@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A.K Nursery | Plants, Pots & Vermicompost</title>
+<meta name="description" content="A.K Nursery - Plants, nursery pots, vermicompost and wall compound.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div class="topbar">🌱 Welcome to A.K Nursery & Wall Compound <span>Sonipat, Haryana</span></div>
+  <nav class="nav">
+    <div class="brand"><div class="logo">🌿</div><div><b>A.K NURSERY</b><small>& WALL COMPOUND</small></div></div>
+    <div class="links">
+      <a href="#home">Home</a><a href="#categories">Categories</a><a href="#products">Shop</a><a href="#about">About</a><a href="#contact">Contact</a>
+    </div>
+    <button class="cartBtn" onclick="openCart()">🛒 <span id="cartCount">0</span></button>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="hero">
+  <div class="heroText">
+    <p class="eyebrow">Bring Nature To Your Life 🌱</p>
+    <h1>A.K NURSERY</h1>
+    <h2>Plants • Pots • Vermicompost • Wall Compound</h2>
+    <p>Quality nursery products at affordable prices. Order directly from us.</p>
+    <div class="actions"><a class="btn" href="#products">Shop Now</a><a class="btn outline" href="#contact">WhatsApp Order</a></div>
+    <div class="benefits"><span>✓ Best Quality</span><span>✓ Affordable Price</span><span>✓ Fast Delivery</span></div>
+  </div>
+  <div class="heroArt">🪴🌿<br><span>Grow • Green • Beautiful</span></div>
+</section>
+
+<section id="categories" class="section">
+  <h2>Shop By Category</h2>
+  <p class="muted">Choose what you need</p>
+  <div class="categories">
+    <button onclick="filterCat('Plants')">🌿 Plants</button>
+    <button onclick="filterCat('Pots')">🪴 Nursery Pots</button>
+    <button onclick="filterCat('Vermicompost')">♻️ Vermicompost</button>
+    <button onclick="filterCat('Wall Compound')">🧱 Wall Compound</button>
+  </div>
+</section>
+
+<section id="products" class="section">
+  <div class="sectionHead"><div><h2>Our Products</h2><p class="muted">Sample prices — edit them before publishing.</p></div><select id="filter" onchange="filterCat(this.value)"><option>All</option><option>Plants</option><option>Pots</option><option>Vermicompost</option><option>Wall Compound</option></select></div>
+  <div id="productGrid" class="grid"></div>
+</section>
+
+<section id="about" class="about section">
+  <h2>Why Choose A.K Nursery?</h2>
+  <div class="features">
+    <div>🌱<b>Fresh Plants</b><span>Healthy nursery stock</span></div>
+    <div>💰<b>Good Prices</b><span>Value for money</span></div>
+    <div>🚚<b>Delivery</b><span>Delivery options available</span></div>
+    <div>💬<b>WhatsApp Support</b><span>Easy direct ordering</span></div>
+  </div>
+</section>
+
+<section id="contact" class="section contact">
+  <h2>Order / Contact Us</h2>
+  <p class="muted">Fill the form and your order will be prepared for WhatsApp.</p>
+  <form onsubmit="sendOrder(event)">
+    <input id="name" required placeholder="Your name">
+    <input id="phone" required placeholder="Mobile number">
+    <textarea id="address" required placeholder="Delivery address"></textarea>
+    <button class="btn" type="submit">Send Order on WhatsApp</button>
+  </form>
+  <p class="note">Before publishing: replace the WhatsApp number in <b>script.js</b> with your business number.</p>
+</section>
+</main>
+
+<footer>
+  <div><b>A.K NURSERY & WALL COMPOUND</b><p>Plants, pots, vermicompost and wall compound.</p></div>
+  <div><b>Location</b><p>Sonipat, Haryana, India</p></div>
+  <div><b>Business Hours</b><p>Mon–Sat: 9 AM–7 PM</p></div>
+</footer>
+
+<div id="cartModal" class="modal hidden">
+  <div class="cart">
+    <button class="close" onclick="closeCart()">×</button>
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <div class="total">Total: ₹<span id="cartTotal">0</span></div>
+    <button class="btn" onclick="checkout()">Order Cart on WhatsApp</button>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
