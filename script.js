@@ -1,12 +1,12 @@
 // ====== A.K NURSERY WEBSITE SETTINGS ======
-const WHATSAPP_NUMBER = "91XXXXXXXXXX"; // Replace with your WhatsApp number, e.g. 919999999999
+const WHATSAPP_NUMBER = "919555322028"; // Replace with your WhatsApp number, e.g. 919999999999
 
 const products = [
  {id:1,name:"Areca Palm Plant",cat:"Plants",price:299,old:399,icon:"🌴"},
  {id:2,name:"Snake Plant",cat:"Plants",price:249,old:349,icon:"🌿"},
  {id:3,name:"Rose Plant",cat:"Plants",price:199,old:299,icon:"🌹"},
  {id:4,name:"12 Inch Nursery Pot",cat:"Pots",price:35,old:50,icon:"🪴"},
- {id:5,name:"Vermicompost 5 Kg",cat:"Vermicompost",price:50,old:70,icon:"♻️"},
+ {id:5,name:"Vermicompost 5 Kg",cat:"Vermicompost",price:100,old:200,icon:"♻️"},
  {id:6,name:"Wall Compound",cat:"Wall Compound",price:65,old:0,icon:"🧱"}
 ];
 
