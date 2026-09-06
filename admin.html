@@ -1,11 +1,10 @@
-/div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>A.K Nursery Admin</title>
-<
+
 <style>
 body{font-family:Arial,sans-serif;background:#f4f7f4;margin:0;padding:20px}
 .container{max-width:600px;margin:auto}
@@ -17,10 +16,13 @@ button{padding:12px 18px;border:0;border-radius:8px;background:#176b35;color:whi
 .product{border:1px solid #ddd;padding:12px;border-radius:10px;margin:10px 0}
 .product img{width:100px;height:100px;object-fit:cover;border-radius:8px}
 .hidden{display:none}
+.error{color:#c62828;word-break:break-word}
+.success{color:green;font-weight:bold}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
 <h1>🌱 A.K Nursery Admin</h1>
@@ -35,6 +37,7 @@ button{padding:12px 18px;border:0;border-radius:8px;background:#176b35;color:whi
 <p id="loginMsg"></p>
 </div>
 
+
 <div id="adminBox" class="hidden">
 
 <div class="box">
@@ -43,15 +46,14 @@ button{padding:12px 18px;border:0;border-radius:8px;background:#176b35;color:whi
 <input id="productName" placeholder="Product name">
 
 <select id="category">
-<option>Plants</option>
-<option>Pots</option>
-<option>Vermicompost</option>
-<option>Wall Compound</option>
+<option value="Plants">Plants</option>
+<option value="Pots">Pots</option>
+<option value="Vermicompost">Vermicompost</option>
+<option value="Wall Compound">Wall Compound</option>
 </select>
 
 <input id="price" type="number" placeholder="Price">
 <input id="oldPrice" type="number" placeholder="Old Price (optional)">
-
 <input id="imageUrl" placeholder="Photo URL">
 
 <textarea id="description" placeholder="Product description"></textarea>
@@ -61,6 +63,7 @@ button{padding:12px 18px;border:0;border-radius:8px;background:#176b35;color:whi
 <p id="msg"></p>
 </div>
 
+
 <div class="box">
 <h2>Products</h2>
 <div id="productList">Loading...</div>
@@ -69,98 +72,189 @@ button{padding:12px 18px;border:0;border-radius:8px;background:#176b35;color:whi
 <button class="danger" onclick="logout()">Logout</button>
 
 </div>
+</div>
+
 
 <script>
-const SUPABASE_URL = "https://mudpcroftnctbbdqxisj.supabase.co";
-const SUPABASE_KEY = "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
+
+const SUPABASE_URL =
+"https://mudpcroftnctbbdqxisj.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
+
 
 async function login(){
- const email=document.getElementById("email").value;
+
+ const email=document.getElementById("email").value.trim();
  const password=document.getElementById("password").value;
 
- const r=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
-  method:"POST",
-  headers:{
-   "apikey":SUPABASE_KEY,
-   "Content-Type":"application/json"
-  },
-  body:JSON.stringify({email,password})
- });
+ const r=await fetch(
+  SUPABASE_URL+"/auth/v1/token?grant_type=password",
+  {
+   method:"POST",
+   headers:{
+    "apikey":SUPABASE_KEY,
+    "Content-Type":"application/json"
+   },
+   body:JSON.stringify({email,password})
+  }
+ );
 
  const data=await r.json();
 
  if(data.access_token){
+
   localStorage.setItem("ak_token",data.access_token);
+
   document.getElementById("loginBox").classList.add("hidden");
   document.getElementById("adminBox").classList.remove("hidden");
+
   loadProducts();
+
  }else{
-  document.getElementById("loginMsg").textContent="Login failed. Email/password check karo.";
+
+  document.getElementById("loginMsg").textContent =
+  "Login failed: "+
+  (data.error_description || data.msg || "Email/password check karo.");
+
  }
 }
 
+
 async function loadProducts(){
+
  const token=localStorage.getItem("ak_token");
 
- const r=await fetch(SUPABASE_URL+"/rest/v1/products?select=*&order=id.desc",{
-  headers:{
-   "apikey":SUPABASE_KEY,
-   "Authorization":"Bearer "+token
+ const r=await fetch(
+  SUPABASE_URL+"/rest/v1/products?select=*&order=id.desc",
+  {
+   headers:{
+    "apikey":SUPABASE_KEY,
+    "Authorization":"Bearer "+token
+   }
   }
- });
+ );
 
  const data=await r.json();
 
- document.getElementById("productList").innerHTML=data.map(p=>`
+ if(!r.ok){
+
+  document.getElementById("productList").innerHTML=
+  `<p class="error">Error: ${JSON.stringify(data)}</p>`;
+
+  return;
+ }
+
+ if(!data.length){
+
+  document.getElementById("productList").innerHTML=
+  "<p>No products added yet.</p>";
+
+  return;
+ }
+
+ document.getElementById("productList").innerHTML=
+ data.map(p=>`
+
  <div class="product">
-  ${p.image_url?`<img src="${p.image_url}">`:""}
-  <h3>${p.name}</h3>
-  <p>Category: ${p.cat || ""}</p>
-  <b>₹${p.price}</b>
+
+ ${p.image_url ? `<img src="${p.image_url}" alt="${p.name}">` : ""}
+
+ <h3>${p.name || ""}</h3>
+
+ <p>Category: ${p.cat || ""}</p>
+
+ <p>Price: <b>₹${p.price || 0}</b></p>
+
+ <p>${p.description || ""}</p>
+
  </div>
+
  `).join("");
 }
 
+
 async function addProduct(){
+
  const token=localStorage.getItem("ak_token");
 
  const product={
-  name:document.getElementById("productName").value,
+
+  name:document.getElementById("productName").value.trim(),
+
+  cat:document.getElementById("category").value,
+
   price:Number(document.getElementById("price").value),
-  image_url:document.getElementById("imageUrl").value,
-  description:document.getElementById("description").value,
+
+  image_url:document.getElementById("imageUrl").value.trim(),
+
+  description:document.getElementById("description").value.trim(),
+
   stock:true
+
  };
 
- const r=await fetch(SUPABASE_URL+"/rest/v1/products",{
-  method:"POST",
-  headers:{
-   "apikey":SUPABASE_KEY,
-   "Authorization":"Bearer "+token,
-   "Content-Type":"application/json",
-   "Prefer":"return=minimal"
-  },
-  body:JSON.stringify(product)
- });
+
+ const r=await fetch(
+  SUPABASE_URL+"/rest/v1/products",
+  {
+   method:"POST",
+
+   headers:{
+    "apikey":SUPABASE_KEY,
+    "Authorization":"Bearer "+token,
+    "Content-Type":"application/json",
+    "Prefer":"return=minimal"
+   },
+
+   body:JSON.stringify(product)
+  }
+ );
+
 
  if(r.ok){
-  document.getElementById("msg").textContent="Product added successfully ✅";
+
+  document.getElementById("msg").innerHTML=
+  `<span class="success">Product added successfully ✅</span>`;
+
+  document.getElementById("productName").value="";
+  document.getElementById("price").value="";
+  document.getElementById("oldPrice").value="";
+  document.getElementById("imageUrl").value="";
+  document.getElementById("description").value="";
+
   loadProducts();
+
  }else{
-  document.getElementById("msg").textContent="Product add nahi hua.";
+
+  const error=await r.text();
+
+  document.getElementById("msg").innerHTML=
+  `<span class="error">Error: ${error}</span>`;
+
  }
 }
 
+
 function logout(){
+
  localStorage.removeItem("ak_token");
  location.reload();
+
 }
 
+
 if(localStorage.getItem("ak_token")){
+
  document.getElementById("loginBox").classList.add("hidden");
+
  document.getElementById("adminBox").classList.remove("hidden");
+
  loadProducts();
+
 }
+
 </script>
 
 </body>
