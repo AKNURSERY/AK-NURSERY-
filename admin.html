@@ -3,490 +3,395 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>A.K Nursery Admin</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
- font-family:Arial,sans-serif;
- background:#f4f7f4;
- margin:0;
- padding:20px;
- color:#12351f
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f7f3;
+  color:#12351f;
 }
 
 .container{
- max-width:650px;
- margin:auto
+  width:min(1000px,94%);
+  margin:30px auto;
 }
 
-h1{
- color:#176b35;
- text-align:center
+.header{
+  background:#064b2a;
+  color:white;
+  padding:20px;
+  border-radius:14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
 }
 
-.box{
- background:white;
- padding:20px;
- border-radius:14px;
- margin-bottom:20px;
- box-shadow:0 2px 10px #0001
-}
-
-input,textarea,select{
- width:100%;
- padding:12px;
- margin:7px 0 14px;
- border:1px solid #ccc;
- border-radius:8px;
- font-size:15px
-}
-
-textarea{
- min-height:100px;
- resize:vertical
+.header h1{
+  margin:0;
+  font-size:24px;
 }
 
 button{
- padding:11px 15px;
- border:0;
- border-radius:8px;
- background:#176b35;
- color:white;
- font-weight:bold;
- cursor:pointer;
- margin:3px
+  border:0;
+  cursor:pointer;
 }
 
-button:disabled{
- background:#999;
- cursor:not-allowed
+.btn{
+  background:#087c35;
+  color:white;
+  padding:11px 18px;
+  border-radius:8px;
+  font-weight:bold;
 }
 
-.danger{background:#c62828}
-.editBtn{background:#1976d2}
-.stockBtn{background:#ef8f00}
-.cancelBtn{background:#777}
-.deleteBtn{background:#c62828}
-
-.hidden{
- display:none
+.btn:hover{
+  background:#065f29;
 }
 
-.uploadBtn{
- display:block;
- background:#176b35;
- color:white;
- padding:13px;
- border-radius:8px;
- text-align:center;
- cursor:pointer;
- margin-bottom:8px
+.logout{
+  background:#fff;
+  color:#064b2a;
 }
 
-.photosPreview{
- display:grid;
- grid-template-columns:repeat(5,1fr);
- gap:8px;
- margin:10px 0
+.card{
+  background:white;
+  margin-top:20px;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 3px 15px #0001;
 }
 
-.photoBox{
- position:relative
+.login{
+  max-width:450px;
+  margin:80px auto;
 }
 
-.photoBox img{
- width:100%;
- aspect-ratio:1;
- object-fit:cover;
- border-radius:8px;
- border:1px solid #ddd
+h2{
+  margin-top:0;
 }
 
-.removePhoto{
- position:absolute;
- top:2px;
- right:2px;
- width:25px;
- height:25px;
- padding:0;
- border-radius:50%;
- background:#c62828;
- font-size:14px
+input,
+textarea,
+select{
+  width:100%;
+  padding:12px;
+  margin:6px 0 12px;
+  border:1px solid #ccd8cd;
+  border-radius:8px;
+  font-size:15px;
 }
 
-.colorList{
- display:flex;
- flex-wrap:wrap;
- gap:7px;
- margin:5px 0 15px
+textarea{
+  min-height:90px;
+  resize:vertical;
 }
 
-.colorItem{
- background:#eef6ed;
- border:1px solid #cddfce;
- padding:7px 10px;
- border-radius:20px;
- display:flex;
- align-items:center;
- gap:5px
-}
-
-.colorItem button{
- background:#c62828;
- padding:3px 7px;
- margin:0;
- border-radius:50%
+label{
+  font-weight:bold;
+  font-size:14px;
 }
 
 .product{
- border:1px solid #ddd;
- padding:14px;
- border-radius:12px;
- margin:12px 0
+  border:1px solid #dde6dd;
+  border-radius:12px;
+  padding:15px;
+  margin-top:15px;
+  display:flex;
+  gap:15px;
+  align-items:center;
 }
 
-.productPhotos{
- display:grid;
- grid-template-columns:repeat(5,1fr);
- gap:5px;
- margin-bottom:10px
+.product img{
+  width:90px;
+  height:90px;
+  object-fit:contain;
+  background:#f5f8f4;
+  border-radius:8px;
 }
 
-.productPhotos img{
- width:100%;
- aspect-ratio:1;
- object-fit:cover;
- border-radius:6px
+.productInfo{
+  flex:1;
 }
 
-.product h3{
- margin:8px 0
+.productInfo h3{
+  margin:0 0 6px;
 }
 
-.price{
- color:#176b35;
- font-size:20px;
- font-weight:bold
+.productInfo p{
+  margin:4px 0;
+  color:#66756b;
 }
 
-.old{
- color:#999;
- text-decoration:line-through;
- font-size:14px;
- margin-left:6px
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
 }
 
-.colors{
- display:flex;
- flex-wrap:wrap;
- gap:5px;
- margin:8px 0
+.edit{
+  background:#eaf6e9;
+  color:#087c35;
 }
 
-.colorBadge{
- background:#f0f0f0;
- padding:5px 9px;
- border-radius:15px;
- font-size:13px
+.delete{
+  background:#ffe9e9;
+  color:#b00020;
 }
 
-.in{
- color:green;
- font-weight:bold
+.stock{
+  margin:10px 0;
 }
 
-.out{
- color:#c62828;
- font-weight:bold
+.hidden{
+  display:none;
 }
 
-.success{
- color:green;
- font-weight:bold
+.message{
+  padding:12px;
+  border-radius:8px;
+  margin-top:10px;
+  background:#eef8e9;
 }
 
-.error{
- color:#c62828;
- word-break:break-word
+.preview{
+  width:120px;
+  height:120px;
+  object-fit:contain;
+  background:#f5f8f4;
+  border-radius:10px;
+  display:block;
+  margin:10px 0;
 }
 
-.small{
- font-size:13px;
- color:#666
-}
+@media(max-width:600px){
 
-.chargeRow{
- display:grid;
- grid-template-columns:1fr 150px;
- gap:10px;
- align-items:center
-}
+  .header{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
-@media(max-width:500px){
- .photosPreview,
- .productPhotos{
-  grid-template-columns:repeat(5,1fr)
- }
+  .product{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
- .chargeRow{
-  grid-template-columns:1fr 110px
- }
+  .product img{
+    width:120px;
+    height:120px;
+  }
+
+  .actions{
+    width:100%;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div id="loginBox" class="container login">
 
-<h1>🌱 A.K Nursery Admin</h1>
+  <div class="card">
 
-<!-- ================= LOGIN ================= -->
+    <h2>🔐 A.K Nursery Admin</h2>
 
-<div id="loginBox" class="box">
+    <p>Admin account se login karein.</p>
 
-<h2>🔐 Admin Login</h2>
+    <form id="loginForm">
 
-<input
- id="email"
- type="email"
- placeholder="Admin Email"
->
+      <label>Email</label>
+      <input
+        id="email"
+        type="email"
+        required
+        placeholder="Admin email">
 
-<input
- id="password"
- type="password"
- placeholder="Password"
->
+      <label>Password</label>
+      <input
+        id="password"
+        type="password"
+        required
+        placeholder="Password">
 
-<button onclick="login()">Login</button>
+      <button class="btn" type="submit">
+        Login
+      </button>
 
-<p id="loginMsg"></p>
+    </form>
 
-</div>
+    <div id="loginMessage"></div>
 
-
-<!-- ================= ADMIN ================= -->
-
-<div id="adminBox" class="hidden">
-
-<!-- PRODUCT FORM -->
-
-<div class="box">
-
-<h2 id="formTitle">➕ Add Product</h2>
-
-<label>Product Name</label>
-
-<input
- id="productName"
- placeholder="Example: Money Plant"
->
-
-<label>Category</label>
-
-<select id="category">
-
-<option value="Plants">🌿 Plants</option>
-
-<option value="Pots">🪴 Pots</option>
-
-<option value="Vermicompost">♻️ Vermicompost</option>
-
-<option value="Wall Compound">🧱 Wall Compound</option>
-
-</select>
-
-
-<label>Current Price</label>
-
-<input
- id="price"
- type="number"
- min="0"
- placeholder="Price"
->
-
-
-<label>Old Price</label>
-
-<input
- id="oldPrice"
- type="number"
- min="0"
- placeholder="Old Price (optional)"
->
-
-
-<!-- COLORS -->
-
-<label>🎨 Product Colors</label>
-
-<input
- id="colorInput"
- placeholder="Example: Red"
->
-
-<button
- type="button"
- onclick="addColor()"
->
-➕ Add Color
-</button>
-
-<p class="small">
-Maximum 10 colors per product.
-</p>
-
-<div id="colorList" class="colorList"></div>
-
-
-<!-- PHOTOS -->
-
-<label>📸 Product Photos</label>
-
-<label class="uploadBtn">
-
-Choose Photos From Gallery
-
-<input
- id="productPhoto"
- type="file"
- accept="image/*"
- multiple
- hidden
- onchange="previewPhotos(event)"
->
-
-</label>
-
-<p class="small">
-Maximum 10 photos per product.
-</p>
-
-<div
- id="photosPreview"
- class="photosPreview"
-></div>
-
-
-<label>Description</label>
-
-<textarea
- id="description"
- placeholder="Product description"
-></textarea>
-
-
-<button
- id="saveBtn"
- onclick="saveProduct()"
->
-➕ Add Product
-</button>
-
-<button
- id="cancelBtn"
- class="cancelBtn hidden"
- onclick="cancelEdit()"
->
-Cancel Edit
-</button>
-
-<p id="msg"></p>
+  </div>
 
 </div>
 
 
-<!-- ================= CHARGES ================= -->
+<div id="adminBox" class="container hidden">
 
-<div class="box">
+  <div class="header">
 
-<h2>💰 Delivery & Fixing Charges</h2>
+    <div>
+      <h1>🌱 A.K Nursery Admin</h1>
+      <small>Product Management</small>
+    </div>
 
-<div class="chargeRow">
+    <button
+      class="btn logout"
+      onclick="logout()">
+      Logout
+    </button>
 
-<label>🚚 Delivery Charge</label>
-
-<input
- id="deliveryCharge"
- type="number"
- min="0"
- placeholder="₹"
->
-
-</div>
+  </div>
 
 
-<div class="chargeRow">
+  <!-- ADD / EDIT PRODUCT -->
 
-<label>🪴 Pot Fixing Charge</label>
+  <div class="card">
 
-<input
- id="potFixingCharge"
- type="number"
- min="0"
- placeholder="₹"
->
+    <h2 id="formTitle">
+      ➕ Add New Product
+    </h2>
 
-</div>
+    <form id="productForm">
 
-
-<div class="chargeRow">
-
-<label>🌱 Plant Fixing Charge</label>
-
-<input
- id="plantFixingCharge"
- type="number"
- min="0"
- placeholder="₹"
->
-
-</div>
+      <input
+        id="productId"
+        type="hidden">
 
 
-<button onclick="saveCharges()">
-💾 Save Charges
-</button>
+      <label>Product Name</label>
 
-<p id="chargeMsg"></p>
-
-</div>
-
-
-<!-- ================= PRODUCTS ================= -->
-
-<div class="box">
-
-<h2>📦 Products</h2>
-
-<div id="productList">
-Loading...
-</div>
-
-</div>
+      <input
+        id="productName"
+        required
+        placeholder="Example: Plastic Pot 15&quot;">
 
 
-<button
- class="danger"
- onclick="logout()"
->
-Logout
-</button>
+      <label>Price ₹</label>
 
-</div>
+      <input
+        id="productPrice"
+        type="number"
+        min="0"
+        required
+        placeholder="419">
+
+
+      <label>Old Price ₹</label>
+
+      <input
+        id="oldPrice"
+        type="number"
+        min="0"
+        placeholder="499">
+
+
+      <label>Category</label>
+
+      <select id="productCat">
+
+        <option value="Plants">
+          Plants
+        </option>
+
+        <option value="Pots">
+          Pots
+        </option>
+
+        <option value="Vermicompost">
+          Vermicompost
+        </option>
+
+        <option value="Wall Compound">
+          Wall Compound
+        </option>
+
+      </select>
+
+
+      <label>Photo URL</label>
+
+      <input
+        id="imageUrl"
+        type="url"
+        placeholder="https://...">
+
+
+      <img
+        id="preview"
+        class="preview hidden"
+        alt="Photo preview">
+
+
+      <label>Description</label>
+
+      <textarea
+        id="description"
+        placeholder="Product description"></textarea>
+
+
+      <label>Colors</label>
+
+      <input
+        id="colors"
+        placeholder="Black, White, Green">
+
+
+      <label class="stock">
+        <input
+          id="stock"
+          type="checkbox"
+          checked
+          style="width:auto;">
+        Product In Stock
+      </label>
+
+
+      <button
+        class="btn"
+        type="submit">
+        💾 Save Product
+      </button>
+
+      <button
+        type="button"
+        class="btn edit hidden"
+        id="cancelBtn"
+        onclick="cancelEdit()">
+        Cancel Edit
+      </button>
+
+    </form>
+
+    <div id="formMessage"></div>
+
+  </div>
+
+
+  <!-- PRODUCT LIST -->
+
+  <div class="card">
+
+    <h2>📦 Your Products</h2>
+
+    <div id="products">
+      Loading products...
+    </div>
+
+  </div>
 
 </div>
 
 
 <script>
-
-/* ==================================================
-   A.K NURSERY ADMIN
-   ================================================== */
 
 const SUPABASE_URL =
 "https://mudpcroftnctbbdqxisj.supabase.co";
@@ -494,1606 +399,764 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
 
-const BUCKET =
-"product-images";
+
+const headers = {
+  "apikey": SUPABASE_KEY,
+  "Authorization": "Bearer " + SUPABASE_KEY,
+  "Content-Type": "application/json"
+};
 
 
-let editingId = null;
-
-let selectedColors = [];
-
-let selectedFiles = [];
-
-let existingImages = [];
-
-let products = [];
+let currentProducts = [];
 
 
-/* ==================================================
-   LOGIN
-   ================================================== */
+// ======================================
+// LOGIN
+// ======================================
 
-async function login(){
+document
+.getElementById("loginForm")
+.addEventListener("submit", async function(e){
 
- const email =
- document.getElementById("email").value.trim();
+  e.preventDefault();
 
- const password =
- document.getElementById("password").value;
+  const email =
+    document.getElementById("email").value.trim();
 
- const msg =
- document.getElementById("loginMsg");
-
- msg.textContent="⏳ Login...";
-
- try{
-
-  const r = await fetch(
-   SUPABASE_URL +
-   "/auth/v1/token?grant_type=password",
-   {
-    method:"POST",
-    headers:{
-     "apikey":SUPABASE_KEY,
-     "Content-Type":"application/json"
-    },
-    body:JSON.stringify({
-     email:email,
-     password:password
-    })
-   }
-  );
-
-  const data = await r.json();
-
-  if(data.access_token){
-
-   localStorage.setItem(
-    "ak_token",
-    data.access_token
-   );
-
-   document
-   .getElementById("loginBox")
-   .classList.add("hidden");
-
-   document
-   .getElementById("adminBox")
-   .classList.remove("hidden");
-
-   loadProducts();
-
-   loadCharges();
-
-  }else{
-
-   msg.innerHTML =
-   `<span class="error">
-   Login failed: ${
-    data.error_description ||
-    data.msg ||
-    "Email/password check karo."
-   }
-   </span>`;
-
-  }
-
- }catch(error){
-
-  msg.innerHTML =
-  `<span class="error">
-  Network error.
-  </span>`;
-
- }
-
-}
+  const password =
+    document.getElementById("password").value;
 
 
-/* ==================================================
-   PHOTO PREVIEW
-   ================================================== */
+  const message =
+    document.getElementById("loginMessage");
 
-function previewPhotos(event){
-
- const files =
- Array.from(event.target.files);
-
- if(files.length > 10){
-
-  alert("Maximum 10 photos allowed.");
-
-  event.target.value="";
-
-  return;
- }
-
- selectedFiles = files;
-
- renderPhotoPreview();
-
-}
+  message.innerHTML =
+    "Logging in...";
 
 
-function renderPhotoPreview(){
+  try{
 
- const box =
- document.getElementById("photosPreview");
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/auth/v1/token?grant_type=password",
+        {
+          method:"POST",
 
- box.innerHTML="";
+          headers:{
+            "apikey":SUPABASE_KEY,
+            "Content-Type":"application/json"
+          },
 
- selectedFiles.forEach(
-  (file,index)=>{
+          body:JSON.stringify({
+            email:email,
+            password:password
+          })
+        }
+      );
 
-   const url =
-   URL.createObjectURL(file);
 
-   box.innerHTML += `
+    const data =
+      await response.json();
 
-    <div class="photoBox">
 
-     <img src="${url}">
+    if(!response.ok){
 
-     <button
-      class="removePhoto"
-      onclick="removeSelectedPhoto(${index})"
-      type="button"
-     >
-      ×
-     </button>
+      message.innerHTML =
+        "❌ Login failed: " +
+        (data.error_description ||
+         data.msg ||
+         "Invalid login");
 
-    </div>
+      return;
+    }
 
-   `;
+
+    localStorage.setItem(
+      "ak_access_token",
+      data.access_token
+    );
+
+
+    localStorage.setItem(
+      "ak_user_id",
+      data.user?.id || ""
+    );
+
+
+    showAdmin();
+
+  }catch(error){
+
+    console.error(error);
+
+    message.innerHTML =
+      "❌ Internet/Supabase connection problem.";
 
   }
- );
 
-}
+});
 
 
-function removeSelectedPhoto(index){
+// ======================================
+// CHECK LOGIN
+// ======================================
 
- selectedFiles.splice(index,1);
-
- renderPhotoPreview();
-
-}
-
-
-/* ==================================================
-   COLORS
-   ================================================== */
-
-function addColor(){
-
- const input =
- document.getElementById("colorInput");
-
- const color =
- input.value.trim();
-
- if(!color) return;
-
- if(selectedColors.length >= 10){
-
-  alert("Maximum 10 colors allowed.");
-
-  return;
- }
-
- if(
-  selectedColors
-  .some(
-   c => c.toLowerCase() === color.toLowerCase()
-  )
- ){
-
-  alert("Ye color already added hai.");
-
-  return;
- }
-
- selectedColors.push(color);
-
- input.value="";
-
- renderColors();
-
-}
-
-
-function renderColors(){
-
- const box =
- document.getElementById("colorList");
-
- box.innerHTML =
- selectedColors.map(
-  (color,index)=>`
-
-   <div class="colorItem">
-
-    ${escapeHTML(color)}
-
-    <button
-     type="button"
-     onclick="removeColor(${index})"
-    >
-     ×
-    </button>
-
-   </div>
-
-  `
- ).join("");
-
-}
-
-
-function removeColor(index){
-
- selectedColors.splice(index,1);
-
- renderColors();
-
-}
-
-
-/* ==================================================
-   UPLOAD PHOTO
-   ================================================== */
-
-async function uploadPhoto(file){
-
- const token =
- localStorage.getItem("ak_token");
-
- if(!token){
-
-  throw new Error(
-   "Admin login required."
-  );
-
- }
-
- const extension =
- file.name
- .split(".")
- .pop()
- .toLowerCase();
-
- const fileName =
- Date.now() +
- "_" +
- Math.random()
- .toString(36)
- .substring(2,10) +
- "." +
- extension;
-
- const uploadUrl =
- SUPABASE_URL +
- "/storage/v1/object/" +
- BUCKET +
- "/" +
- fileName;
-
- const r =
- await fetch(
-  uploadUrl,
-  {
-   method:"POST",
-
-   headers:{
-    "apikey":SUPABASE_KEY,
-
-    "Authorization":
-     "Bearer " + token,
-
-    "Content-Type":
-     file.type,
-
-    "x-upsert":
-     "false"
-   },
-
-   body:file
-  }
- );
-
- if(!r.ok){
-
-  const error =
-  await r.text();
-
-  throw new Error(
-   "Photo upload failed: " +
-   error
-  );
-
- }
-
- return (
-  SUPABASE_URL +
-  "/storage/v1/object/public/" +
-  BUCKET +
-  "/" +
-  fileName
- );
-
-}
-
-
-/* ==================================================
-   SAVE PRODUCT
-   ================================================== */
-
-async function saveProduct(){
-
- const msg =
- document.getElementById("msg");
-
- try{
-
-  msg.innerHTML="⏳ Saving...";
+function checkLogin(){
 
   const token =
-  localStorage.getItem("ak_token");
+    localStorage.getItem(
+      "ak_access_token"
+    );
 
-  if(!token){
+  if(token){
 
-   msg.innerHTML =
-   `<span class="error">
-   Please login first.
-   </span>`;
+    showAdmin();
 
-   return;
   }
+
+}
+
+
+// ======================================
+// SHOW ADMIN
+// ======================================
+
+function showAdmin(){
+
+  document
+    .getElementById("loginBox")
+    .classList.add("hidden");
+
+  document
+    .getElementById("adminBox")
+    .classList.remove("hidden");
+
+  loadProducts();
+
+}
+
+
+// ======================================
+// LOGOUT
+// ======================================
+
+async function logout(){
+
+  const token =
+    localStorage.getItem(
+      "ak_access_token"
+    );
+
+
+  if(token){
+
+    try{
+
+      await fetch(
+        SUPABASE_URL +
+        "/auth/v1/logout",
+        {
+          method:"POST",
+          headers:{
+            "apikey":SUPABASE_KEY,
+            "Authorization":
+              "Bearer " + token
+          }
+        }
+      );
+
+    }catch(e){}
+
+  }
+
+
+  localStorage.removeItem(
+    "ak_access_token"
+  );
+
+  localStorage.removeItem(
+    "ak_user_id"
+  );
+
+
+  location.reload();
+
+}
+
+
+// ======================================
+// LOAD PRODUCTS
+// ======================================
+
+async function loadProducts(){
+
+  const box =
+    document.getElementById("products");
+
+  box.innerHTML =
+    "Loading products...";
+
+
+  try{
+
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/products?select=*&order=id.desc",
+        {
+          headers:headers
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if(!response.ok){
+
+      box.innerHTML =
+        "❌ Products load nahi ho rahe.";
+
+      console.error(data);
+
+      return;
+    }
+
+
+    currentProducts = data;
+
+    renderAdminProducts();
+
+  }catch(error){
+
+    console.error(error);
+
+    box.innerHTML =
+      "❌ Connection error.";
+
+  }
+
+}
+
+
+// ======================================
+// SHOW PRODUCTS
+// ======================================
+
+function renderAdminProducts(){
+
+  const box =
+    document.getElementById("products");
+
+
+  if(!currentProducts.length){
+
+    box.innerHTML =
+      "<p>No products found.</p>";
+
+    return;
+  }
+
+
+  box.innerHTML =
+    currentProducts.map(p => `
+
+      <div class="product">
+
+        ${
+          p.image_url
+          ?
+          `<img
+            src="${escapeHTML(p.image_url)}"
+            alt="${escapeHTML(p.name || "Product")}"
+            onerror="this.style.display='none';"
+          >`
+          :
+          `<img
+            src=""
+            alt="No photo"
+            style="display:none;">
+          `
+        }
+
+
+        <div class="productInfo">
+
+          <h3>
+            ${escapeHTML(
+              p.name || "Product"
+            )}
+          </h3>
+
+          <p>
+            Category:
+            ${escapeHTML(
+              p.cat || "Plants"
+            )}
+          </p>
+
+          <p>
+            Price:
+            ₹${Number(p.price) || 0}
+          </p>
+
+          <p>
+            ${
+              p.stock !== false
+              ? "🟢 In Stock"
+              : "🔴 Out of Stock"
+            }
+          </p>
+
+        </div>
+
+
+        <div class="actions">
+
+          <button
+            class="btn edit"
+            onclick="editProduct(${p.id})">
+            ✏️ Edit
+          </button>
+
+          <button
+            class="btn delete"
+            onclick="deleteProduct(${p.id})">
+            🗑️ Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
+}
+
+
+// ======================================
+// ADD / UPDATE
+// ======================================
+
+document
+.getElementById("productForm")
+.addEventListener("submit", async function(e){
+
+  e.preventDefault();
+
+
+  const id =
+    document.getElementById("productId").value;
 
 
   const name =
-  document
-  .getElementById("productName")
-  .value.trim();
-
-
-  const cat =
-  document
-  .getElementById("category")
-  .value;
+    document.getElementById("productName")
+      .value.trim();
 
 
   const price =
-  Number(
-   document
-   .getElementById("price")
-   .value
-  );
+    Number(
+      document.getElementById("productPrice")
+        .value
+    );
 
 
   const oldPrice =
-  Number(
-   document
-   .getElementById("oldPrice")
-   .value
-  ) || 0;
+    Number(
+      document.getElementById("oldPrice")
+        .value
+    ) || 0;
+
+
+  const cat =
+    document.getElementById("productCat")
+      .value;
+
+
+  const imageUrl =
+    document.getElementById("imageUrl")
+      .value.trim();
 
 
   const description =
-  document
-  .getElementById("description")
-  .value.trim();
+    document.getElementById("description")
+      .value.trim();
 
 
-  if(!name){
-
-   msg.innerHTML =
-   `<span class="error">
-   Product name डालो.
-   </span>`;
-
-   return;
-  }
+  const colors =
+    document.getElementById("colors")
+      .value.trim();
 
 
-  if(price <= 0){
-
-   msg.innerHTML =
-   `<span class="error">
-   Valid price डालो.
-   </span>`;
-
-   return;
-  }
+  const stock =
+    document.getElementById("stock")
+      .checked;
 
 
-  if(oldPrice > 0 && oldPrice <= price){
-
-   msg.innerHTML =
-   `<span class="error">
-   Old Price current price se zyada hona chahiye.
-   </span>`;
-
-   return;
-  }
-
-
-  /* ============================
-     EDIT PRODUCT
-     ============================ */
-
-  if(editingId){
-
-   let updateData = {
+  const payload = {
 
     name:name,
-
-    cat:cat,
 
     price:price,
 
     old_price:oldPrice,
 
-    colors:selectedColors,
+    cat:cat,
 
-    description:description
+    image_url:imageUrl,
 
-   };
+    description:description,
 
+    colors:colors,
 
-   /* New photos upload */
-
-   if(selectedFiles.length){
-
-    msg.innerHTML =
-    "📸 Photos upload ho rahi hain...";
-
-    const newImages = [];
-
-    for(
-     const file of selectedFiles
-    ){
-
-     const url =
-     await uploadPhoto(file);
-
-     newImages.push(url);
-
-    }
-
-
-    updateData.images =
-    [
-     ...existingImages,
-     ...newImages
-    ].slice(0,10);
-
-
-    updateData.image_url =
-    updateData.images[0] || "";
-
-   }
-
-
-   msg.innerHTML =
-   "⏳ Product update ho raha hai...";
-
-
-   const r =
-   await fetch(
-    SUPABASE_URL +
-    "/rest/v1/products?id=eq." +
-    editingId,
-    {
-     method:"PATCH",
-
-     headers:{
-      "apikey":SUPABASE_KEY,
-
-      "Authorization":
-       "Bearer " + token,
-
-      "Content-Type":
-       "application/json",
-
-      "Prefer":
-       "return=minimal"
-     },
-
-     body:
-     JSON.stringify(updateData)
-    }
-   );
-
-
-   if(!r.ok){
-
-    const error =
-    await r.text();
-
-    msg.innerHTML =
-    `<span class="error">
-    Update failed:<br>
-    ${error}
-    </span>`;
-
-    return;
-   }
-
-
-   msg.innerHTML =
-   `<span class="success">
-   ✅ Product updated successfully!
-   </span>`;
-
-
-   cancelEdit();
-
-   loadProducts();
-
-   return;
-
-  }
-
-
-  /* ============================
-     NEW PRODUCT
-     ============================ */
-
-  let imageUrls = [];
-
-
-  if(selectedFiles.length){
-
-   msg.innerHTML =
-   "📸 Photos upload ho rahi hain...";
-
-
-   for(
-    const file of selectedFiles
-   ){
-
-    const url =
-    await uploadPhoto(file);
-
-    imageUrls.push(url);
-
-   }
-
-  }
-
-
-  const product = {
-
-   name:name,
-
-   cat:cat,
-
-   price:price,
-
-   old_price:oldPrice,
-
-   colors:selectedColors,
-
-   images:imageUrls,
-
-   image_url:
-    imageUrls[0] || "",
-
-   description:description,
-
-   stock:true
+    stock:stock
 
   };
 
 
-  msg.innerHTML =
-  "⏳ Product save ho raha hai...";
+  const message =
+    document.getElementById("formMessage");
 
 
-  const r =
-  await fetch(
-   SUPABASE_URL +
-   "/rest/v1/products",
-   {
-    method:"POST",
-
-    headers:{
-     "apikey":SUPABASE_KEY,
-
-     "Authorization":
-      "Bearer " + token,
-
-     "Content-Type":
-      "application/json",
-
-     "Prefer":
-      "return=minimal"
-    },
-
-    body:
-    JSON.stringify(product)
-   }
-  );
+  message.innerHTML =
+    "Saving...";
 
 
-  if(!r.ok){
+  try{
 
-   const error =
-   await r.text();
-
-   msg.innerHTML =
-   `<span class="error">
-   Product add nahi hua:<br>
-   ${error}
-   </span>`;
-
-   return;
-  }
+    let response;
 
 
-  msg.innerHTML =
-  `<span class="success">
-  ✅ Product added successfully!
-  </span>`;
+    if(id){
 
+      response =
+        await fetch(
+          SUPABASE_URL +
+          "/rest/v1/products?id=eq." +
+          encodeURIComponent(id),
+          {
+            method:"PATCH",
+            headers:{
+              ...headers,
+              "Prefer":"return=minimal"
+            },
+            body:JSON.stringify(payload)
+          }
+        );
 
-  clearForm();
+    }else{
 
-  loadProducts();
+      response =
+        await fetch(
+          SUPABASE_URL +
+          "/rest/v1/products",
+          {
+            method:"POST",
+            headers:{
+              ...headers,
+              "Prefer":"return=minimal"
+            },
+            body:JSON.stringify(payload)
+          }
+        );
 
-
- }catch(error){
-
-  msg.innerHTML =
-  `<span class="error">
-  ❌ ${error.message}
-  </span>`;
-
- }
-
-}
-
-
-/* ==================================================
-   LOAD PRODUCTS
-   ================================================== */
-
-async function loadProducts(){
-
- const token =
- localStorage.getItem("ak_token");
-
- if(!token) return;
-
-
- try{
-
-  const r =
-  await fetch(
-   SUPABASE_URL +
-   "/rest/v1/products?select=*&order=id.desc",
-   {
-    headers:{
-     "apikey":SUPABASE_KEY,
-
-     "Authorization":
-      "Bearer " + token
     }
-   }
-  );
 
 
-  const data =
-  await r.json();
+    if(!response.ok){
 
+      const error =
+        await response.json();
 
-  if(!r.ok){
+      console.error(error);
 
-   document
-   .getElementById("productList")
-   .innerHTML =
-   `<p class="error">
-   ${escapeHTML(JSON.stringify(data))}
-   </p>`;
+      message.innerHTML =
+        "❌ Save failed. Supabase RLS policy check karo.";
 
-   return;
-  }
-
-
-  products=data;
-
-  renderProducts(data);
-
-
- }catch(error){
-
-  document
-  .getElementById("productList")
-  .innerHTML =
-  `<p class="error">
-  ${error.message}
-  </p>`;
-
- }
-
-}
-
-
-/* ==================================================
-   RENDER PRODUCTS
-   ================================================== */
-
-function renderProducts(data){
-
- const list =
- document.getElementById("productList");
-
-
- if(!data.length){
-
-  list.innerHTML =
-  "<p>No products added yet.</p>";
-
-  return;
- }
-
-
- list.innerHTML =
- data.map(
-  p=>{
-
-   const images =
-   Array.isArray(p.images) &&
-   p.images.length
-
-   ?
-
-   p.images
-
-   :
-
-   (
-    p.image_url
-    ?
-    [p.image_url]
-    :
-    []
-   );
-
-
-   const colors =
-   Array.isArray(p.colors)
-   ?
-   p.colors
-   :
-   [];
-
-
-   return `
-
-    <div class="product">
-
-     ${
-      images.length
-
-      ?
-
-      `
-      <div class="productPhotos">
-
-       ${
-        images
-        .slice(0,10)
-        .map(
-         img=>`
-          <img
-           src="${escapeHTML(img)}"
-          >
-         `
-        )
-        .join("")
-       }
-
-      </div>
-      `
-
-      :
-
-      ""
-     }
-
-
-     <h3>
-      ${escapeHTML(p.name)}
-     </h3>
-
-
-     <p>
-      Category:
-      <b>${escapeHTML(p.cat)}</b>
-     </p>
-
-
-     <div class="price">
-
-      ₹${Number(p.price)||0}
-
-      ${
-       Number(p.old_price)>0
-
-       ?
-
-       `
-       <span class="old">
-        ₹${Number(p.old_price)}
-       </span>
-       `
-
-       :
-
-       ""
-      }
-
-     </div>
-
-
-     ${
-      colors.length
-
-      ?
-
-      `
-      <div class="colors">
-
-       ${colors.map(
-        c=>`
-         <span class="colorBadge">
-          🎨 ${escapeHTML(c)}
-         </span>
-        `
-       ).join("")}
-
-      </div>
-      `
-
-      :
-
-      ""
-     }
-
-
-     ${
-      p.description
-
-      ?
-
-      `<p>${escapeHTML(p.description)}</p>`
-
-      :
-
-      ""
-     }
-
-
-     <p>
-      Stock:
-
-      ${
-       p.stock !== false
-
-       ?
-
-       `
-       <span class="in">
-        Available ✅
-       </span>
-       `
-
-       :
-
-       `
-       <span class="out">
-        Out of Stock ❌
-       </span>
-       `
-      }
-
-     </p>
-
-
-     <button
-      class="editBtn"
-      onclick="editProduct(${p.id})"
-     >
-      ✏️ Edit
-     </button>
-
-
-     <button
-      class="stockBtn"
-      onclick="toggleStock(
-       ${p.id},
-       ${p.stock !== false}
-      )"
-     >
-
-      ${
-       p.stock !== false
-
-       ?
-
-       "📦 Mark Out of Stock"
-
-       :
-
-       "✅ Mark Available"
-      }
-
-     </button>
-
-
-     <button
-      class="deleteBtn"
-      onclick="deleteProduct(${p.id})"
-     >
-      🗑️ Delete
-     </button>
-
-    </div>
-
-   `;
-
-  }
- ).join("");
-
-}
-
-
-/* ==================================================
-   EDIT PRODUCT
-   ================================================== */
-
-async function editProduct(id){
-
- const token =
- localStorage.getItem("ak_token");
-
-
- try{
-
-  const r =
-  await fetch(
-   SUPABASE_URL +
-   "/rest/v1/products?id=eq." +
-   id +
-   "&select=*",
-   {
-    headers:{
-     "apikey":SUPABASE_KEY,
-
-     "Authorization":
-      "Bearer " + token
+      return;
     }
-   }
-  );
 
 
-  const data =
-  await r.json();
+    message.innerHTML =
+      "✅ Product saved successfully.";
 
 
-  if(!r.ok || !data.length){
+    resetForm();
 
-   alert("Product load nahi hua.");
+    loadProducts();
 
-   return;
+
+  }catch(error){
+
+    console.error(error);
+
+    message.innerHTML =
+      "❌ Connection error.";
+
   }
 
-
-  const p=data[0];
-
-  editingId=id;
+});
 
 
-  document
-  .getElementById("formTitle")
-  .textContent =
-  "✏️ Edit Product";
+// ======================================
+// EDIT PRODUCT
+// ======================================
+
+function editProduct(id){
+
+  const p =
+    currentProducts.find(
+      x => x.id === id
+    );
 
 
-  document
-  .getElementById("productName")
-  .value =
-  p.name || "";
+  if(!p) return;
 
 
-  document
-  .getElementById("category")
-  .value =
-  p.cat || "Plants";
+  document.getElementById("productId")
+    .value = p.id;
 
 
-  document
-  .getElementById("price")
-  .value =
-  p.price || "";
+  document.getElementById("productName")
+    .value = p.name || "";
 
 
-  document
-  .getElementById("oldPrice")
-  .value =
-  p.old_price || "";
+  document.getElementById("productPrice")
+    .value = p.price || 0;
 
 
-  document
-  .getElementById("description")
-  .value =
-  p.description || "";
+  document.getElementById("oldPrice")
+    .value = p.old_price || 0;
 
 
-  selectedColors =
-  Array.isArray(p.colors)
-  ?
-  [...p.colors].slice(0,10)
-  :
-  [];
+  document.getElementById("productCat")
+    .value = p.cat || "Plants";
 
 
-  renderColors();
+  document.getElementById("imageUrl")
+    .value = p.image_url || "";
 
 
-  existingImages =
-  Array.isArray(p.images)
-  ?
-  [...p.images].slice(0,10)
-  :
-  (
-   p.image_url
-   ?
-   [p.image_url]
-   :
-   []
-  );
+  document.getElementById("description")
+    .value = p.description || "";
 
 
-  selectedFiles=[];
-
-  document
-  .getElementById("productPhoto")
-  .value="";
-
-
-  renderExistingPhotos();
+  document.getElementById("colors")
+    .value =
+      Array.isArray(p.colors)
+      ? p.colors.join(", ")
+      : (p.colors || "");
 
 
-  document
-  .getElementById("saveBtn")
-  .textContent =
-  "💾 Update Product";
+  document.getElementById("stock")
+    .checked = p.stock !== false;
 
 
-  document
-  .getElementById("cancelBtn")
-  .classList
-  .remove("hidden");
+  document.getElementById("formTitle")
+    .textContent =
+      "✏️ Edit Product";
+
+
+  document.getElementById("cancelBtn")
+    .classList.remove("hidden");
+
+
+  updatePreview();
 
 
   window.scrollTo({
-   top:0,
-   behavior:"smooth"
+    top:0,
+    behavior:"smooth"
   });
 
-
- }catch(error){
-
-  alert(
-   "Error: " +
-   error.message
-  );
-
- }
-
 }
 
 
-/* ==================================================
-   EXISTING PHOTO DISPLAY
-   ================================================== */
-
-function renderExistingPhotos(){
-
- const box =
- document.getElementById("photosPreview");
-
- box.innerHTML="";
-
-
- existingImages.forEach(
-  (url,index)=>{
-
-   box.innerHTML += `
-
-    <div class="photoBox">
-
-     <img src="${escapeHTML(url)}">
-
-     <button
-      type="button"
-      class="removePhoto"
-      onclick="removeExistingPhoto(${index})"
-     >
-      ×
-     </button>
-
-    </div>
-
-   `;
-
-  }
- );
-
-}
-
-
-/* ==================================================
-   REMOVE EXISTING PHOTO
-   ================================================== */
-
-function removeExistingPhoto(index){
-
- existingImages.splice(index,1);
-
- renderExistingPhotos();
-
-}
-
-
-/* ==================================================
-   STOCK
-   ================================================== */
-
-async function toggleStock(
- id,
- currentStock
-){
-
- const token =
- localStorage.getItem("ak_token");
-
-
- const r =
- await fetch(
-  SUPABASE_URL +
-  "/rest/v1/products?id=eq." +
-  id,
-  {
-   method:"PATCH",
-
-   headers:{
-    "apikey":SUPABASE_KEY,
-
-    "Authorization":
-     "Bearer " + token,
-
-    "Content-Type":
-     "application/json",
-
-    "Prefer":
-     "return=minimal"
-   },
-
-   body:
-   JSON.stringify({
-    stock:!currentStock
-   })
-  }
- );
-
-
- if(r.ok){
-
-  loadProducts();
-
- }else{
-
-  const error =
-  await r.text();
-
-  alert(
-   "Stock update nahi hua:\n" +
-   error
-  );
-
- }
-
-}
-
-
-/* ==================================================
-   DELETE PRODUCT
-   ================================================== */
+// ======================================
+// DELETE
+// ======================================
 
 async function deleteProduct(id){
 
- if(
-  !confirm(
-   "Kya aap ye product delete karna chahte ho?"
-  )
- ){
-
-  return;
- }
+  const p =
+    currentProducts.find(
+      x => x.id === id
+    );
 
 
- const token =
- localStorage.getItem("ak_token");
+  if(!p) return;
 
 
- const r =
- await fetch(
-  SUPABASE_URL +
-  "/rest/v1/products?id=eq." +
-  id,
-  {
-   method:"DELETE",
-
-   headers:{
-    "apikey":SUPABASE_KEY,
-
-    "Authorization":
-     "Bearer " + token,
-
-    "Prefer":
-     "return=minimal"
-   }
-  }
- );
+  const ok =
+    confirm(
+      `Delete "${p.name}"?`
+    );
 
 
- if(r.ok){
-
-  alert("Product deleted successfully.");
-
-  loadProducts();
-
- }else{
-
-  const error =
-  await r.text();
-
-  alert(
-   "Delete failed:\n" +
-   error
-  );
-
- }
-
-}
+  if(!ok) return;
 
 
-/* ==================================================
-   CHARGES
-   ================================================== */
+  try{
 
-async function loadCharges(){
+    const response =
+      await fetch(
+        SUPABASE_URL +
+        "/rest/v1/products?id=eq." +
+        encodeURIComponent(id),
+        {
+          method:"DELETE",
+          headers:{
+            ...headers,
+            "Prefer":"return=minimal"
+          }
+        }
+      );
 
- const token =
- localStorage.getItem("ak_token");
 
- if(!token) return;
+    if(!response.ok){
 
+      const error =
+        await response.json();
 
- try{
+      console.error(error);
 
-  const r =
-  await fetch(
-   SUPABASE_URL +
-   "/rest/v1/shop_settings?id=eq.1&select=*",
-   {
-    headers:{
-     "apikey":SUPABASE_KEY,
+      alert(
+        "Delete failed. Supabase RLS policy check karo."
+      );
 
-     "Authorization":
-      "Bearer " + token
+      return;
     }
-   }
-  );
 
 
-  const data =
-  await r.json();
+    alert(
+      "Product deleted."
+    );
 
 
-  if(!r.ok || !data.length){
+    loadProducts();
 
-   return;
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Connection error."
+    );
+
   }
 
-
-  const settings=data[0];
-
-
-  document
-  .getElementById("deliveryCharge")
-  .value =
-  settings.delivery_charge || 0;
-
-
-  document
-  .getElementById("potFixingCharge")
-  .value =
-  settings.pot_fixing_charge || 0;
-
-
-  document
-  .getElementById("plantFixingCharge")
-  .value =
-  settings.plant_fixing_charge || 0;
-
-
- }catch(error){
-
-  console.error(error);
-
- }
-
 }
 
 
-/* ==================================================
-   SAVE CHARGES
-   ================================================== */
+// ======================================
+// IMAGE PREVIEW
+// ======================================
 
-async function saveCharges(){
-
- const token =
- localStorage.getItem("ak_token");
-
- const msg =
- document.getElementById("chargeMsg");
-
-
- const delivery =
- Number(
-  document
-  .getElementById("deliveryCharge")
-  .value
- ) || 0;
+document
+.getElementById("imageUrl")
+.addEventListener(
+  "input",
+  updatePreview
+);
 
 
- const pot =
- Number(
-  document
-  .getElementById("potFixingCharge")
-  .value
- ) || 0;
+function updatePreview(){
+
+  const url =
+    document.getElementById("imageUrl")
+      .value.trim();
 
 
- const plant =
- Number(
-  document
-  .getElementById("plantFixingCharge")
-  .value
- ) || 0;
+  const preview =
+    document.getElementById("preview");
 
 
- msg.textContent =
- "⏳ Saving...";
+  if(url){
 
+    preview.src = url;
 
- try{
+    preview.classList.remove(
+      "hidden"
+    );
 
-  const r =
-  await fetch(
-   SUPABASE_URL +
-   "/rest/v1/shop_settings?id=eq.1",
-   {
-    method:"PATCH",
+  }else{
 
-    headers:{
-     "apikey":SUPABASE_KEY,
+    preview.src = "";
 
-     "Authorization":
-      "Bearer " + token,
+    preview.classList.add(
+      "hidden"
+    );
 
-     "Content-Type":
-      "application/json",
-
-     "Prefer":
-      "return=minimal"
-    },
-
-    body:
-    JSON.stringify({
-
-     delivery_charge:delivery,
-
-     pot_fixing_charge:pot,
-
-     plant_fixing_charge:plant,
-
-     updated_at:
-      new Date().toISOString()
-
-    })
-   }
-  );
-
-
-  if(!r.ok){
-
-   const error =
-   await r.text();
-
-   msg.innerHTML =
-   `<span class="error">
-   ${escapeHTML(error)}
-   </span>`;
-
-   return;
   }
 
-
-  msg.innerHTML =
-  `<span class="success">
-  ✅ Charges saved successfully!
-  </span>`;
-
-
- }catch(error){
-
-  msg.innerHTML =
-  `<span class="error">
-  ${error.message}
-  </span>`;
-
- }
-
 }
 
 
-/* ==================================================
-   CLEAR FORM
-   ================================================== */
+// ======================================
+// RESET FORM
+// ======================================
 
-function clearForm(){
+function resetForm(){
 
- editingId=null;
-
- selectedColors=[];
-
- selectedFiles=[];
-
- existingImages=[];
+  document
+    .getElementById("productForm")
+    .reset();
 
 
- document
- .getElementById("productName")
- .value="";
+  document.getElementById("productId")
+    .value = "";
 
 
- document
- .getElementById("price")
- .value="";
+  document.getElementById("stock")
+    .checked = true;
 
 
- document
- .getElementById("oldPrice")
- .value="";
+  document.getElementById("formTitle")
+    .textContent =
+      "➕ Add New Product";
 
 
- document
- .getElementById("description")
- .value="";
+  document.getElementById("cancelBtn")
+    .classList.add("hidden");
 
 
- document
- .getElementById("colorInput")
- .value="";
-
-
- document
- .getElementById("productPhoto")
- .value="";
-
-
- document
- .getElementById("photosPreview")
- .innerHTML="";
-
-
- renderColors();
-
-
- document
- .getElementById("formTitle")
- .textContent =
- "➕ Add Product";
-
-
- document
- .getElementById("saveBtn")
- .textContent =
- "➕ Add Product";
-
-
- document
- .getElementById("cancelBtn")
- .classList
- .add("hidden");
+  document.getElementById("preview")
+    .classList.add("hidden");
 
 }
 
-
-/* ==================================================
-   CANCEL EDIT
-   ================================================== */
 
 function cancelEdit(){
 
- clearForm();
+  resetForm();
 
 }
 
 
-/* ==================================================
-   ESCAPE HTML
-   ================================================== */
+// ======================================
+// ESCAPE HTML
+// ======================================
 
 function escapeHTML(value){
 
- return String(value ?? "")
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
-/* ==================================================
-   LOGOUT
-   ================================================== */
+// ======================================
+// START
+// ======================================
 
-function logout(){
-
- localStorage.removeItem(
-  "ak_token"
- );
-
- location.reload();
-
-}
-
-
-/* ==================================================
-   AUTO LOGIN
-   ================================================== */
-
-if(
- localStorage.getItem("ak_token")
-){
-
- document
- .getElementById("loginBox")
- .classList
- .add("hidden");
-
-
- document
- .getElementById("adminBox")
- .classList
- .remove("hidden");
-
-
- loadProducts();
-
- loadCharges();
-
-}
+checkLogin();
 
 </script>
 
