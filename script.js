@@ -1,6 +1,6 @@
-// ========================================
-// A.K NURSERY - WEBSITE SCRIPT
-// ========================================
+// ==========================================
+// A.K NURSERY - FINAL SCRIPT
+// ==========================================
 
 const WHATSAPP_NUMBER = "919555322038";
 
@@ -10,13 +10,18 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
 
+
+// Delivery / fixing charges automatic nahi hain
+const DELIVERY_CHARGE = 0;
+const FIXING_CHARGE = 0;
+
 let products = [];
 let cart = [];
 
 
-// ========================================
+// ==========================================
 // LOAD PRODUCTS
-// ========================================
+// ==========================================
 
 async function loadProducts() {
 
@@ -24,47 +29,55 @@ async function loadProducts() {
 
     try {
 
-        grid.innerHTML = "<p>Loading products...</p>";
+        if (grid) {
+            grid.innerHTML = "<p>Loading products...</p>";
+        }
 
-        const response = await fetch(
-            SUPABASE_URL + "/rest/v1/products?select=*&order=id.desc",
-            {
-                method: "GET",
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": "Bearer " + SUPABASE_KEY,
-                    "Content-Type": "application/json"
-                }
+        const url =
+            SUPABASE_URL +
+            "/rest/v1/products" +
+            "?select=id,name,image_url,stock,cat,description,old_price,colors,images" +
+            "&order=id.desc";
+
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "apikey": SUPABASE_KEY,
+                "Authorization": "Bearer " + SUPABASE_KEY
             }
-        );
+        });
+
+        const text = await response.text();
 
         if (!response.ok) {
 
-            const errorText = await response.text();
+            console.error("Supabase Error:", text);
 
-            console.error("Supabase Error:", errorText);
-
-            grid.innerHTML =
-                "<p>Products load nahi ho rahe. Supabase connection check karein.</p>";
+            if (grid) {
+                grid.innerHTML =
+                    "<p>Products load nahi ho rahe.</p>";
+            }
 
             return;
         }
 
-        const data = await response.json();
+        const data = JSON.parse(text);
 
-        console.log("Supabase Products:", data);
+        console.log("Products received:", data);
 
         products = data.map(function (p) {
 
             return {
                 id: p.id,
                 name: p.name || "Product",
-                cat: p.cat || "Plants",
-                price: Number(p.price) || 0,
-                old: Number(p.old_price) || 0,
-                stock: p.stock !== false,
                 image: p.image_url || "",
+                stock: p.stock !== false,
+                cat: p.cat || "Plants",
                 description: p.description || "",
+                old: Number(p.old_price) || 0,
+                colors: p.colors || "",
+                images: p.images || [],
+                price: Number(p.price) || 0,
                 icon: "🌱"
             };
 
@@ -74,17 +87,19 @@ async function loadProducts() {
 
     } catch (error) {
 
-        console.error("Connection Error:", error);
+        console.error("Website Error:", error);
 
-        grid.innerHTML =
-            "<p>Products load karne me problem aa rahi hai.</p>";
+        if (grid) {
+            grid.innerHTML =
+                "<p>Products load karne me problem aa rahi hai.</p>";
+        }
     }
 }
 
 
-// ========================================
+// ==========================================
 // SHOW PRODUCTS
-// ========================================
+// ==========================================
 
 function renderProducts(list = products) {
 
@@ -102,32 +117,35 @@ function renderProducts(list = products) {
 
     grid.innerHTML = list.map(function (p) {
 
-        const imageHTML = p.image
-            ? `
-                <img
-                    src="${p.image}"
-                    alt="${p.name}"
-                    loading="lazy"
-                >
-              `
-            : `
-                <div style="
-                    font-size:75px;
-                    display:grid;
-                    place-items:center;
-                    width:100%;
-                    height:100%;
-                ">
-                    ${p.icon}
-                </div>
-              `;
-
         return `
-
         <article class="card">
 
             <div class="pic">
-                ${imageHTML}
+
+                ${
+                    p.image
+                    ?
+                    `
+                    <img
+                        src="${p.image}"
+                        alt="${p.name}"
+                        loading="lazy"
+                    >
+                    `
+                    :
+                    `
+                    <div style="
+                        font-size:75px;
+                        width:100%;
+                        height:100%;
+                        display:grid;
+                        place-items:center;
+                    ">
+                        ${p.icon}
+                    </div>
+                    `
+                }
+
             </div>
 
             <div class="cardBody">
@@ -142,20 +160,30 @@ function renderProducts(list = products) {
 
                 ${
                     p.description
-                    ? `<p>${p.description}</p>`
-                    : ""
+                    ?
+                    `<p>${p.description}</p>`
+                    :
+                    ""
+                }
+
+                ${
+                    p.colors
+                    ?
+                    `<p><b>Color:</b> ${p.colors}</p>`
+                    :
+                    ""
                 }
 
                 <div class="price">
-
                     ₹${p.price}
 
                     ${
                         p.old > 0
-                        ? `<span class="old">₹${p.old}</span>`
-                        : ""
+                        ?
+                        `<span class="old">₹${p.old}</span>`
+                        :
+                        ""
                     }
-
                 </div>
 
                 ${
@@ -182,16 +210,15 @@ function renderProducts(list = products) {
             </div>
 
         </article>
-
         `;
 
     }).join("");
 }
 
 
-// ========================================
+// ==========================================
 // CATEGORY FILTER
-// ========================================
+// ==========================================
 
 function filterCat(cat) {
 
@@ -212,7 +239,6 @@ function filterCat(cat) {
                 return p.cat === cat;
             })
         );
-
     }
 
     const section = document.getElementById("products");
@@ -222,14 +248,13 @@ function filterCat(cat) {
         section.scrollIntoView({
             behavior: "smooth"
         });
-
     }
 }
 
 
-// ========================================
+// ==========================================
 // ADD TO CART
-// ========================================
+// ==========================================
 
 function addToCart(id) {
 
@@ -260,7 +285,6 @@ function addToCart(id) {
             ...product,
             qty: 1
         });
-
     }
 
     updateCart();
@@ -269,24 +293,29 @@ function addToCart(id) {
 }
 
 
-// ========================================
+// ==========================================
 // UPDATE CART
-// ========================================
+// ==========================================
 
 function updateCart() {
 
-    const count = document.getElementById("cartCount");
-    const items = document.getElementById("cartItems");
-    const total = document.getElementById("cartTotal");
+    const count =
+        document.getElementById("cartCount");
 
-    const cartCount = cart.reduce(
+    const items =
+        document.getElementById("cartItems");
+
+    const total =
+        document.getElementById("cartTotal");
+
+    const quantity = cart.reduce(
         function (sum, p) {
             return sum + p.qty;
         },
         0
     );
 
-    const cartTotal = cart.reduce(
+    const productTotal = cart.reduce(
         function (sum, p) {
             return sum + (p.price * p.qty);
         },
@@ -294,11 +323,11 @@ function updateCart() {
     );
 
     if (count) {
-        count.textContent = cartCount;
+        count.textContent = quantity;
     }
 
     if (total) {
-        total.textContent = cartTotal;
+        total.textContent = productTotal;
     }
 
     if (items) {
@@ -314,7 +343,6 @@ function updateCart() {
         items.innerHTML = cart.map(function (p) {
 
             return `
-
             <div class="cartRow">
 
                 <div style="
@@ -326,7 +354,8 @@ function updateCart() {
                     ${
                         p.image
                         ?
-                        `<img
+                        `
+                        <img
                             src="${p.image}"
                             alt="${p.name}"
                             style="
@@ -335,7 +364,8 @@ function updateCart() {
                                 object-fit:cover;
                                 border-radius:8px;
                             "
-                        >`
+                        >
+                        `
                         :
                         `<span style="font-size:30px;">🌱</span>`
                     }
@@ -351,7 +381,6 @@ function updateCart() {
                 </b>
 
             </div>
-
             `;
 
         }).join("");
@@ -359,53 +388,54 @@ function updateCart() {
 }
 
 
-// ========================================
+// ==========================================
 // OPEN CART
-// ========================================
+// ==========================================
 
 function openCart() {
 
-    const modal = document.getElementById("cartModal");
+    const modal =
+        document.getElementById("cartModal");
 
     if (modal) {
-
         modal.classList.remove("hidden");
-
     }
 
     updateCart();
 }
 
 
-// ========================================
+// ==========================================
 // CLOSE CART
-// ========================================
+// ==========================================
 
 function closeCart() {
 
-    const modal = document.getElementById("cartModal");
+    const modal =
+        document.getElementById("cartModal");
 
     if (modal) {
-
         modal.classList.add("hidden");
-
     }
 }
 
 
-// ========================================
+// ==========================================
 // WHATSAPP ORDER
-// ========================================
+// ==========================================
 
 function orderText(extra = "") {
 
     const lines = cart.map(function (p) {
 
-        return `${p.name} x ${p.qty} = ₹${p.price * p.qty}`;
+        return (
+            `${p.name} x ${p.qty} = ₹${p.price * p.qty}` +
+            (p.image ? `\nPhoto: ${p.image}` : "")
+        );
 
-    }).join("\n");
+    }).join("\n\n");
 
-    const total = cart.reduce(
+    const productTotal = cart.reduce(
         function (sum, p) {
             return sum + (p.price * p.qty);
         },
@@ -414,24 +444,27 @@ function orderText(extra = "") {
 
     const message =
 
-`Namaste A.K Nursery,
+`🌱 A.K NURSERY ORDER
 
 ${lines || "Website enquiry"}
 
-Product Total: ₹${total}
+Product Total: ₹${productTotal}
 
-Delivery charges extra.
-Plant & Pot fixing charge extra.
+🚚 Delivery charges extra.
+🪴 Plant & Pot fixing charge extra.
 
-${extra}`;
+${extra}
+
+Thank you.
+A.K Nursery & Wall Compound`;
 
     return encodeURIComponent(message);
 }
 
 
-// ========================================
+// ==========================================
 // CHECKOUT
-// ========================================
+// ==========================================
 
 function checkout() {
 
@@ -449,9 +482,9 @@ function checkout() {
 }
 
 
-// ========================================
+// ==========================================
 // CONTACT FORM
-// ========================================
+// ==========================================
 
 function sendOrder(e) {
 
@@ -468,7 +501,7 @@ function sendOrder(e) {
 
     const extra =
 
-`Name: ${name}
+`Customer Name: ${name}
 
 Mobile: ${phone}
 
@@ -481,16 +514,21 @@ Address: ${address}`;
 }
 
 
-// ========================================
-// START
-// ========================================
+// ==========================================
+// START WEBSITE
+// ==========================================
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
 
-    loadProducts();
+        loadProducts();
 
-    updateCart();
+        updateCart();
 
-});
+    }
+);
 
-console.log("A.K Nursery script loaded successfully");
+console.log(
+    "A.K Nursery website loaded successfully"
+);
