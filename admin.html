@@ -1064,12 +1064,19 @@ async function saveProduct(){
 
  }catch(error){
 
-  console.error(error);
+  console.error("SAVE PRODUCT ERROR:", error);
 
   showMessage(
-   "Internet/Supabase connection error.",
-   "error"
+    "ERROR: " + (error.message || error),
+    "error"
   );
+
+  alert(
+    "SAVE ERROR:\n\n" +
+    (error.message || error)
+  );
+
+}
 
  }finally{
 
