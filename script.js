@@ -1,4 +1,6 @@
-===== A.K NURSERY WEBSITE SETTINGS ======
+// ========================================
+// A.K NURSERY - WEBSITE SCRIPT
+// ========================================
 
 const WHATSAPP_NUMBER = "919555322038";
 
@@ -12,484 +14,483 @@ let products = [];
 let cart = [];
 
 
-// ================================
-// LOAD PRODUCTS FROM SUPABASE
-// ================================
+// ========================================
+// LOAD PRODUCTS
+// ========================================
 
-async function loadProducts(){
+async function loadProducts() {
 
- try{
+    const grid = document.getElementById("productGrid");
 
-  const r = await fetch(
-   SUPABASE_URL +
-   "/rest/v1/products?select=*&order=id.desc",
-   {
-    headers:{
-     "apikey":SUPABASE_KEY
+    try {
+
+        grid.innerHTML = "<p>Loading products...</p>";
+
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/products?select=*&order=id.desc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        if (!response.ok) {
+
+            const errorText = await response.text();
+
+            console.error("Supabase Error:", errorText);
+
+            grid.innerHTML =
+                "<p>Products load nahi ho rahe. Supabase connection check karein.</p>";
+
+            return;
+        }
+
+        const data = await response.json();
+
+        console.log("Supabase Products:", data);
+
+        products = data.map(function (p) {
+
+            return {
+                id: p.id,
+                name: p.name || "Product",
+                cat: p.cat || "Plants",
+                price: Number(p.price) || 0,
+                old: Number(p.old_price) || 0,
+                stock: p.stock !== false,
+                image: p.image_url || "",
+                description: p.description || "",
+                icon: "🌱"
+            };
+
+        });
+
+        renderProducts();
+
+    } catch (error) {
+
+        console.error("Connection Error:", error);
+
+        grid.innerHTML =
+            "<p>Products load karne me problem aa rahi hai.</p>";
     }
-   }
-  );
-
-  const data = await r.json();
-
-  if(!r.ok){
-
-   console.error("Supabase Error:",data);
-
-   document.getElementById("productGrid").innerHTML =
-   "<p>Products load nahi ho rahe.</p>";
-
-   return;
-  }
-
-  products = data.map(p => ({
-
-   id:p.id,
-
-   name:p.name || "Product",
-
-   cat:p.cat || "Plants",
-
-   price:Number(p.price) || 0,
-
-   old:Number(p.old_price) || 0,
-
-   stock:p.stock !== false,
-
-   image:p.image_url || "",
-
-   icon:"🌱",
-
-   description:p.description || ""
-
-  }));
-
-  renderProducts();
-
- }catch(error){
-
-  console.error("Product loading error:",error);
-
- }
-
 }
 
 
-// ================================
+// ========================================
 // SHOW PRODUCTS
-// ================================
+// ========================================
 
-function renderProducts(list=products){
+function renderProducts(list = products) {
 
- const grid =
- document.getElementById("productGrid");
+    const grid = document.getElementById("productGrid");
 
- if(!grid) return;
+    if (!grid) return;
 
- if(!list.length){
+    if (!list.length) {
 
-  grid.innerHTML =
-  "<p>No products available.</p>";
+        grid.innerHTML =
+            "<p>No products available.</p>";
 
-  return;
- }
-
- grid.innerHTML = list.map(p=>`
-
- <article class="card">
-
-  <div class="pic">
-
-   ${
-    p.image
-    ?
-    `<img
-      src="${p.image}"
-      alt="${p.name}"
-      style="width:100%;height:100%;object-fit:cover;border-radius:10px;"
-    >`
-    :
-    p.icon
-   }
-
-  </div>
-
-  <div class="cardBody">
-
-   <span class="tag">
-    ${p.cat}
-   </span>
-
-   <h3>
-    ${p.name}
-   </h3>
-
-   ${
-    p.description
-    ?
-    `<p>${p.description}</p>`
-    :
-    ""
-   }
-
-   <div class="price">
-
-    ₹${p.price}
-
-    ${
-     p.old > 0
-     ?
-     `<span class="old">₹${p.old}</span>`
-     :
-     ""
+        return;
     }
 
-   </div>
+    grid.innerHTML = list.map(function (p) {
 
-   ${
-    p.stock
-    ?
+        const imageHTML = p.image
+            ? `
+                <img
+                    src="${p.image}"
+                    alt="${p.name}"
+                    loading="lazy"
+                >
+              `
+            : `
+                <div style="
+                    font-size:75px;
+                    display:grid;
+                    place-items:center;
+                    width:100%;
+                    height:100%;
+                ">
+                    ${p.icon}
+                </div>
+              `;
 
-    `<button
-      class="btn"
-      onclick="addToCart(${p.id})">
-      🛒 Add to Cart
-    </button>`
+        return `
 
-    :
+        <article class="card">
 
-    `<button
-      class="btn"
-      disabled
-      style="background:#999;cursor:not-allowed;">
-      ❌ Out of Stock
-    </button>`
+            <div class="pic">
+                ${imageHTML}
+            </div>
 
-   }
+            <div class="cardBody">
 
-  </div>
+                <span class="tag">
+                    ${p.cat}
+                </span>
 
- </article>
+                <h3>
+                    ${p.name}
+                </h3>
 
- `).join("");
+                ${
+                    p.description
+                    ? `<p>${p.description}</p>`
+                    : ""
+                }
 
+                <div class="price">
+
+                    ₹${p.price}
+
+                    ${
+                        p.old > 0
+                        ? `<span class="old">₹${p.old}</span>`
+                        : ""
+                    }
+
+                </div>
+
+                ${
+                    p.stock
+                    ?
+                    `
+                    <button
+                        class="btn"
+                        onclick="addToCart(${p.id})">
+                        🛒 Add to Cart
+                    </button>
+                    `
+                    :
+                    `
+                    <button
+                        class="btn"
+                        disabled
+                        style="background:#999;">
+                        ❌ Out of Stock
+                    </button>
+                    `
+                }
+
+            </div>
+
+        </article>
+
+        `;
+
+    }).join("");
 }
 
 
-// ================================
+// ========================================
 // CATEGORY FILTER
-// ================================
+// ========================================
 
-function filterCat(cat){
+function filterCat(cat) {
 
- const filter =
- document.getElementById("filter");
+    const filter = document.getElementById("filter");
 
- if(filter){
+    if (filter) {
+        filter.value = cat;
+    }
 
-  filter.value = cat;
+    if (cat === "All") {
 
- }
+        renderProducts(products);
 
- if(cat === "All"){
+    } else {
 
-  renderProducts(products);
+        renderProducts(
+            products.filter(function (p) {
+                return p.cat === cat;
+            })
+        );
 
- }else{
+    }
 
-  renderProducts(
-   products.filter(p => p.cat === cat)
-  );
+    const section = document.getElementById("products");
 
- }
+    if (section) {
 
- const section =
- document.getElementById("products");
+        section.scrollIntoView({
+            behavior: "smooth"
+        });
 
- if(section){
-
-  section.scrollIntoView({
-   behavior:"smooth"
-  });
-
- }
-
+    }
 }
 
 
-// ================================
+// ========================================
 // ADD TO CART
-// ================================
+// ========================================
 
-function addToCart(id){
+function addToCart(id) {
 
- const p =
- products.find(x => x.id === id);
+    const product = products.find(function (p) {
+        return p.id === id;
+    });
 
- if(!p) return;
+    if (!product) return;
 
- // Stock check
+    if (!product.stock) {
 
- if(!p.stock){
+        alert("Ye product Out of Stock hai.");
 
-  alert("Ye product abhi Out of Stock hai.");
+        return;
+    }
 
-  return;
+    const existing = cart.find(function (p) {
+        return p.id === id;
+    });
 
- }
+    if (existing) {
 
- const found =
- cart.find(x => x.id === id);
+        existing.qty++;
 
- if(found){
+    } else {
 
-  found.qty++;
+        cart.push({
+            ...product,
+            qty: 1
+        });
 
- }else{
+    }
 
-  cart.push({
+    updateCart();
 
-   ...p,
-
-   qty:1
-
-  });
-
- }
-
- updateCart();
-
- openCart();
-
+    openCart();
 }
 
 
-// ================================
+// ========================================
 // UPDATE CART
-// ================================
+// ========================================
 
-function updateCart(){
+function updateCart() {
 
- const count =
- document.getElementById("cartCount");
+    const count = document.getElementById("cartCount");
+    const items = document.getElementById("cartItems");
+    const total = document.getElementById("cartTotal");
 
- const items =
- document.getElementById("cartItems");
+    const cartCount = cart.reduce(
+        function (sum, p) {
+            return sum + p.qty;
+        },
+        0
+    );
 
- const total =
- document.getElementById("cartTotal");
+    const cartTotal = cart.reduce(
+        function (sum, p) {
+            return sum + (p.price * p.qty);
+        },
+        0
+    );
 
+    if (count) {
+        count.textContent = cartCount;
+    }
 
- // Cart count
+    if (total) {
+        total.textContent = cartTotal;
+    }
 
- if(count){
+    if (items) {
 
-  count.textContent =
-  cart.reduce(
-   (sum,p)=>sum+p.qty,
-   0
-  );
+        if (!cart.length) {
 
- }
+            items.innerHTML =
+                "<p>Your cart is empty.</p>";
 
+            return;
+        }
 
- // Cart items
+        items.innerHTML = cart.map(function (p) {
 
- if(items){
+            return `
 
-  if(!cart.length){
+            <div class="cartRow">
 
-   items.innerHTML =
-   "<p>Your cart is empty.</p>";
+                <div style="
+                    display:flex;
+                    align-items:center;
+                    gap:10px;
+                ">
 
-  }else{
+                    ${
+                        p.image
+                        ?
+                        `<img
+                            src="${p.image}"
+                            alt="${p.name}"
+                            style="
+                                width:55px;
+                                height:55px;
+                                object-fit:cover;
+                                border-radius:8px;
+                            "
+                        >`
+                        :
+                        `<span style="font-size:30px;">🌱</span>`
+                    }
 
-   items.innerHTML = cart.map(p=>`
+                    <span>
+                        ${p.name} × ${p.qty}
+                    </span>
 
-    <div class="cartRow">
+                </div>
 
-     <span>
+                <b>
+                    ₹${p.price * p.qty}
+                </b>
 
-      ${p.icon}
-      ${p.name}
-      × ${p.qty}
+            </div>
 
-     </span>
+            `;
 
-     <b>
-
-      ₹${p.price * p.qty}
-
-     </b>
-
-    </div>
-
-   `).join("");
-
-  }
-
- }
-
-
- // Total
-
- if(total){
-
-  total.textContent =
-  cart.reduce(
-   (sum,p)=>sum + p.price*p.qty,
-   0
-  );
-
- }
-
+        }).join("");
+    }
 }
 
 
-// ================================
+// ========================================
 // OPEN CART
-// ================================
+// ========================================
 
-function openCart(){
+function openCart() {
 
- const modal =
- document.getElementById("cartModal");
+    const modal = document.getElementById("cartModal");
 
- if(modal){
+    if (modal) {
 
-  modal.classList.remove("hidden");
+        modal.classList.remove("hidden");
 
- }
+    }
 
- updateCart();
-
+    updateCart();
 }
 
 
-// ================================
+// ========================================
 // CLOSE CART
-// ================================
+// ========================================
 
-function closeCart(){
+function closeCart() {
 
- const modal =
- document.getElementById("cartModal");
+    const modal = document.getElementById("cartModal");
 
- if(modal){
+    if (modal) {
 
-  modal.classList.add("hidden");
+        modal.classList.add("hidden");
 
- }
-
+    }
 }
 
 
-// ================================
-// WHATSAPP ORDER TEXT
-// ================================
+// ========================================
+// WHATSAPP ORDER
+// ========================================
 
-function orderText(extra=""){
+function orderText(extra = "") {
 
- const lines =
- cart.map(p =>
+    const lines = cart.map(function (p) {
 
-  `${p.name} x ${p.qty} = ₹${p.price*p.qty}`
+        return `${p.name} x ${p.qty} = ₹${p.price * p.qty}`;
 
- ).join("\n");
+    }).join("\n");
 
+    const total = cart.reduce(
+        function (sum, p) {
+            return sum + (p.price * p.qty);
+        },
+        0
+    );
 
- const total =
- cart.reduce(
-  (sum,p)=>sum+p.price*p.qty,
-  0
- );
+    const message =
 
-
- const message =
- `Namaste A.K Nursery,
+`Namaste A.K Nursery,
 
 ${lines || "Website enquiry"}
 
-Total: ₹${total}
+Product Total: ₹${total}
+
+Delivery charges extra.
+Plant & Pot fixing charge extra.
 
 ${extra}`;
 
-
- return encodeURIComponent(message);
-
+    return encodeURIComponent(message);
 }
 
 
-// ================================
+// ========================================
 // CHECKOUT
-// ================================
+// ========================================
 
-function checkout(){
+function checkout() {
 
- if(!cart.length){
+    if (!cart.length) {
 
-  alert("Cart is empty.");
+        alert("Cart is empty.");
 
-  return;
+        return;
+    }
 
- }
-
- window.open(
-
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText()}`,
-
-  "_blank"
-
- );
-
+    window.open(
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText()}`,
+        "_blank"
+    );
 }
 
 
-// ================================
-// CONTACT FORM ORDER
-// ================================
+// ========================================
+// CONTACT FORM
+// ========================================
 
-function sendOrder(e){
+function sendOrder(e) {
 
- e.preventDefault();
+    e.preventDefault();
 
+    const name =
+        document.getElementById("name").value.trim();
 
- const name =
- document.getElementById("name").value.trim();
+    const phone =
+        document.getElementById("phone").value.trim();
 
+    const address =
+        document.getElementById("address").value.trim();
 
- const phone =
- document.getElementById("phone").value.trim();
+    const extra =
 
-
- const address =
- document.getElementById("address").value.trim();
-
-
- const extra =
-
- `Name: ${name}
+`Name: ${name}
 
 Mobile: ${phone}
 
 Address: ${address}`;
 
-
- window.open(
-
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText(extra)}`,
-
-  "_blank"
-
- );
-
+    window.open(
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText(extra)}`,
+        "_blank"
+    );
 }
 
 
-// ================================
-// START WEBSITE
-// ================================
+// ========================================
+// START
+// ========================================
 
-loadProducts();
-console.log("A.K Nursery script loaded");
-updateCart();
+document.addEventListener("DOMContentLoaded", function () {
+
+    loadProducts();
+
+    updateCart();
+
+});
+
+console.log("A.K Nursery script loaded successfully");
