@@ -1,823 +1,690 @@
-// ========================================
-// A.K NURSERY WEBSITE
-// FINAL SCRIPT.JS
-// ========================================
+/* ========================================
+   A.K NURSERY WEBSITE
+   FINAL STYLES.CSS
+======================================== */
 
-const WHATSAPP_NUMBER = "919555322038";
+*{
+  box-sizing:border-box;
+}
 
-const SUPABASE_URL =
-"https://mudpcroftnctbbdqxisj.supabase.co";
+html{
+  scroll-behavior:smooth;
+}
 
-const SUPABASE_KEY =
-"sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  color:#12351f;
+  background:#fff;
+}
 
-let products = [];
-let cart = [];
-
-
-// ========================================
-// LOAD PRODUCTS
-// ========================================
-
-async function loadProducts(){
-
-  const grid = document.getElementById("productGrid");
-
-  try{
-
-    grid.innerHTML = `
-      <p class="loading">Loading products...</p>
-    `;
-
-    const response = await fetch(
-      SUPABASE_URL +
-      "/rest/v1/products?select=id,created_at,name,image_url,stock,cat,description,old_price,colors,images,price&order=id.desc",
-      {
-        method: "GET",
-        headers: {
-          "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    const data = await response.json();
-
-    console.log("SUPABASE PRODUCTS:", data);
-
-    if(!response.ok){
-
-      console.error("SUPABASE ERROR:", data);
-
-      grid.innerHTML = `
-        <p>
-          Products load nahi ho rahe.<br>
-          Supabase error check karo.
-        </p>
-      `;
-
-      return;
-    }
-
-
-    products = data.map(p => {
-
-      // PRICE
-      let priceValue = p.price;
-
-      if(
-        typeof priceValue === "string"
-      ){
-        priceValue =
-          priceValue.replace(/[₹,\s]/g,"");
-      }
-
-      const price =
-        Number(priceValue) || 0;
-
-
-      // OLD PRICE
-      let oldValue = p.old_price;
-
-      if(
-        typeof oldValue === "string"
-      ){
-        oldValue =
-          oldValue.replace(/[₹,\s]/g,"");
-      }
-
-      const oldPrice =
-        Number(oldValue) || 0;
-
-
-      // IMAGE
-      let image = "";
-
-      if(
-        p.image_url &&
-        typeof p.image_url === "string"
-      ){
-        image = p.image_url.trim();
-      }
-
-
-      // EXTRA IMAGES
-      let extraImages = [];
-
-      if(Array.isArray(p.images)){
-        extraImages = p.images;
-      }
-      else if(typeof p.images === "string"){
-        try{
-          const parsed =
-            JSON.parse(p.images);
-
-          if(Array.isArray(parsed)){
-            extraImages = parsed;
-          }
-        }catch(e){}
-      }
-
-
-      return {
-
-        id: p.id,
-
-        name:
-          p.name ||
-          "Product",
-
-        cat:
-          p.cat ||
-          "Plants",
-
-        price: price,
-
-        old: oldPrice,
-
-        stock:
-          p.stock !== false,
-
-        image: image,
-
-        images: extraImages,
-
-        colors:
-          p.colors || "",
-
-        description:
-          p.description || "",
-
-        icon: "🌱"
-
-      };
-
-    });
-
-
-    console.log(
-      "FINAL PRODUCTS:",
-      products
-    );
-
-
-    renderProducts();
-
-
-  }catch(error){
-
-    console.error(
-      "PRODUCT LOADING ERROR:",
-      error
-    );
-
-    grid.innerHTML = `
-      <p>
-        Products load nahi ho rahe.
-        Internet/Supabase connection check karo.
-      </p>
-    `;
-
-  }
-
+a{
+  text-decoration:none;
+  color:inherit;
 }
 
 
-// ========================================
-// RENDER PRODUCTS
-// ========================================
+/* ========================================
+   TOP BAR
+======================================== */
 
-function renderProducts(list = products){
-
-  const grid =
-    document.getElementById("productGrid");
-
-  if(!grid) return;
-
-
-  if(!list.length){
-
-    grid.innerHTML = `
-      <p class="loading">
-        No products available.
-      </p>
-    `;
-
-    return;
-  }
-
-
-  grid.innerHTML = list.map(p => `
-
-    <article class="card">
-
-      <div class="pic">
-
-        ${
-          p.image
-
-          ?
-
-          `
-          <img
-            src="${p.image}"
-            alt="${escapeHTML(p.name)}"
-            loading="lazy"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='grid';"
-          >
-
-          <div
-            class="imageFallback"
-            style="display:none;"
-          >
-            🌱
-          </div>
-          `
-
-          :
-
-          `
-          <div class="imageFallback">
-            ${p.icon}
-          </div>
-          `
-        }
-
-      </div>
-
-
-      <div class="cardBody">
-
-        <span class="tag">
-          ${escapeHTML(p.cat)}
-        </span>
-
-
-        <h3>
-          ${escapeHTML(p.name)}
-        </h3>
-
-
-        ${
-          p.description
-
-          ?
-
-          `
-          <p>
-            ${escapeHTML(p.description)}
-          </p>
-          `
-
-          :
-
-          ""
-        }
-
-
-        ${
-          p.colors
-
-          ?
-
-          `
-          <div class="productColors">
-            🎨 ${escapeHTML(
-              Array.isArray(p.colors)
-              ? p.colors.join(", ")
-              : p.colors
-            )}
-          </div>
-          `
-
-          :
-
-          ""
-        }
-
-
-        <div class="price">
-
-          ₹${formatPrice(p.price)}
-
-          ${
-            p.old > 0
-
-            ?
-
-            `
-            <span class="old">
-              ₹${formatPrice(p.old)}
-            </span>
-            `
-
-            :
-
-            ""
-          }
-
-        </div>
-
-
-        <div class="extraCharges">
-
-          🚚 Delivery charges extra
-
-          <br>
-
-          🪴 Plant & Pot fixing charge extra
-
-        </div>
-
-
-        ${
-          p.stock
-
-          ?
-
-          `
-          <button
-            class="btn"
-            onclick="addToCart(${p.id})"
-          >
-            🛒 Add to Cart
-          </button>
-          `
-
-          :
-
-          `
-          <button
-            class="btn"
-            disabled
-          >
-            ❌ Out of Stock
-          </button>
-          `
-        }
-
-      </div>
-
-    </article>
-
-  `).join("");
-
+.topbar{
+  background:#064b2a;
+  color:#fff;
+  padding:9px 5%;
+  font-size:13px;
+  display:flex;
+  justify-content:space-between;
 }
 
 
-// ========================================
-// PRICE FORMAT
-// ========================================
+/* ========================================
+   NAVIGATION
+======================================== */
 
-function formatPrice(value){
+.nav{
+  min-height:78px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 5%;
+  background:#fff;
+  position:sticky;
+  top:0;
+  z-index:5;
+  box-shadow:0 2px 12px #0001;
+}
 
-  const number =
-    Number(value);
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
 
-  if(!Number.isFinite(number)){
-    return "0";
-  }
+.brand b{
+  display:block;
+  font-size:24px;
+}
 
-  return number.toLocaleString("en-IN");
+.brand small{
+  display:block;
+  letter-spacing:2px;
+}
 
+.logo{
+  font-size:35px;
+}
+
+.links{
+  display:flex;
+  gap:25px;
+  font-weight:700;
+}
+
+.links a:hover{
+  color:#087c35;
+}
+
+.cartBtn{
+  border:0;
+  background:#eaf6e9;
+  padding:10px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:16px;
 }
 
 
-// ========================================
-// ESCAPE HTML
-// ========================================
-
-function escapeHTML(value){
-
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
-}
-
-
-// ========================================
-// CATEGORY FILTER
-// ========================================
-
-function filterCat(cat){
-
-  const filter =
-    document.getElementById("filter");
-
-  if(filter){
-    filter.value = cat;
-  }
-
-
-  if(cat === "All"){
-
-    renderProducts(products);
-
-  }else{
-
-    renderProducts(
-      products.filter(
-        p =>
-          String(p.cat).toLowerCase() ===
-          String(cat).toLowerCase()
-      )
-    );
-
-  }
-
-
-  const section =
-    document.getElementById("products");
-
-  if(section){
-
-    section.scrollIntoView({
-      behavior:"smooth"
-    });
-
-  }
-
-}
-
-
-// ========================================
-// ADD TO CART
-// ========================================
-
-function addToCart(id){
-
-  const product =
-    products.find(
-      p => p.id === id
-    );
-
-  if(!product) return;
-
-
-  if(!product.stock){
-
-    alert(
-      "Ye product abhi Out of Stock hai."
-    );
-
-    return;
-
-  }
-
-
-  const existing =
-    cart.find(
-      p => p.id === id
-    );
-
-
-  if(existing){
-
-    existing.qty++;
-
-  }else{
-
-    cart.push({
-
-      ...product,
-
-      qty: 1
-
-    });
-
-  }
-
-
-  updateCart();
-
-  openCart();
-
-}
-
-
-// ========================================
-// UPDATE CART
-// ========================================
-
-function updateCart(){
-
-  const count =
-    document.getElementById("cartCount");
-
-  const items =
-    document.getElementById("cartItems");
-
-  const total =
-    document.getElementById("cartTotal");
-
-
-  // COUNT
-
-  if(count){
-
-    count.textContent =
-      cart.reduce(
-        (sum,p) =>
-          sum + p.qty,
-        0
-      );
-
-  }
-
-
-  // ITEMS
-
-  if(items){
-
-    if(!cart.length){
-
-      items.innerHTML = `
-        <p>Your cart is empty.</p>
-      `;
-
-    }else{
-
-      items.innerHTML =
-        cart.map(p => `
-
-          <div class="cartRow">
-
-            <div class="cartProduct">
-
-              ${
-                p.image
-
-                ?
-
-                `
-                <img
-                  src="${p.image}"
-                  alt="${escapeHTML(p.name)}"
-                  class="cartImage"
-                >
-                `
-
-                :
-
-                `
-                <div class="cartImageFallback">
-                  ${p.icon}
-                </div>
-                `
-              }
-
-
-              <div>
-
-                <strong>
-                  ${escapeHTML(p.name)}
-                </strong>
-
-                <div>
-                  ₹${formatPrice(p.price)}
-                  × ${p.qty}
-                </div>
-
-              </div>
-
-            </div>
-
-
-            <b>
-              ₹${formatPrice(
-                p.price * p.qty
-              )}
-            </b>
-
-          </div>
-
-        `).join("");
-
-    }
-
-  }
-
-
-  // TOTAL
-
-  if(total){
-
-    const cartTotal =
-      cart.reduce(
-        (sum,p) =>
-          sum +
-          (p.price * p.qty),
-        0
-      );
-
-    total.textContent =
-      formatPrice(cartTotal);
-
-  }
-
-}
-
-
-// ========================================
-// OPEN CART
-// ========================================
-
-function openCart(){
-
-  const modal =
-    document.getElementById("cartModal");
-
-  if(modal){
-
-    modal.classList.remove(
-      "hidden"
-    );
-
-  }
-
-  updateCart();
-
-}
-
-
-// ========================================
-// CLOSE CART
-// ========================================
-
-function closeCart(){
-
-  const modal =
-    document.getElementById("cartModal");
-
-  if(modal){
-
-    modal.classList.add(
-      "hidden"
-    );
-
-  }
-
-}
-
-
-// ========================================
-// WHATSAPP ORDER
-// ========================================
-
-function orderText(extra = ""){
-
-  const lines =
-    cart.map(p => {
-
-      return `
-${p.name} x ${p.qty}
-Price: ₹${formatPrice(
-  p.price * p.qty
-)}
-Photo: ${p.image || "Not available"}
-`;
-
-    }).join("\n");
-
-
-  const total =
-    cart.reduce(
-      (sum,p) =>
-        sum +
-        (p.price * p.qty),
-      0
-    );
-
-
-  const message = `
-
-🌱 A.K NURSERY & WALL COMPOUND
-
-🛒 ORDER
-
-${lines}
-
-━━━━━━━━━━━━━━
-
-Product Total: ₹${formatPrice(total)}
-
-🚚 Delivery charges extra
-🪴 Plant & Pot fixing charge extra
-
-${extra}
-
-Thank you for choosing
-A.K Nursery.
-
-`;
-
-
-  return encodeURIComponent(
-    message
+/* ========================================
+   HERO
+======================================== */
+
+.hero{
+  min-height:500px;
+  padding:70px 7%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:40px;
+  background:linear-gradient(
+    110deg,
+    #eef8e9,
+    #dff0d9
   );
+}
 
+.heroText{
+  max-width:650px;
+}
+
+.eyebrow{
+  font-style:italic;
+  font-size:20px;
+}
+
+.hero h1{
+  font-size:64px;
+  margin:10px 0;
+  color:#064b2a;
+}
+
+.hero h2{
+  font-size:22px;
+}
+
+.hero p{
+  font-size:18px;
+  line-height:1.6;
+}
+
+.heroArt{
+  font-size:110px;
+  text-align:center;
+  line-height:1.1;
+}
+
+.heroArt span{
+  font-size:18px;
+  font-weight:700;
 }
 
 
-// ========================================
-// CHECKOUT
-// ========================================
+/* ========================================
+   BUTTONS
+======================================== */
 
-function checkout(){
+.actions{
+  display:flex;
+  gap:12px;
+  margin:25px 0;
+}
 
-  if(!cart.length){
+.btn{
+  border:0;
+  background:#087c35;
+  color:#fff;
+  padding:13px 22px;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  display:inline-block;
+}
 
-    alert(
-      "Cart is empty."
-    );
+.btn:hover{
+  background:#065f29;
+}
 
-    return;
+.outline{
+  background:#fff;
+  color:#087c35;
+  border:2px solid #087c35;
+}
 
+.outline:hover{
+  background:#087c35;
+  color:#fff;
+}
+
+.benefits{
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+  font-weight:700;
+}
+
+
+/* ========================================
+   SECTIONS
+======================================== */
+
+.section{
+  padding:55px 6%;
+  text-align:center;
+}
+
+.section h2{
+  font-size:32px;
+  margin:0 0 8px;
+}
+
+.muted{
+  color:#66756b;
+}
+
+
+/* ========================================
+   CATEGORIES
+======================================== */
+
+.categories{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-top:25px;
+}
+
+.categories button{
+  padding:28px 10px;
+  border:1px solid #dce7dc;
+  background:#fff;
+  border-radius:14px;
+  font-size:18px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.categories button:hover{
+  background:#eef8e9;
+  border-color:#087c35;
+  transform:translateY(-2px);
+}
+
+
+/* ========================================
+   PRODUCTS
+======================================== */
+
+.productsSection{
+  background:#fff;
+}
+
+.sectionHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  text-align:left;
+  gap:20px;
+}
+
+.sectionHead select{
+  padding:11px 35px 11px 12px;
+  border-radius:8px;
+  border:1px solid #ccd8cd;
+  font-size:15px;
+  background:#fff;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+  margin-top:25px;
+  text-align:left;
+}
+
+.loading{
+  text-align:center;
+  grid-column:1/-1;
+  color:#66756b;
+}
+
+
+/* ========================================
+   PRODUCT CARD
+======================================== */
+
+.card{
+  border:1px solid #e1e8e1;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  box-shadow:0 3px 12px #0000000d;
+  transition:.2s;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 20px #00000015;
+}
+
+
+/* ========================================
+   PRODUCT IMAGE
+   PHOTO FULL SHOW
+   NO CROPPING
+======================================== */
+
+.pic{
+  width:100%;
+  height:300px;
+  background:#f5f5f5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:0;
+}
+
+.pic img{
+  width:100%;
+  height:100%;
+  object-fit:contain !important;
+  object-position:center center;
+  display:block;
+}
+
+
+/* IMAGE FALLBACK */
+
+.imageFallback{
+  width:100%;
+  height:100%;
+  display:grid;
+  place-items:center;
+  font-size:75px;
+  background:#eef6ed;
+}
+
+
+/* ========================================
+   CARD BODY
+======================================== */
+
+.cardBody{
+  padding:16px;
+}
+
+.tag{
+  font-size:12px;
+  background:#e8f6e8;
+  padding:5px 8px;
+  border-radius:10px;
+}
+
+.card h3{
+  margin:10px 0;
+  font-size:19px;
+}
+
+.cardBody p{
+  color:#66756b;
+  line-height:1.5;
+}
+
+.productColors{
+  margin-top:8px;
+  color:#555;
+  font-size:14px;
+}
+
+.price{
+  font-size:21px;
+  font-weight:800;
+  color:#087c35;
+  margin-top:10px;
+}
+
+.old{
+  text-decoration:line-through;
+  color:#999;
+  font-size:13px;
+  margin-left:5px;
+  font-weight:normal;
+}
+
+.card .btn{
+  width:100%;
+  margin-top:12px;
+}
+
+
+/* ========================================
+   EXTRA CHARGES
+======================================== */
+
+.extraCharges{
+  margin-top:12px;
+  padding:10px;
+  background:#fff8e8;
+  border-radius:8px;
+  color:#725500;
+  font-size:13px;
+  line-height:1.7;
+}
+
+
+/* ========================================
+   ABOUT
+======================================== */
+
+.about{
+  background:#f3f8ef;
+}
+
+.features{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-top:25px;
+}
+
+.features div{
+  background:#fff;
+  padding:25px;
+  border-radius:14px;
+  font-size:30px;
+}
+
+.features b,
+.features span{
+  display:block;
+  font-size:16px;
+  margin-top:8px;
+}
+
+
+/* ========================================
+   CONTACT
+======================================== */
+
+.contact form{
+  max-width:600px;
+  margin:20px auto;
+  display:grid;
+  gap:12px;
+}
+
+.contact input,
+.contact textarea{
+  padding:14px;
+  border:1px solid #ccd8cd;
+  border-radius:8px;
+  font-size:16px;
+  width:100%;
+}
+
+.contact textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+.contact .btn{
+  width:100%;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+footer{
+  background:#063c23;
+  color:#fff;
+  padding:35px 6%;
+  display:flex;
+  justify-content:space-between;
+  gap:25px;
+}
+
+footer p{
+  color:#d4e4d8;
+}
+
+
+/* ========================================
+   CART MODAL
+======================================== */
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#0008;
+  display:grid;
+  place-items:center;
+  z-index:10;
+  padding:15px;
+}
+
+.hidden{
+  display:none;
+}
+
+.cart{
+  background:#fff;
+  width:min(92%,500px);
+  max-height:85vh;
+  overflow:auto;
+  border-radius:15px;
+  padding:25px;
+  position:relative;
+}
+
+.close{
+  position:absolute;
+  right:15px;
+  top:10px;
+  border:0;
+  background:none;
+  font-size:28px;
+  cursor:pointer;
+}
+
+.cartRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:12px 0;
+  border-bottom:1px solid #ddd;
+}
+
+.cartProduct{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.cartImage{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+  background:#f5f5f5;
+  border-radius:8px;
+}
+
+.cartImageFallback{
+  width:60px;
+  height:60px;
+  display:grid;
+  place-items:center;
+  background:#eef6ed;
+  border-radius:8px;
+  font-size:30px;
+}
+
+.total{
+  font-size:20px;
+  font-weight:800;
+  margin:18px 0;
+}
+
+.checkoutBtn{
+  width:100%;
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media(max-width:800px){
+
+  .links{
+    display:none;
   }
 
-
-  window.open(
-
-    `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText()}`,
-
-    "_blank"
-
-  );
-
-}
-
-
-// ========================================
-// CONTACT FORM
-// ========================================
-
-function sendOrder(e){
-
-  e.preventDefault();
-
-
-  const name =
-    document
-      .getElementById("name")
-      .value
-      .trim();
-
-
-  const phone =
-    document
-      .getElementById("phone")
-      .value
-      .trim();
-
-
-  const address =
-    document
-      .getElementById("address")
-      .value
-      .trim();
-
-
-  const extra = `
-
-👤 Customer Name:
-${name}
-
-📱 Mobile:
-${phone}
-
-📍 Address:
-${address}
-
-`;
-
-
-  window.open(
-
-    `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText(extra)}`,
-
-    "_blank"
-
-  );
-
-}
-
-
-// ========================================
-// START
-// ========================================
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    loadProducts();
-
-    updateCart();
-
+  .hero{
+    padding:45px 6%;
+    display:block;
   }
-);
+
+  .hero h1{
+    font-size:45px;
+  }
+
+  .heroArt{
+    font-size:70px;
+    margin-top:25px;
+  }
+
+  .categories,
+  .grid,
+  .features{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  footer{
+    display:grid;
+  }
+
+  .pic{
+    height:300px;
+  }
+
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media(max-width:480px){
+
+  .topbar{
+    justify-content:center;
+  }
+
+  .topbar span{
+    display:none;
+  }
+
+  .categories,
+  .grid,
+  .features{
+    grid-template-columns:1fr;
+  }
+
+  .sectionHead{
+    display:block;
+  }
+
+  .sectionHead select{
+    margin-top:10px;
+    width:100%;
+  }
+
+  .brand b{
+    font-size:18px;
+  }
+
+  .brand small{
+    font-size:9px;
+  }
+
+  .nav{
+    min-height:65px;
+  }
+
+  .hero{
+    min-height:auto;
+  }
+
+  .hero h1{
+    font-size:40px;
+  }
+
+  .hero h2{
+    font-size:18px;
+  }
+
+  .hero p{
+    font-size:16px;
+  }
+
+  .actions{
+    flex-direction:column;
+  }
+
+  .actions .btn{
+    width:100%;
+    text-align:center;
+  }
+
+  /* MOBILE PHOTO FULL */
+
+  .pic{
+    height:300px;
+  }
+
+  .pic img{
+    width:100%;
+    height:100%;
+    object-fit:contain !important;
+  }
+
+  .card h3{
+    font-size:20px;
+  }
+
+}
