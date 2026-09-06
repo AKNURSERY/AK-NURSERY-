@@ -266,4 +266,1271 @@ button:disabled{
 <input
  id="oldPrice"
  type="number"
- min
+ min="0"
+ placeholder="Old Price (optional)"
+>
+
+
+<!-- PHOTO -->
+
+<label class="uploadBtn">
+
+📸 Choose Product Photo
+
+<input
+ id="productPhoto"
+ type="file"
+ accept="image/*"
+ style="display:none"
+ onchange="previewPhoto(event)"
+>
+
+</label>
+
+<p class="small">
+Phone gallery se product photo select karo.
+</p>
+
+
+<img
+ id="photoPreview"
+ class="preview"
+>
+
+
+<textarea
+ id="description"
+ placeholder="Product description"
+></textarea>
+
+
+<button
+ id="saveBtn"
+ onclick="saveProduct()"
+>
+➕ Add Product
+</button>
+
+
+<button
+ id="cancelBtn"
+ class="cancelBtn hidden"
+ onclick="cancelEdit()"
+>
+Cancel Edit
+</button>
+
+
+<p id="msg"></p>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- PRODUCTS -->
+<!-- ========================= -->
+
+<div class="box">
+
+<h2>📦 Products</h2>
+
+<div id="productList">
+
+<p class="loading">
+Loading products...
+</p>
+
+</div>
+
+</div>
+
+
+<button
+ class="danger"
+ onclick="logout()"
+>
+🚪 Logout
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+// ==========================================
+// A.K NURSERY ADMIN SETTINGS
+// ==========================================
+
+const SUPABASE_URL =
+"https://mudpcroftnctbbdqxisj.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
+
+const BUCKET =
+"product-images";
+
+let editingId = null;
+
+
+// ==========================================
+// HTML ESCAPE
+// ==========================================
+
+function escapeHTML(value){
+
+ return String(value ?? "")
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
+
+}
+
+
+// ==========================================
+// LOGIN
+// ==========================================
+
+async function login(){
+
+ const email =
+ document.getElementById("email")
+ .value
+ .trim();
+
+ const password =
+ document.getElementById("password")
+ .value;
+
+ const loginMsg =
+ document.getElementById("loginMsg");
+
+
+ if(!email || !password){
+
+  loginMsg.innerHTML =
+  `<span class="error">
+  Email aur password dono bharo.
+  </span>`;
+
+  return;
+ }
+
+
+ loginMsg.textContent =
+ "⏳ Login ho raha hai...";
+
+
+ try{
+
+  const r =
+  await fetch(
+   SUPABASE_URL +
+   "/auth/v1/token?grant_type=password",
+   {
+    method:"POST",
+
+    headers:{
+     "apikey":SUPABASE_KEY,
+     "Content-Type":
+      "application/json"
+    },
+
+    body:
+    JSON.stringify({
+     email:email,
+     password:password
+    })
+   }
+  );
+
+
+  const data =
+  await r.json();
+
+
+  if(data.access_token){
+
+   localStorage.setItem(
+    "ak_token",
+    data.access_token
+   );
+
+
+   document
+   .getElementById("loginBox")
+   .classList
+   .add("hidden");
+
+
+   document
+   .getElementById("adminBox")
+   .classList
+   .remove("hidden");
+
+
+   loginMsg.textContent="";
+
+
+   loadProducts();
+
+
+  }else{
+
+   loginMsg.innerHTML =
+   `<span class="error">
+   Login failed: ${
+    escapeHTML(
+     data.error_description ||
+     data.msg ||
+     "Email/password check karo."
+    )
+   }
+   </span>`;
+
+  }
+
+
+ }catch(error){
+
+  loginMsg.innerHTML =
+  `<span class="error">
+  Network error. Internet connection check karo.
+  </span>`;
+
+ }
+
+}
+
+
+// ==========================================
+// PHOTO PREVIEW
+// ==========================================
+
+function previewPhoto(event){
+
+ const file =
+ event.target.files[0];
+
+ const preview =
+ document.getElementById("photoPreview");
+
+
+ if(!file){
+
+  preview.style.display="none";
+
+  return;
+ }
+
+
+ if(!file.type.startsWith("image/")){
+
+  alert("Sirf image file select karo.");
+
+  event.target.value="";
+
+  preview.style.display="none";
+
+  return;
+ }
+
+
+ preview.src =
+ URL.createObjectURL(file);
+
+ preview.style.display="block";
+
+}
+
+
+// ==========================================
+// UPLOAD PHOTO
+// ==========================================
+
+async function uploadPhoto(file){
+
+ const token =
+ localStorage.getItem("ak_token");
+
+
+ if(!token){
+
+  throw new Error(
+   "Admin login required."
+  );
+
+ }
+
+
+ const extension =
+ file.name
+ .split(".")
+ .pop()
+ .toLowerCase();
+
+
+ const fileName =
+ Date.now() +
+ "_" +
+ Math.random()
+ .toString(36)
+ .substring(2,8) +
+ "." +
+ extension;
+
+
+ const uploadUrl =
+ SUPABASE_URL +
+ "/storage/v1/object/" +
+ BUCKET +
+ "/" +
+ fileName;
+
+
+ const r =
+ await fetch(
+  uploadUrl,
+  {
+   method:"POST",
+
+   headers:{
+    "apikey":SUPABASE_KEY,
+
+    "Authorization":
+     "Bearer " + token,
+
+    "Content-Type":
+     file.type,
+
+    "x-upsert":
+     "false"
+   },
+
+   body:file
+  }
+ );
+
+
+ if(!r.ok){
+
+  const error =
+  await r.text();
+
+  throw new Error(
+   "Photo upload failed: " +
+   error
+  );
+
+ }
+
+
+ return (
+  SUPABASE_URL +
+  "/storage/v1/object/public/" +
+  BUCKET +
+  "/" +
+  fileName
+ );
+
+}
+
+
+// ==========================================
+// SAVE PRODUCT
+// ==========================================
+
+async function saveProduct(){
+
+ const msg =
+ document.getElementById("msg");
+
+
+ try{
+
+  msg.innerHTML =
+  "⏳ Saving...";
+
+
+  const token =
+  localStorage.getItem("ak_token");
+
+
+  if(!token){
+
+   msg.innerHTML =
+   `<span class="error">
+   Please login first.
+   </span>`;
+
+   return;
+  }
+
+
+  const name =
+  document
+  .getElementById("productName")
+  .value
+  .trim();
+
+
+  const cat =
+  document
+  .getElementById("category")
+  .value;
+
+
+  const price =
+  Number(
+   document
+   .getElementById("price")
+   .value
+  );
+
+
+  const oldPrice =
+  Number(
+   document
+   .getElementById("oldPrice")
+   .value
+  ) || 0;
+
+
+  const description =
+  document
+  .getElementById("description")
+  .value
+  .trim();
+
+
+  const file =
+  document
+  .getElementById("productPhoto")
+  .files[0];
+
+
+  // ========================================
+  // VALIDATION
+  // ========================================
+
+  if(!name){
+
+   msg.innerHTML =
+   `<span class="error">
+   Product name डालो.
+   </span>`;
+
+   return;
+  }
+
+
+  if(!price || price < 0){
+
+   msg.innerHTML =
+   `<span class="error">
+   Selling price डालो.
+   </span>`;
+
+   return;
+  }
+
+
+  // ========================================
+  // EDIT PRODUCT
+  // ========================================
+
+  if(editingId){
+
+   let updateData = {
+
+    name:name,
+
+    cat:cat,
+
+    price:price,
+
+    old_price:oldPrice,
+
+    description:description
+
+   };
+
+
+   // NEW PHOTO
+
+   if(file){
+
+    msg.innerHTML =
+    "📸 New photo upload ho rahi hai...";
+
+
+    updateData.image_url =
+    await uploadPhoto(file);
+
+   }
+
+
+   msg.innerHTML =
+   "⏳ Product update ho raha hai...";
+
+
+   const r =
+   await fetch(
+    SUPABASE_URL +
+    "/rest/v1/products?id=eq." +
+    editingId,
+    {
+     method:"PATCH",
+
+     headers:{
+      "apikey":SUPABASE_KEY,
+
+      "Authorization":
+       "Bearer " + token,
+
+      "Content-Type":
+       "application/json",
+
+      "Prefer":
+       "return=minimal"
+     },
+
+     body:
+     JSON.stringify(updateData)
+    }
+   );
+
+
+   if(!r.ok){
+
+    const error =
+    await r.text();
+
+    msg.innerHTML =
+    `<span class="error">
+    Update failed:<br>
+    ${escapeHTML(error)}
+    </span>`;
+
+    return;
+   }
+
+
+   msg.innerHTML =
+   `<span class="success">
+   ✅ Product updated successfully!
+   </span>`;
+
+
+   cancelEdit();
+
+   loadProducts();
+
+   return;
+
+  }
+
+
+  // ========================================
+  // ADD NEW PRODUCT
+  // ========================================
+
+  let imageUrl = "";
+
+
+  if(file){
+
+   msg.innerHTML =
+   "📸 Photo upload ho rahi hai...";
+
+
+   imageUrl =
+   await uploadPhoto(file);
+
+  }
+
+
+  const product = {
+
+   name:name,
+
+   cat:cat,
+
+   price:price,
+
+   old_price:oldPrice,
+
+   image_url:imageUrl,
+
+   description:description,
+
+   stock:true
+
+  };
+
+
+  msg.innerHTML =
+  "⏳ Product save ho raha hai...";
+
+
+  const r =
+  await fetch(
+   SUPABASE_URL +
+   "/rest/v1/products",
+   {
+    method:"POST",
+
+    headers:{
+     "apikey":SUPABASE_KEY,
+
+     "Authorization":
+      "Bearer " + token,
+
+     "Content-Type":
+      "application/json",
+
+     "Prefer":
+      "return=minimal"
+    },
+
+    body:
+    JSON.stringify(product)
+   }
+  );
+
+
+  if(!r.ok){
+
+   const error =
+   await r.text();
+
+   msg.innerHTML =
+   `<span class="error">
+   Product add nahi hua:<br>
+   ${escapeHTML(error)}
+   </span>`;
+
+   return;
+  }
+
+
+  msg.innerHTML =
+  `<span class="success">
+  ✅ Product added successfully!
+  </span>`;
+
+
+  clearForm();
+
+  loadProducts();
+
+
+ }catch(error){
+
+  msg.innerHTML =
+  `<span class="error">
+  ❌ ${escapeHTML(error.message)}
+  </span>`;
+
+ }
+
+}
+
+
+// ==========================================
+// LOAD PRODUCTS
+// ==========================================
+
+async function loadProducts(){
+
+ const token =
+ localStorage.getItem("ak_token");
+
+
+ if(!token) return;
+
+
+ const productList =
+ document.getElementById("productList");
+
+
+ productList.innerHTML =
+ "<p class='loading'>⏳ Loading products...</p>";
+
+
+ try{
+
+  const r =
+  await fetch(
+   SUPABASE_URL +
+   "/rest/v1/products?select=*&order=id.desc",
+   {
+    headers:{
+     "apikey":SUPABASE_KEY,
+
+     "Authorization":
+      "Bearer " + token
+    }
+   }
+  );
+
+
+  const data =
+  await r.json();
+
+
+  if(!r.ok){
+
+   productList.innerHTML =
+   `<p class="error">
+   ${escapeHTML(JSON.stringify(data))}
+   </p>`;
+
+   return;
+  }
+
+
+  if(!data.length){
+
+   productList.innerHTML =
+   "<p>No products added yet.</p>";
+
+   return;
+  }
+
+
+  productList.innerHTML =
+  data.map(p=>{
+
+
+   const name =
+   escapeHTML(p.name || "");
+
+
+   const cat =
+   escapeHTML(p.cat || "");
+
+
+   const description =
+   escapeHTML(
+    p.description || ""
+   );
+
+
+   const image =
+   p.image_url || "";
+
+
+   const price =
+   Number(p.price) || 0;
+
+
+   const oldPrice =
+   Number(p.old_price) || 0;
+
+
+   const stock =
+   p.stock !== false;
+
+
+   return `
+
+   <div class="product">
+
+
+    ${
+     image
+
+     ?
+
+     `<img
+      src="${escapeHTML(image)}"
+      alt="${name}"
+     >`
+
+     :
+
+     ""
+    }
+
+
+    <h3>
+    ${name}
+    </h3>
+
+
+    <p>
+    Category:
+    <b>${cat}</b>
+    </p>
+
+
+    <p class="price">
+
+    ₹${price}
+
+    ${
+     oldPrice
+
+     ?
+
+     `<span class="old">
+     ₹${oldPrice}
+     </span>`
+
+     :
+
+     ""
+    }
+
+    </p>
+
+
+    <p>
+
+    Stock:
+
+    ${
+     stock
+
+     ?
+
+     `<span class="in">
+     Available ✅
+     </span>`
+
+     :
+
+     `<span class="out">
+     Out of Stock ❌
+     </span>`
+    }
+
+    </p>
+
+
+    ${
+     description
+
+     ?
+
+     `<p>
+     ${description}
+     </p>`
+
+     :
+
+     ""
+    }
+
+
+    <button
+     class="editBtn"
+     onclick="editProduct(${Number(p.id)})"
+    >
+     ✏️ Edit
+    </button>
+
+
+    <button
+     class="stockBtn"
+     onclick="toggleStock(${Number(p.id)}, ${stock})"
+    >
+
+    ${
+     stock
+
+     ?
+
+     "📦 Mark Out of Stock"
+
+     :
+
+     "✅ Mark Available"
+    }
+
+    </button>
+
+
+   </div>
+
+   `;
+
+  }).join("");
+
+
+ }catch(error){
+
+  productList.innerHTML =
+  `<p class="error">
+  ${escapeHTML(error.message)}
+  </p>`;
+
+ }
+
+}
+
+
+// ==========================================
+// EDIT PRODUCT
+// ==========================================
+
+async function editProduct(id){
+
+ const token =
+ localStorage.getItem("ak_token");
+
+
+ if(!token){
+
+  alert("Please login first.");
+
+  return;
+ }
+
+
+ try{
+
+  const r =
+  await fetch(
+   SUPABASE_URL +
+   "/rest/v1/products?id=eq." +
+   id +
+   "&select=*",
+   {
+    headers:{
+     "apikey":SUPABASE_KEY,
+
+     "Authorization":
+      "Bearer " + token
+    }
+   }
+  );
+
+
+  const data =
+  await r.json();
+
+
+  if(!r.ok || !data.length){
+
+   alert("Product load nahi hua.");
+
+   return;
+  }
+
+
+  const p =
+  data[0];
+
+
+  editingId =
+  id;
+
+
+  document
+  .getElementById("formTitle")
+  .textContent =
+  "✏️ Edit Product";
+
+
+  document
+  .getElementById("productName")
+  .value =
+  p.name || "";
+
+
+  document
+  .getElementById("category")
+  .value =
+  p.cat || "Plants";
+
+
+  document
+  .getElementById("price")
+  .value =
+  p.price || "";
+
+
+  document
+  .getElementById("oldPrice")
+  .value =
+  p.old_price || "";
+
+
+  document
+  .getElementById("description")
+  .value =
+  p.description || "";
+
+
+  document
+  .getElementById("productPhoto")
+  .value =
+  "";
+
+
+  document
+  .getElementById("saveBtn")
+  .textContent =
+  "💾 Update Product";
+
+
+  document
+  .getElementById("cancelBtn")
+  .classList
+  .remove("hidden");
+
+
+  const preview =
+  document
+  .getElementById("photoPreview");
+
+
+  if(p.image_url){
+
+   preview.src =
+   p.image_url;
+
+   preview.style.display =
+   "block";
+
+  }else{
+
+   preview.style.display =
+   "none";
+
+  }
+
+
+  window.scrollTo({
+   top:0,
+   behavior:"smooth"
+  });
+
+
+ }catch(error){
+
+  alert(
+   "Product load error: " +
+   error.message
+  );
+
+ }
+
+}
+
+
+// ==========================================
+// STOCK ON / OFF
+// ==========================================
+
+async function toggleStock(
+ id,
+ currentStock
+){
+
+ const token =
+ localStorage.getItem("ak_token");
+
+
+ if(!token){
+
+  alert("Please login first.");
+
+  return;
+ }
+
+
+ try{
+
+  const r =
+  await fetch(
+   SUPABASE_URL +
+   "/rest/v1/products?id=eq." +
+   id,
+   {
+    method:"PATCH",
+
+    headers:{
+     "apikey":SUPABASE_KEY,
+
+     "Authorization":
+      "Bearer " + token,
+
+     "Content-Type":
+      "application/json",
+
+     "Prefer":
+      "return=minimal"
+    },
+
+    body:
+    JSON.stringify({
+     stock:!currentStock
+    })
+   }
+  );
+
+
+  if(r.ok){
+
+   loadProducts();
+
+  }else{
+
+   const error =
+   await r.text();
+
+   alert(
+    "Stock update nahi hua:\n" +
+    error
+   );
+
+  }
+
+
+ }catch(error){
+
+  alert(
+   "Network error: " +
+   error.message
+  );
+
+ }
+
+}
+
+
+// ==========================================
+// CLEAR FORM
+// ==========================================
+
+function clearForm(){
+
+ document
+ .getElementById("productName")
+ .value =
+ "";
+
+
+ document
+ .getElementById("price")
+ .value =
+ "";
+
+
+ document
+ .getElementById("oldPrice")
+ .value =
+ "";
+
+
+ document
+ .getElementById("productPhoto")
+ .value =
+ "";
+
+
+ document
+ .getElementById("description")
+ .value =
+ "";
+
+
+ document
+ .getElementById("photoPreview")
+ .style
+ .display =
+ "none";
+
+}
+
+
+// ==========================================
+// CANCEL EDIT
+// ==========================================
+
+function cancelEdit(){
+
+ editingId =
+ null;
+
+
+ document
+ .getElementById("formTitle")
+ .textContent =
+ "➕ Add Product";
+
+
+ document
+ .getElementById("saveBtn")
+ .textContent =
+ "➕ Add Product";
+
+
+ document
+ .getElementById("cancelBtn")
+ .classList
+ .add("hidden");
+
+
+ clearForm();
+
+
+ document
+ .getElementById("msg")
+ .innerHTML =
+ "";
+
+}
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+function logout(){
+
+ localStorage.removeItem(
+  "ak_token"
+ );
+
+ location.reload();
+
+}
+
+
+// ==========================================
+// AUTO LOGIN
+// ==========================================
+
+if(
+ localStorage.getItem("ak_token")
+){
+
+ document
+ .getElementById("loginBox")
+ .classList
+ .add("hidden");
+
+
+ document
+ .getElementById("adminBox")
+ .classList
+ .remove("hidden");
+
+
+ loadProducts();
+
+}
+
+</script>
+
+</body>
+ </html>
