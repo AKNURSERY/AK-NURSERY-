@@ -1,14 +1,14 @@
 // ========================================
-// A.K NURSERY — FINAL SCRIPT.JS
+// A.K NURSERY - FINAL SCRIPT.JS
 // ========================================
 
 const WHATSAPP_NUMBER = "919555322038";
 
 const SUPABASE_URL =
-  "https://mudpcroftnctbbdqxisj.supabase.co";
+"https://mudpcroftnctbbdqxisj.supabase.co";
 
 const SUPABASE_KEY =
-  "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
+"sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
 
 let products = [];
 let cart = [];
@@ -18,143 +18,94 @@ let cart = [];
 // LOAD PRODUCTS
 // ========================================
 
-async function loadProducts() {
+async function loadProducts(){
 
   const grid = document.getElementById("productGrid");
 
-  if (!grid) return;
+  if(!grid) return;
 
   grid.innerHTML =
-    '<p class="loading">Loading products...</p>';
+    `<p class="loading">Loading products...</p>`;
 
-  try {
+  try{
 
-    const url =
+    const response = await fetch(
       SUPABASE_URL +
-      "/rest/v1/products?select=id,name,image_url,stock,cat,description,old_price,colors,images,price&order=id.desc";
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "apikey": SUPABASE_KEY,
-        "Authorization": "Bearer " + SUPABASE_KEY,
-        "Content-Type": "application/json"
+      "/rest/v1/products?select=*&order=id.desc",
+      {
+        method:"GET",
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer " + SUPABASE_KEY
+        }
       }
-    });
+    );
 
     const data = await response.json();
 
-    console.log("SUPABASE RESPONSE:", data);
+    console.log("SUPABASE:",data);
 
-    if (!response.ok) {
+    if(!response.ok){
+
+      console.error(data);
 
       grid.innerHTML =
-        "<p>Products load nahi ho rahe.</p>";
-
-      console.error("Supabase Error:", data);
+        `<p>Products load nahi ho rahe.</p>`;
 
       return;
     }
 
-    if (!Array.isArray(data)) {
+    products = data.map(p => {
 
-      grid.innerHTML =
-        "<p>Products data galat format me hai.</p>";
+      let price = Number(
+        String(p.price ?? "")
+          .replace(/[₹,\s]/g,"")
+      );
 
-      return;
-    }
-
-
-    // ========================================
-    // CONVERT PRODUCTS
-    // ========================================
-
-    products = data.map(function (p) {
-
-      let price = Number(p.price);
-
-      if (!Number.isFinite(price)) {
-        price = 0;
-      }
-
-
-      let oldPrice = Number(p.old_price);
-
-      if (!Number.isFinite(oldPrice)) {
-        oldPrice = 0;
-      }
-
-
-      let image = "";
-
-      if (
-        p.image_url &&
-        typeof p.image_url === "string"
-      ) {
-        image = p.image_url.trim();
-      }
-
+      let oldPrice = Number(
+        String(p.old_price ?? "")
+          .replace(/[₹,\s]/g,"")
+      );
 
       return {
 
-        id: p.id,
+        id:p.id,
 
-        name:
-          p.name ||
-          "Product",
+        name:p.name || "Product",
 
-        cat:
-          p.cat ||
-          "Plants",
+        cat:p.cat || "Plants",
 
-        description:
-          p.description ||
-          "",
+        price:Number.isFinite(price) ? price : 0,
 
-        price: price,
+        old:Number.isFinite(oldPrice) ? oldPrice : 0,
 
-        old: oldPrice,
+        image:
+          typeof p.image_url === "string"
+          ? p.image_url.trim()
+          : "",
 
-        stock:
-          p.stock !== false,
+        stock:p.stock !== false,
 
-        image: image,
+        description:p.description || "",
 
-        colors:
-          p.colors ||
-          "",
+        colors:p.colors || "",
 
-        images:
-          p.images ||
-          "",
-
-        icon:
-          "🌱"
+        icon:"🌱"
 
       };
 
     });
 
+    console.log("FINAL PRODUCTS:",products);
 
-    console.log(
-      "PRODUCTS READY:",
-      products
-    );
+    renderProducts();
 
+  }catch(error){
 
-    renderProducts(products);
-
-  }
-
-  catch (error) {
-
-    console.error(
-      "PRODUCT LOADING ERROR:",
-      error
-    );
+    console.error("PRODUCT ERROR:",error);
 
     grid.innerHTML =
-      "<p>Products load nahi ho rahe. Supabase connection check karo.</p>";
+      `<p>Products load nahi ho rahe. Internet check karo.</p>`;
 
   }
 
@@ -165,206 +116,156 @@ async function loadProducts() {
 // RENDER PRODUCTS
 // ========================================
 
-function renderProducts(list) {
+function renderProducts(list = products){
 
   const grid =
     document.getElementById("productGrid");
 
-  if (!grid) return;
+  if(!grid) return;
 
-
-  if (!list || !list.length) {
+  if(!list.length){
 
     grid.innerHTML =
-      '<p class="loading">No products available.</p>';
+      `<p class="loading">No products available.</p>`;
 
     return;
   }
 
 
-  grid.innerHTML =
-    list.map(function (p) {
+  grid.innerHTML = list.map(p => `
 
-      const imageHTML =
-        p.image
+    <article class="card">
 
-        ?
+      <div class="pic">
 
-        `
-        <img
-          src="${escapeHTML(p.image)}"
-          alt="${escapeHTML(p.name)}"
-          class="productImage"
-          loading="lazy"
-          onclick="openProductImage('${escapeHTML(p.image)}')"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
-        >
+        ${
+          p.image
 
-        <div
-          class="imageFallback"
-          style="display:none;"
-        >
-          ${p.icon}
-        </div>
-        `
+          ?
 
-        :
+          `
+          <img
+            src="${escapeHTML(p.image)}"
+            alt="${escapeHTML(p.name)}"
+            class="productImage"
+            loading="lazy"
+            onclick="openProductImage('${escapeJS(p.image)}','${escapeJS(p.name)}')"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='grid';"
+          >
 
-        `
-        <div class="imageFallback">
-          ${p.icon}
-        </div>
-        `;
+          <div
+            class="imageFallback"
+            style="display:none;">
+            ${p.icon}
+          </div>
+          `
+
+          :
+
+          `
+          <div class="imageFallback">
+            ${p.icon}
+          </div>
+          `
+        }
+
+      </div>
 
 
-      const oldPriceHTML =
-        p.old > 0
+      <div class="cardBody">
 
-        ?
-
-        `
-        <span class="old">
-          ₹${formatPrice(p.old)}
+        <span class="tag">
+          ${escapeHTML(p.cat)}
         </span>
-        `
 
-        :
-
-        "";
-
-
-      const descriptionHTML =
-        p.description
-
-        ?
-
-        `
-        <p>
-          ${escapeHTML(p.description)}
-        </p>
-        `
-
-        :
-
-        "";
+        <h3>
+          ${escapeHTML(p.name)}
+        </h3>
 
 
-      const colorHTML =
-        p.colors
+        ${
+          p.description
 
-        ?
+          ?
 
-        `
-        <div class="productColors">
-          🎨 ${escapeHTML(
-            Array.isArray(p.colors)
-              ? p.colors.join(", ")
-              : p.colors
-          )}
+          `<p>${escapeHTML(p.description)}</p>`
+
+          :
+
+          ""
+        }
+
+
+        <div class="price">
+
+          ₹${formatPrice(p.price)}
+
+          ${
+            p.old > 0
+
+            ?
+
+            `<span class="old">
+              ₹${formatPrice(p.old)}
+            </span>`
+
+            :
+
+            ""
+          }
+
         </div>
-        `
-
-        :
-
-        "";
 
 
-      const buttonHTML =
-        p.stock
+        <div class="extraCharges">
 
-        ?
+          🚚 Delivery charges extra
 
-        `
-        <button
-          class="btn"
-          onclick="addToCart(${p.id})"
-        >
-          🛒 Add to Cart
-        </button>
-        `
+          <br>
 
-        :
+          🪴 Plant & Pot fixing charge extra
 
-        `
-        <button
-          class="btn"
-          disabled
-          style="background:#999;"
-        >
-          ❌ Out of Stock
-        </button>
-        `;
+        </div>
 
 
-      return `
+        ${
+          p.stock
 
-        <article class="card">
+          ?
 
-          <div class="pic">
+          `
+          <button
+            class="btn"
+            onclick="addToCart(${p.id})">
+            🛒 Add to Cart
+          </button>
+          `
 
-            ${imageHTML}
+          :
 
-          </div>
+          `
+          <button
+            class="btn"
+            disabled>
+            ❌ Out of Stock
+          </button>
+          `
+        }
 
+      </div>
 
-          <div class="cardBody">
+    </article>
 
-            <span class="tag">
-              ${escapeHTML(p.cat)}
-            </span>
-
-
-            <h3>
-              ${escapeHTML(p.name)}
-            </h3>
-
-
-            ${descriptionHTML}
-
-
-            ${colorHTML}
-
-
-            <div class="price">
-
-              ₹${formatPrice(p.price)}
-
-              ${oldPriceHTML}
-
-            </div>
-
-
-            <div class="extraCharges">
-
-              🚚 Delivery charges extra
-
-              <br>
-
-              🪴 Plant & Pot fixing charge extra
-
-            </div>
-
-
-            ${buttonHTML}
-
-          </div>
-
-        </article>
-
-      `;
-
-    }).join("");
+  `).join("");
 
 }
 
 
 // ========================================
-// FULL PRODUCT IMAGE
+// FULL SCREEN PRODUCT PHOTO
 // ========================================
 
-function openProductImage(image) {
-
-  if (!image) return;
+function openProductImage(image,name){
 
   const viewer =
     document.getElementById("imageViewer");
@@ -372,49 +273,68 @@ function openProductImage(image) {
   const viewerImage =
     document.getElementById("viewerImage");
 
-  if (viewer && viewerImage) {
+  if(!viewer || !viewerImage) return;
 
-    viewerImage.src = image;
+  viewerImage.src = image;
 
-    viewer.classList.remove("hidden");
+  viewerImage.alt = name || "Product";
 
-  }
+  viewer.classList.remove("hidden");
 
 }
 
 
 // ========================================
-// CLOSE IMAGE
+// CLOSE FULL SCREEN PHOTO
 // ========================================
 
-function closeProductImage() {
+function closeProductImage(){
 
   const viewer =
     document.getElementById("imageViewer");
 
-  if (viewer) {
+  const viewerImage =
+    document.getElementById("viewerImage");
+
+  if(viewer){
 
     viewer.classList.add("hidden");
 
   }
 
+  if(viewerImage){
+
+    viewerImage.src = "";
+
+  }
+
 }
+
+
+// ========================================
+// CLOSE PHOTO WITH ESCAPE
+// ========================================
+
+document.addEventListener("keydown",function(e){
+
+  if(e.key === "Escape"){
+
+    closeProductImage();
+
+  }
+
+});
 
 
 // ========================================
 // PRICE FORMAT
 // ========================================
 
-function formatPrice(value) {
+function formatPrice(value){
 
-  const number =
-    Number(value);
+  const number = Number(value);
 
-  if (!Number.isFinite(number)) {
-
-    return "0";
-
-  }
+  if(!Number.isFinite(number)) return "0";
 
   return number.toLocaleString("en-IN");
 
@@ -425,19 +345,33 @@ function formatPrice(value) {
 // ESCAPE HTML
 // ========================================
 
-function escapeHTML(value) {
+function escapeHTML(value){
 
   return String(value)
 
-    .replace(/&/g, "&amp;")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
-    .replace(/</g, "&lt;")
+}
 
-    .replace(/>/g, "&gt;")
 
-    .replace(/"/g, "&quot;")
+// ========================================
+// ESCAPE JAVASCRIPT
+// ========================================
 
-    .replace(/'/g, "&#039;");
+function escapeJS(value){
+
+  return String(value)
+
+    .replace(/\\/g,"\\\\")
+    .replace(/'/g,"\\'")
+    .replace(/"/g,"&quot;")
+
+    .replace(/\n/g,"\\n")
+    .replace(/\r/g,"\\r");
 
 }
 
@@ -446,39 +380,35 @@ function escapeHTML(value) {
 // CATEGORY FILTER
 // ========================================
 
-function filterCat(cat) {
+function filterCat(cat){
 
   const filter =
     document.getElementById("filter");
 
-  if (filter) {
+  if(filter){
 
     filter.value = cat;
 
   }
 
 
-  if (cat === "All") {
+  if(cat === "All"){
 
     renderProducts(products);
 
-  }
+  }else{
 
-  else {
+    renderProducts(
 
-    const filtered =
-      products.filter(function (p) {
+      products.filter(
 
-        return String(p.cat)
-          .trim()
-          .toLowerCase() ===
-          String(cat)
-            .trim()
-            .toLowerCase();
+        p =>
+          String(p.cat).toLowerCase() ===
+          String(cat).toLowerCase()
 
-      });
+      )
 
-    renderProducts(filtered);
+    );
 
   }
 
@@ -486,10 +416,10 @@ function filterCat(cat) {
   const section =
     document.getElementById("products");
 
-  if (section) {
+  if(section){
 
     section.scrollIntoView({
-      behavior: "smooth"
+      behavior:"smooth"
     });
 
   }
@@ -501,30 +431,17 @@ function filterCat(cat) {
 // ADD TO CART
 // ========================================
 
-function addToCart(id) {
+function addToCart(id){
 
   const product =
-    products.find(function (p) {
+    products.find(p => p.id === id);
 
-      return p.id === id;
-
-    });
+  if(!product) return;
 
 
-  if (!product) {
+  if(!product.stock){
 
-    alert("Product nahi mila.");
-
-    return;
-
-  }
-
-
-  if (!product.stock) {
-
-    alert(
-      "Ye product abhi Out of Stock hai."
-    );
+    alert("Ye product abhi Out of Stock hai.");
 
     return;
 
@@ -532,26 +449,20 @@ function addToCart(id) {
 
 
   const existing =
-    cart.find(function (p) {
-
-      return p.id === id;
-
-    });
+    cart.find(p => p.id === id);
 
 
-  if (existing) {
+  if(existing){
 
     existing.qty++;
 
-  }
-
-  else {
+  }else{
 
     cart.push({
 
       ...product,
 
-      qty: 1
+      qty:1
 
     });
 
@@ -569,14 +480,10 @@ function addToCart(id) {
 // REMOVE FROM CART
 // ========================================
 
-function removeFromCart(id) {
+function removeFromCart(id){
 
   cart =
-    cart.filter(function (p) {
-
-      return p.id !== id;
-
-    });
+    cart.filter(p => p.id !== id);
 
   updateCart();
 
@@ -587,23 +494,18 @@ function removeFromCart(id) {
 // CHANGE QUANTITY
 // ========================================
 
-function changeQty(id, change) {
+function changeQty(id,change){
 
   const item =
-    cart.find(function (p) {
+    cart.find(p => p.id === id);
 
-      return p.id === id;
-
-    });
-
-
-  if (!item) return;
+  if(!item) return;
 
 
   item.qty += change;
 
 
-  if (item.qty <= 0) {
+  if(item.qty <= 0){
 
     removeFromCart(id);
 
@@ -621,7 +523,7 @@ function changeQty(id, change) {
 // UPDATE CART
 // ========================================
 
-function updateCart() {
+function updateCart(){
 
   const count =
     document.getElementById("cartCount");
@@ -633,142 +535,121 @@ function updateCart() {
     document.getElementById("cartTotal");
 
 
-  // COUNT
-
-  if (count) {
+  if(count){
 
     count.textContent =
       cart.reduce(
-        function (sum, p) {
-
-          return sum + p.qty;
-
-        },
+        (sum,p) => sum + p.qty,
         0
       );
 
   }
 
 
-  // ITEMS
+  if(items){
 
-  if (items) {
-
-    if (!cart.length) {
+    if(!cart.length){
 
       items.innerHTML =
-        "<p>Your cart is empty.</p>";
+        `<p>Your cart is empty.</p>`;
 
-    }
-
-    else {
+    }else{
 
       items.innerHTML =
-        cart.map(function (p) {
 
-          return `
+        cart.map(p => `
 
-            <div class="cartRow">
+          <div class="cartRow">
 
-              <div class="cartProduct">
+            <div class="cartProduct">
 
-                ${
-                  p.image
+              ${
+                p.image
 
-                  ?
+                ?
 
-                  `
-                  <img
-                    src="${escapeHTML(p.image)}"
-                    class="cartImage"
-                    alt="${escapeHTML(p.name)}"
-                  >
-                  `
+                `
+                <img
+                  src="${escapeHTML(p.image)}"
+                  class="cartImage"
+                  alt="${escapeHTML(p.name)}"
+                >
+                `
 
-                  :
+                :
 
-                  `
-                  <div class="cartImageFallback">
-                    ${p.icon}
-                  </div>
-                  `
-                }
+                `
+                <div class="cartImageFallback">
+                  ${p.icon}
+                </div>
+                `
+              }
 
+
+              <div>
+
+                <strong>
+                  ${escapeHTML(p.name)}
+                </strong>
 
                 <div>
-
-                  <strong>
-                    ${escapeHTML(p.name)}
-                  </strong>
-
-                  <div>
-                    ₹${formatPrice(p.price)}
-                  </div>
+                  ₹${formatPrice(p.price)}
+                </div>
 
 
-                  <div class="qtyControls">
+                <div class="qtyControls">
 
-                    <button
-                      onclick="changeQty(${p.id},-1)"
-                    >
-                      −
-                    </button>
+                  <button
+                    onclick="changeQty(${p.id},-1)">
+                    −
+                  </button>
 
-                    <span>
-                      ${p.qty}
-                    </span>
+                  <span>
+                    ${p.qty}
+                  </span>
 
-                    <button
-                      onclick="changeQty(${p.id},1)"
-                    >
-                      +
-                    </button>
+                  <button
+                    onclick="changeQty(${p.id},1)">
+                    +
+                  </button>
 
-                    <button
-                      onclick="removeFromCart(${p.id})"
-                    >
-                      🗑️
-                    </button>
-
-                  </div>
+                  <button
+                    onclick="removeFromCart(${p.id})">
+                    🗑️
+                  </button>
 
                 </div>
 
               </div>
 
-
-              <b>
-
-                ₹${formatPrice(
-                  p.price * p.qty
-                )}
-
-              </b>
-
             </div>
 
-          `;
 
-        }).join("");
+            <b>
+              ₹${formatPrice(
+                p.price * p.qty
+              )}
+            </b>
+
+          </div>
+
+        `).join("");
 
     }
 
   }
 
 
-  // TOTAL
-
-  if (total) {
+  if(total){
 
     const cartTotal =
       cart.reduce(
-        function (sum, p) {
 
-          return sum +
-            p.price * p.qty;
+        (sum,p) =>
+          sum + (p.price * p.qty),
 
-        },
         0
+
       );
 
     total.textContent =
@@ -783,12 +664,12 @@ function updateCart() {
 // OPEN CART
 // ========================================
 
-function openCart() {
+function openCart(){
 
   const modal =
     document.getElementById("cartModal");
 
-  if (modal) {
+  if(modal){
 
     modal.classList.remove("hidden");
 
@@ -803,12 +684,12 @@ function openCart() {
 // CLOSE CART
 // ========================================
 
-function closeCart() {
+function closeCart(){
 
   const modal =
     document.getElementById("cartModal");
 
-  if (modal) {
+  if(modal){
 
     modal.classList.add("hidden");
 
@@ -818,26 +699,27 @@ function closeCart() {
 
 
 // ========================================
-// WHATSAPP ORDER
+// WHATSAPP ORDER TEXT
 // ========================================
 
-function orderText(extra = "") {
+function orderText(extra = ""){
 
   const lines =
-    cart.map(function (p) {
+
+    cart.map(p => {
 
       return `
 
-🌿 ${p.name}
+🌱 ${p.name}
 
 Quantity: ${p.qty}
 
 Price: ₹${formatPrice(
-        p.price * p.qty
-      )}
+  p.price * p.qty
+)}
 
-Photo:
-${p.image || "Photo available on website"}
+Product Photo:
+${p.image || "Photo not available"}
 
 `;
 
@@ -845,14 +727,14 @@ ${p.image || "Photo available on website"}
 
 
   const total =
+
     cart.reduce(
-      function (sum, p) {
 
-        return sum +
-          p.price * p.qty;
+      (sum,p) =>
+        sum + (p.price * p.qty),
 
-      },
       0
+
     );
 
 
@@ -866,8 +748,7 @@ ${lines}
 
 ━━━━━━━━━━━━━━
 
-Product Total:
-₹${formatPrice(total)}
+Product Total: ₹${formatPrice(total)}
 
 🚚 Delivery charges extra
 
@@ -892,9 +773,9 @@ Sonipat, Haryana
 // CHECKOUT
 // ========================================
 
-function checkout() {
+function checkout(){
 
-  if (!cart.length) {
+  if(!cart.length){
 
     alert("Cart is empty.");
 
@@ -903,16 +784,12 @@ function checkout() {
   }
 
 
-  const url =
-    "https://wa.me/" +
-    WHATSAPP_NUMBER +
-    "?text=" +
-    orderText();
-
-
   window.open(
-    url,
+
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText()}`,
+
     "_blank"
+
   );
 
 }
@@ -922,30 +799,21 @@ function checkout() {
 // CONTACT FORM
 // ========================================
 
-function sendOrder(e) {
+function sendOrder(e){
 
   e.preventDefault();
 
 
   const name =
-    document
-      .getElementById("name")
-      .value
-      .trim();
+    document.getElementById("name").value.trim();
 
 
   const phone =
-    document
-      .getElementById("phone")
-      .value
-      .trim();
+    document.getElementById("phone").value.trim();
 
 
   const address =
-    document
-      .getElementById("address")
-      .value
-      .trim();
+    document.getElementById("address").value.trim();
 
 
   const extra = `
@@ -964,10 +832,7 @@ ${address}
 
   window.open(
 
-    "https://wa.me/" +
-    WHATSAPP_NUMBER +
-    "?text=" +
-    orderText(extra),
+    `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText(extra)}`,
 
     "_blank"
 
@@ -982,7 +847,7 @@ ${address}
 
 document.addEventListener(
   "DOMContentLoaded",
-  function () {
+  function(){
 
     loadProducts();
 
