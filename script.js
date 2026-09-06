@@ -491,5 +491,5 @@ Address: ${address}`;
 // ================================
 
 loadProducts();
-
+console.log("A.K Nursery script loaded");
 updateCart()
