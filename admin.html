@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>A.K Nursery Admin</title>
 
 <style>
@@ -13,23 +12,14 @@ body{
  margin:0;
  padding:20px
 }
-
-.container{
- max-width:600px;
- margin:auto
-}
-
-h1{
- color:#176b35
-}
-
+.container{max-width:600px;margin:auto}
+h1{color:#176b35}
 .box{
  background:white;
  padding:20px;
  border-radius:12px;
  margin-bottom:20px
 }
-
 input,textarea,select{
  width:100%;
  box-sizing:border-box;
@@ -38,35 +28,32 @@ input,textarea,select{
  border:1px solid #ccc;
  border-radius:8px
 }
-
 button{
- padding:12px 18px;
+ padding:10px 14px;
  border:0;
  border-radius:8px;
  background:#176b35;
  color:white;
  font-weight:bold;
- cursor:pointer
+ cursor:pointer;
+ margin:3px
 }
-
-.danger{
- background:#c62828
-}
-
+.danger{background:#c62828}
+.editBtn{background:#1976d2}
+.stockBtn{background:#ef8f00}
+.cancelBtn{background:#777}
 .product{
  border:1px solid #ddd;
  padding:12px;
  border-radius:10px;
  margin:10px 0
 }
-
 .product img{
  width:100px;
  height:100px;
  object-fit:cover;
  border-radius:8px
 }
-
 .preview{
  width:150px;
  height:150px;
@@ -75,21 +62,15 @@ button{
  display:none;
  margin:10px 0
 }
-
-.hidden{
- display:none
-}
-
+.hidden{display:none}
 .error{
  color:#c62828;
  word-break:break-word
 }
-
 .success{
  color:green;
  font-weight:bold
 }
-
 .uploadBtn{
  display:inline-block;
  background:#176b35;
@@ -99,10 +80,17 @@ button{
  cursor:pointer;
  margin:5px 0 10px
 }
-
 .small{
  font-size:13px;
  color:#666
+}
+.out{
+ color:#c62828;
+ font-weight:bold
+}
+.in{
+ color:green;
+ font-weight:bold
 }
 </style>
 </head>
@@ -113,24 +101,15 @@ button{
 
 <h1>🌱 A.K Nursery Admin</h1>
 
-
 <!-- LOGIN -->
 
 <div id="loginBox" class="box">
 
 <h2>Admin Login</h2>
 
-<input
- id="email"
- type="email"
- placeholder="Admin Email"
->
+<input id="email" type="email" placeholder="Admin Email">
 
-<input
- id="password"
- type="password"
- placeholder="Password"
->
+<input id="password" type="password" placeholder="Password">
 
 <button onclick="login()">Login</button>
 
@@ -143,50 +122,24 @@ button{
 
 <div id="adminBox" class="hidden">
 
-
-<!-- ADD PRODUCT -->
-
 <div class="box">
 
-<h2>➕ Add Product</h2>
+<h2 id="formTitle">➕ Add Product</h2>
 
-<input
- id="productName"
- placeholder="Product name"
->
-
+<input id="productName" placeholder="Product name">
 
 <select id="category">
-
 <option value="Plants">Plants</option>
-
 <option value="Pots">Pots</option>
-
 <option value="Vermicompost">Vermicompost</option>
-
 <option value="Wall Compound">Wall Compound</option>
-
 </select>
 
+<input id="price" type="number" placeholder="Price">
 
-<input
- id="price"
- type="number"
- placeholder="Price"
->
-
-
-<input
- id="oldPrice"
- type="number"
- placeholder="Old Price (optional)"
->
-
-
-<!-- PHOTO -->
+<input id="oldPrice" type="number" placeholder="Old Price (optional)">
 
 <label class="uploadBtn">
-
 📸 Choose Product Photo
 
 <input
@@ -196,29 +149,28 @@ button{
  style="display:none"
  onchange="previewPhoto(event)"
 >
-
 </label>
 
 <p class="small">
-Phone gallery se product photo select karo.
+Phone gallery se photo select karo.
 </p>
 
-<img
- id="photoPreview"
- class="preview"
->
-
-
-<!-- DESCRIPTION -->
+<img id="photoPreview" class="preview">
 
 <textarea
  id="description"
- placeholder="Product description"
-></textarea>
+ placeholder="Product description">
+</textarea>
 
-
-<button onclick="addProduct()">
+<button id="saveBtn" onclick="saveProduct()">
 Add Product
+</button>
+
+<button
+ id="cancelBtn"
+ class="cancelBtn hidden"
+ onclick="cancelEdit()">
+Cancel Edit
 </button>
 
 <p id="msg"></p>
@@ -239,10 +191,7 @@ Loading...
 </div>
 
 
-<button
- class="danger"
- onclick="logout()"
->
+<button class="danger" onclick="logout()">
 Logout
 </button>
 
@@ -253,11 +202,6 @@ Logout
 
 <script>
 
-
-// ===============================
-// SUPABASE SETTINGS
-// ===============================
-
 const SUPABASE_URL =
 "https://mudpcroftnctbbdqxisj.supabase.co";
 
@@ -267,10 +211,12 @@ const SUPABASE_KEY =
 const BUCKET =
 "product-images";
 
+let editingId = null;
 
-// ===============================
+
+// =========================
 // LOGIN
-// ===============================
+// =========================
 
 async function login(){
 
@@ -280,7 +226,6 @@ async function login(){
  const password =
  document.getElementById("password").value;
 
-
  try{
 
   const r = await fetch(
@@ -288,22 +233,18 @@ async function login(){
    "/auth/v1/token?grant_type=password",
    {
     method:"POST",
-
     headers:{
      "apikey":SUPABASE_KEY,
      "Content-Type":"application/json"
     },
-
     body:JSON.stringify({
-     email:email,
-     password:password
+     email,
+     password
     })
    }
   );
 
-
   const data = await r.json();
-
 
   if(data.access_token){
 
@@ -312,16 +253,13 @@ async function login(){
     data.access_token
    );
 
-
    document
    .getElementById("loginBox")
    .classList.add("hidden");
 
-
    document
    .getElementById("adminBox")
    .classList.remove("hidden");
-
 
    loadProducts();
 
@@ -344,16 +282,16 @@ async function login(){
   document
   .getElementById("loginMsg")
   .textContent =
-  "Network error. Internet check karo.";
+  "Network error.";
 
  }
 
 }
 
 
-// ===============================
+// =========================
 // PHOTO PREVIEW
-// ===============================
+// =========================
 
 function previewPhoto(event){
 
@@ -362,7 +300,6 @@ function previewPhoto(event){
 
  const preview =
  document.getElementById("photoPreview");
-
 
  if(file){
 
@@ -377,15 +314,14 @@ function previewPhoto(event){
 }
 
 
-// ===============================
+// =========================
 // UPLOAD PHOTO
-// ===============================
+// =========================
 
 async function uploadPhoto(file){
 
  const token =
  localStorage.getItem("ak_token");
-
 
  if(!token){
 
@@ -394,9 +330,6 @@ async function uploadPhoto(file){
   );
 
  }
-
-
- // Unique file name
 
  const extension =
  file.name.split(".").pop()
@@ -411,7 +344,6 @@ async function uploadPhoto(file){
  "." +
  extension;
 
-
  const uploadUrl =
  SUPABASE_URL +
  "/storage/v1/object/" +
@@ -419,23 +351,18 @@ async function uploadPhoto(file){
  "/" +
  fileName;
 
-
  const r =
  await fetch(uploadUrl,{
-
   method:"POST",
-
   headers:{
    "apikey":SUPABASE_KEY,
-   "Authorization":"Bearer " + token,
+   "Authorization":
+    "Bearer " + token,
    "Content-Type":file.type,
    "x-upsert":"false"
   },
-
   body:file
-
  });
-
 
  if(!r.ok){
 
@@ -449,41 +376,33 @@ async function uploadPhoto(file){
 
  }
 
-
- // Public image URL
-
- const publicUrl =
- SUPABASE_URL +
- "/storage/v1/object/public/" +
- BUCKET +
- "/" +
- fileName;
-
-
- return publicUrl;
+ return (
+  SUPABASE_URL +
+  "/storage/v1/object/public/" +
+  BUCKET +
+  "/" +
+  fileName
+ );
 
 }
 
 
-// ===============================
-// ADD PRODUCT
-// ===============================
+// =========================
+// SAVE PRODUCT
+// =========================
 
-async function addProduct(){
+async function saveProduct(){
 
  const msg =
  document.getElementById("msg");
 
-
  try{
 
   msg.innerHTML =
-  "⏳ Product add ho raha hai...";
-
+  "⏳ Saving...";
 
   const token =
   localStorage.getItem("ak_token");
-
 
   if(!token){
 
@@ -495,19 +414,15 @@ async function addProduct(){
    return;
   }
 
-
   const name =
   document
   .getElementById("productName")
-  .value
-  .trim();
-
+  .value.trim();
 
   const cat =
   document
   .getElementById("category")
   .value;
-
 
   const price =
   Number(
@@ -516,19 +431,15 @@ async function addProduct(){
    .value
   );
 
-
   const description =
   document
   .getElementById("description")
-  .value
-  .trim();
-
+  .value.trim();
 
   const file =
   document
   .getElementById("productPhoto")
   .files[0];
-
 
   if(!name){
 
@@ -539,7 +450,6 @@ async function addProduct(){
 
    return;
   }
-
 
   if(!price){
 
@@ -552,10 +462,85 @@ async function addProduct(){
   }
 
 
-  // Upload photo if selected
+  // =====================
+  // EDIT PRODUCT
+  // =====================
+
+  if(editingId){
+
+   let updateData = {
+    name:name,
+    cat:cat,
+    price:price,
+    description:description
+   };
+
+   if(file){
+
+    msg.innerHTML =
+    "📸 New photo upload ho rahi hai...";
+
+    updateData.image_url =
+    await uploadPhoto(file);
+
+   }
+
+   msg.innerHTML =
+   "⏳ Product update ho raha hai...";
+
+   const r =
+   await fetch(
+    SUPABASE_URL +
+    "/rest/v1/products?id=eq." +
+    editingId,
+    {
+     method:"PATCH",
+     headers:{
+      "apikey":SUPABASE_KEY,
+      "Authorization":
+       "Bearer " + token,
+      "Content-Type":
+       "application/json",
+      "Prefer":
+       "return=minimal"
+     },
+     body:
+     JSON.stringify(updateData)
+    }
+   );
+
+   if(!r.ok){
+
+    const error =
+    await r.text();
+
+    msg.innerHTML =
+    `<span class="error">
+    Update failed:<br>
+    ${error}
+    </span>`;
+
+    return;
+   }
+
+   msg.innerHTML =
+   `<span class="success">
+   ✅ Product updated successfully!
+   </span>`;
+
+   cancelEdit();
+
+   loadProducts();
+
+   return;
+  }
+
+
+  // =====================
+  // ADD NEW PRODUCT
+  // =====================
 
   let imageUrl = "";
-
 
   if(file){
 
@@ -566,9 +551,6 @@ async function addProduct(){
    await uploadPhoto(file);
 
   }
-
-
-  // Product data
 
   const product = {
 
@@ -586,10 +568,8 @@ async function addProduct(){
 
   };
 
-
   msg.innerHTML =
-  "⏳ Product database me save ho raha hai...";
-
+  "⏳ Product save ho raha hai...";
 
   const r =
   await fetch(
@@ -597,7 +577,6 @@ async function addProduct(){
    "/rest/v1/products",
    {
     method:"POST",
-
     headers:{
      "apikey":SUPABASE_KEY,
      "Authorization":
@@ -607,12 +586,10 @@ async function addProduct(){
      "Prefer":
       "return=minimal"
     },
-
     body:
     JSON.stringify(product)
    }
   );
-
 
   if(!r.ok){
 
@@ -628,47 +605,14 @@ async function addProduct(){
    return;
   }
 
-
   msg.innerHTML =
   `<span class="success">
   ✅ Product added successfully!
   </span>`;
 
-
-  // Clear form
-
-  document
-  .getElementById("productName")
-  .value="";
-
-
-  document
-  .getElementById("price")
-  .value="";
-
-
-  document
-  .getElementById("oldPrice")
-  .value="";
-
-
-  document
-  .getElementById("productPhoto")
-  .value="";
-
-
-  document
-  .getElementById("description")
-  .value="";
-
-
-  document
-  .getElementById("photoPreview")
-  .style.display="none";
-
+  clearForm();
 
   loadProducts();
-
 
  }catch(error){
 
@@ -682,18 +626,16 @@ async function addProduct(){
 }
 
 
-// ===============================
+// =========================
 // LOAD PRODUCTS
-// ===============================
+// =========================
 
 async function loadProducts(){
 
  const token =
  localStorage.getItem("ak_token");
 
-
  if(!token) return;
-
 
  try{
 
@@ -710,10 +652,8 @@ async function loadProducts(){
    }
   );
 
-
   const data =
   await r.json();
-
 
   if(!r.ok){
 
@@ -727,7 +667,6 @@ async function loadProducts(){
    return;
   }
 
-
   if(!data.length){
 
    document
@@ -737,7 +676,6 @@ async function loadProducts(){
 
    return;
   }
-
 
   document
   .getElementById("productList")
@@ -772,6 +710,17 @@ async function loadProducts(){
      <b>₹${p.price || 0}</b>
     </p>
 
+    <p>
+     Stock:
+     ${
+      p.stock
+      ?
+      `<span class="in">Available ✅</span>`
+      :
+      `<span class="out">Out of Stock ❌</span>`
+     }
+    </p>
+
     ${
      p.description
      ?
@@ -780,10 +729,29 @@ async function loadProducts(){
      ""
     }
 
+    <button
+     class="editBtn"
+     onclick="editProduct(${p.id})">
+     ✏️ Edit
+    </button>
+
+    <button
+     class="stockBtn"
+     onclick="toggleStock(${p.id}, ${p.stock})">
+
+     ${
+      p.stock
+      ?
+      "📦 Mark Out of Stock"
+      :
+      "✅ Mark Available"
+     }
+
+    </button>
+
    </div>
 
   `).join("");
-
 
  }catch(error){
 
@@ -799,9 +767,225 @@ async function loadProducts(){
 }
 
 
-// ===============================
+// =========================
+// EDIT PRODUCT
+// =========================
+
+async function editProduct(id){
+
+ const token =
+ localStorage.getItem("ak_token");
+
+ const r =
+ await fetch(
+  SUPABASE_URL +
+  "/rest/v1/products?id=eq." +
+  id +
+  "&select=*",
+  {
+   headers:{
+    "apikey":SUPABASE_KEY,
+    "Authorization":
+     "Bearer " + token
+   }
+  }
+ );
+
+ const data =
+ await r.json();
+
+ if(!r.ok || !data.length){
+
+  alert("Product load nahi hua.");
+
+  return;
+ }
+
+ const p = data[0];
+
+ editingId = id;
+
+ document
+ .getElementById("formTitle")
+ .textContent =
+ "✏️ Edit Product";
+
+ document
+ .getElementById("productName")
+ .value =
+ p.name || "";
+
+ document
+ .getElementById("category")
+ .value =
+ p.cat || "Plants";
+
+ document
+ .getElementById("price")
+ .value =
+ p.price || "";
+
+ document
+ .getElementById("description")
+ .value =
+ p.description || "";
+
+ document
+ .getElementById("productPhoto")
+ .value = "";
+
+ document
+ .getElementById("saveBtn")
+ .textContent =
+ "💾 Update Product";
+
+ document
+ .getElementById("cancelBtn")
+ .classList
+ .remove("hidden");
+
+ const preview =
+ document
+ .getElementById("photoPreview");
+
+ if(p.image_url){
+
+  preview.src =
+  p.image_url;
+
+  preview.style.display =
+  "block";
+
+ }else{
+
+  preview.style.display =
+  "none";
+
+ }
+
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
+
+}
+
+
+// =========================
+// STOCK ON/OFF
+// =========================
+
+async function toggleStock(id,currentStock){
+
+ const token =
+ localStorage.getItem("ak_token");
+
+ const r =
+ await fetch(
+  SUPABASE_URL +
+  "/rest/v1/products?id=eq." +
+  id,
+  {
+   method:"PATCH",
+   headers:{
+    "apikey":SUPABASE_KEY,
+    "Authorization":
+     "Bearer " + token,
+    "Content-Type":
+     "application/json",
+    "Prefer":
+     "return=minimal"
+   },
+   body:
+   JSON.stringify({
+    stock:!currentStock
+   })
+  }
+ );
+
+ if(r.ok){
+
+  loadProducts();
+
+ }else{
+
+  const error =
+  await r.text();
+
+  alert(
+   "Stock update nahi hua:\n" +
+   error
+  );
+
+ }
+
+}
+
+
+// =========================
+// CLEAR FORM
+// =========================
+
+function clearForm(){
+
+ document
+ .getElementById("productName")
+ .value="";
+
+ document
+ .getElementById("price")
+ .value="";
+
+ document
+ .getElementById("oldPrice")
+ .value="";
+
+ document
+ .getElementById("productPhoto")
+ .value="";
+
+ document
+ .getElementById("description")
+ .value="";
+
+ document
+ .getElementById("photoPreview")
+ .style.display="none";
+
+}
+
+
+// =========================
+// CANCEL EDIT
+// =========================
+
+function cancelEdit(){
+
+ editingId = null;
+
+ document
+ .getElementById("formTitle")
+ .textContent =
+ "➕ Add Product";
+
+ document
+ .getElementById("saveBtn")
+ .textContent =
+ "Add Product";
+
+ document
+ .getElementById("cancelBtn")
+ .classList
+ .add("hidden");
+
+ clearForm();
+
+}
+
+
+// =========================
 // LOGOUT
-// ===============================
+// =========================
 
 function logout(){
 
@@ -814,9 +998,9 @@ function logout(){
 }
 
 
-// ===============================
+// =========================
 // AUTO LOGIN
-// ===============================
+// =========================
 
 if(
  localStorage.getItem("ak_token")
@@ -824,13 +1008,13 @@ if(
 
  document
  .getElementById("loginBox")
- .classList.add("hidden");
-
+ .classList
+ .add("hidden");
 
  document
  .getElementById("adminBox")
- .classList.remove("hidden");
-
+ .classList
+ .remove("hidden");
 
  loadProducts();
 
