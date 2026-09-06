@@ -201,6 +201,11 @@ Logout
 
 
 <script>
+ // ========================================
+// A.K NURSERY WEBSITE
+// ========================================
+
+const WHATSAPP_NUMBER = "919555322038";
 
 const SUPABASE_URL =
 "https://mudpcroftnctbbdqxisj.supabase.co";
@@ -208,713 +213,383 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
 "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
 
-const BUCKET =
-"product-images";
-
-let editingId = null;
+let products = [];
+let cart = [];
 
 
-// =========================
-// LOGIN
-// =========================
+// ========================================
+// LOAD PRODUCTS
+// ========================================
 
-async function login(){
-
- const email =
- document.getElementById("email").value.trim();
-
- const password =
- document.getElementById("password").value;
+async function loadProducts(){
 
  try{
 
   const r = await fetch(
    SUPABASE_URL +
-   "/auth/v1/token?grant_type=password",
+   "/rest/v1/products?select=*&order=id.desc",
    {
-    method:"POST",
     headers:{
-     "apikey":SUPABASE_KEY,
-     "Content-Type":"application/json"
-    },
-    body:JSON.stringify({
-     email,
-     password
-    })
+     "apikey":SUPABASE_KEY
+    }
    }
   );
 
   const data = await r.json();
 
-  if(data.access_token){
+  if(!r.ok){
 
-   localStorage.setItem(
-    "ak_token",
-    data.access_token
-   );
+   console.error("Supabase Error:",data);
 
-   document
-   .getElementById("loginBox")
-   .classList.add("hidden");
-
-   document
-   .getElementById("adminBox")
-   .classList.remove("hidden");
-
-   loadProducts();
-
-  }else{
-
-   document
-   .getElementById("loginMsg")
-   .textContent =
-   "Login failed: " +
-   (
-    data.error_description ||
-    data.msg ||
-    "Email/password check karo."
-   );
-
+   return;
   }
+
+  products = data.map(p => ({
+
+   id:p.id,
+
+   name:p.name || "Product",
+
+   cat:p.cat || "Plants",
+
+   price:Number(p.price) || 0,
+
+   old:Number(p.old_price) || 0,
+
+   icon:"🌱",
+
+   image:p.image_url || "",
+
+   description:p.description || "",
+
+   stock:p.stock !== false
+
+  }));
+
+  renderProducts();
 
  }catch(error){
 
-  document
-  .getElementById("loginMsg")
-  .textContent =
-  "Network error.";
-
- }
-
-}
-
-
-// =========================
-// PHOTO PREVIEW
-// =========================
-
-function previewPhoto(event){
-
- const file =
- event.target.files[0];
-
- const preview =
- document.getElementById("photoPreview");
-
- if(file){
-
-  preview.src =
-  URL.createObjectURL(file);
-
-  preview.style.display =
-  "block";
-
- }
-
-}
-
-
-// =========================
-// UPLOAD PHOTO
-// =========================
-
-async function uploadPhoto(file){
-
- const token =
- localStorage.getItem("ak_token");
-
- if(!token){
-
-  throw new Error(
-   "Admin login required."
-  );
-
- }
-
- const extension =
- file.name.split(".").pop()
- .toLowerCase();
-
- const fileName =
- Date.now() +
- "_" +
- Math.random()
- .toString(36)
- .substring(2,8) +
- "." +
- extension;
-
- const uploadUrl =
- SUPABASE_URL +
- "/storage/v1/object/" +
- BUCKET +
- "/" +
- fileName;
-
- const r =
- await fetch(uploadUrl,{
-  method:"POST",
-  headers:{
-   "apikey":SUPABASE_KEY,
-   "Authorization":
-    "Bearer " + token,
-   "Content-Type":file.type,
-   "x-upsert":"false"
-  },
-  body:file
- });
-
- if(!r.ok){
-
-  const error =
-  await r.text();
-
-  throw new Error(
-   "Photo upload failed: " +
+  console.error(
+   "Product loading error:",
    error
   );
 
  }
 
- return (
-  SUPABASE_URL +
-  "/storage/v1/object/public/" +
-  BUCKET +
-  "/" +
-  fileName
- );
+}
+
+
+// ========================================
+// ESCAPE HTML
+// ========================================
+
+function escapeHTML(value){
+
+ return String(value || "")
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
 
 }
 
 
-// =========================
-// SAVE PRODUCT
-// =========================
+// ========================================
+// SHOW PRODUCTS
+// ========================================
 
-async function saveProduct(){
+function renderProducts(list=products){
 
- const msg =
- document.getElementById("msg");
+ const grid =
+ document.getElementById("productGrid");
 
- try{
+ if(!grid) return;
 
-  msg.innerHTML =
-  "⏳ Saving...";
+ if(!list.length){
 
-  const token =
-  localStorage.getItem("ak_token");
-
-  if(!token){
-
-   msg.innerHTML =
-   `<span class="error">
-   Please login first.
-   </span>`;
-
-   return;
-  }
-
-  const name =
-  document
-  .getElementById("productName")
-  .value.trim();
-
-  const cat =
-  document
-  .getElementById("category")
-  .value;
-
-  const price =
-  Number(
-   document
-   .getElementById("price")
-   .value
-  );
-
-  const description =
-  document
-  .getElementById("description")
-  .value.trim();
-
-  const file =
-  document
-  .getElementById("productPhoto")
-  .files[0];
-
-  if(!name){
-
-   msg.innerHTML =
-   `<span class="error">
-   Product name डालो.
-   </span>`;
-
-   return;
-  }
-
-  if(!price){
-
-   msg.innerHTML =
-   `<span class="error">
-   Price डालो.
-   </span>`;
-
-   return;
-  }
-
-
-  // =====================
-  // EDIT PRODUCT
-  // =====================
-
-  if(editingId){
-
-   let updateData = {
-    name:name,
-    cat:cat,
-    price:price,
-    description:description
-   };
-
-   if(file){
-
-    msg.innerHTML =
-    "📸 New photo upload ho rahi hai...";
-
-    updateData.image_url =
-    await uploadPhoto(file);
-
-   }
-
-   msg.innerHTML =
-   "⏳ Product update ho raha hai...";
-
-   const r =
-   await fetch(
-    SUPABASE_URL +
-    "/rest/v1/products?id=eq." +
-    editingId,
-    {
-     method:"PATCH",
-     headers:{
-      "apikey":SUPABASE_KEY,
-      "Authorization":
-       "Bearer " + token,
-      "Content-Type":
-       "application/json",
-      "Prefer":
-       "return=minimal"
-     },
-     body:
-     JSON.stringify(updateData)
-    }
-   );
-
-   if(!r.ok){
-
-    const error =
-    await r.text();
-
-    msg.innerHTML =
-    `<span class="error">
-    Update failed:<br>
-    ${error}
-    </span>`;
-
-    return;
-   }
-
-   msg.innerHTML =
-   `<span class="success">
-   ✅ Product updated successfully!
-   </span>`;
-
-   cancelEdit();
-
-   loadProducts();
-
-   return;
-  }
-
-
-  // =====================
-  // ADD NEW PRODUCT
-  // =====================
-
-  let imageUrl = "";
-
-  if(file){
-
-   msg.innerHTML =
-   "📸 Photo upload ho rahi hai...";
-
-   imageUrl =
-   await uploadPhoto(file);
-
-  }
-
-  const product = {
-
-   name:name,
-
-   cat:cat,
-
-   price:price,
-
-   image_url:imageUrl,
-
-   description:description,
-
-   stock:true
-
-  };
-
-  msg.innerHTML =
-  "⏳ Product save ho raha hai...";
-
-  const r =
-  await fetch(
-   SUPABASE_URL +
-   "/rest/v1/products",
-   {
-    method:"POST",
-    headers:{
-     "apikey":SUPABASE_KEY,
-     "Authorization":
-      "Bearer " + token,
-     "Content-Type":
-      "application/json",
-     "Prefer":
-      "return=minimal"
-    },
-    body:
-    JSON.stringify(product)
-   }
-  );
-
-  if(!r.ok){
-
-   const error =
-   await r.text();
-
-   msg.innerHTML =
-   `<span class="error">
-   Product add nahi hua:<br>
-   ${error}
-   </span>`;
-
-   return;
-  }
-
-  msg.innerHTML =
-  `<span class="success">
-  ✅ Product added successfully!
-  </span>`;
-
-  clearForm();
-
-  loadProducts();
-
- }catch(error){
-
-  msg.innerHTML =
-  `<span class="error">
-  ❌ ${error.message}
-  </span>`;
-
- }
-
-}
-
-
-// =========================
-// LOAD PRODUCTS
-// =========================
-
-async function loadProducts(){
-
- const token =
- localStorage.getItem("ak_token");
-
- if(!token) return;
-
- try{
-
-  const r =
-  await fetch(
-   SUPABASE_URL +
-   "/rest/v1/products?select=*&order=id.desc",
-   {
-    headers:{
-     "apikey":SUPABASE_KEY,
-     "Authorization":
-      "Bearer " + token
-    }
-   }
-  );
-
-  const data =
-  await r.json();
-
-  if(!r.ok){
-
-   document
-   .getElementById("productList")
-   .innerHTML =
-   `<p class="error">
-   ${JSON.stringify(data)}
-   </p>`;
-
-   return;
-  }
-
-  if(!data.length){
-
-   document
-   .getElementById("productList")
-   .innerHTML =
-   "<p>No products added yet.</p>";
-
-   return;
-  }
-
-  document
-  .getElementById("productList")
-  .innerHTML =
-
-  data.map(p=>`
-
-   <div class="product">
-
-    ${
-     p.image_url
-     ?
-     `<img
-      src="${p.image_url}"
-      alt="${p.name}"
-     >`
-     :
-     ""
-    }
-
-    <h3>
-     ${p.name || ""}
-    </h3>
-
-    <p>
-     Category:
-     ${p.cat || ""}
-    </p>
-
-    <p>
-     Price:
-     <b>₹${p.price || 0}</b>
-    </p>
-
-    <p>
-     Stock:
-     ${
-      p.stock
-      ?
-      `<span class="in">Available ✅</span>`
-      :
-      `<span class="out">Out of Stock ❌</span>`
-     }
-    </p>
-
-    ${
-     p.description
-     ?
-     `<p>${p.description}</p>`
-     :
-     ""
-    }
-
-    <button
-     class="editBtn"
-     onclick="editProduct(${p.id})">
-     ✏️ Edit
-    </button>
-
-    <button
-     class="stockBtn"
-     onclick="toggleStock(${p.id}, ${p.stock})">
-
-     ${
-      p.stock
-      ?
-      "📦 Mark Out of Stock"
-      :
-      "✅ Mark Available"
-     }
-
-    </button>
-
-   </div>
-
-  `).join("");
-
- }catch(error){
-
-  document
-  .getElementById("productList")
-  .innerHTML =
-  `<p class="error">
-  ${error.message}
-  </p>`;
-
- }
-
-}
-
-
-// =========================
-// EDIT PRODUCT
-// =========================
-
-async function editProduct(id){
-
- const token =
- localStorage.getItem("ak_token");
-
- const r =
- await fetch(
-  SUPABASE_URL +
-  "/rest/v1/products?id=eq." +
-  id +
-  "&select=*",
-  {
-   headers:{
-    "apikey":SUPABASE_KEY,
-    "Authorization":
-     "Bearer " + token
-   }
-  }
- );
-
- const data =
- await r.json();
-
- if(!r.ok || !data.length){
-
-  alert("Product load nahi hua.");
+  grid.innerHTML =
+  "<p>No products available.</p>";
 
   return;
  }
 
- const p = data[0];
+ grid.innerHTML =
+ list.map(p=>{
 
- editingId = id;
+  const name =
+  escapeHTML(p.name);
 
- document
- .getElementById("formTitle")
- .textContent =
- "✏️ Edit Product";
+  const cat =
+  escapeHTML(p.cat);
 
- document
- .getElementById("productName")
- .value =
- p.name || "";
+  const description =
+  escapeHTML(p.description);
 
- document
- .getElementById("category")
- .value =
- p.cat || "Plants";
+  return `
 
- document
- .getElementById("price")
- .value =
- p.price || "";
+  <article class="card">
 
- document
- .getElementById("description")
- .value =
- p.description || "";
+   <div class="pic">
 
- document
- .getElementById("productPhoto")
- .value = "";
+    ${
+     p.image
 
- document
- .getElementById("saveBtn")
- .textContent =
- "💾 Update Product";
+     ?
 
- document
- .getElementById("cancelBtn")
- .classList
- .remove("hidden");
+     `<img
+      src="${p.image}"
+      alt="${name}"
+      style="
+       width:100%;
+       height:100%;
+       object-fit:cover;
+       border-radius:10px;
+      "
+     >`
 
- const preview =
- document
- .getElementById("photoPreview");
+     :
 
- if(p.image_url){
+     p.icon
+    }
 
-  preview.src =
-  p.image_url;
+   </div>
 
-  preview.style.display =
-  "block";
 
- }else{
+   <div class="cardBody">
 
-  preview.style.display =
-  "none";
+    <span class="tag">
+     ${cat}
+    </span>
 
- }
 
- window.scrollTo({
-  top:0,
-  behavior:"smooth"
- });
+    <h3>
+     ${name}
+    </h3>
+
+
+    ${
+     description
+
+     ?
+
+     `<p>${description}</p>`
+
+     :
+
+     ""
+    }
+
+
+    <div class="price">
+
+     ₹${p.price}
+
+     ${
+      p.old
+
+      ?
+
+      `<span class="old">
+       ₹${p.old}
+       </span>`
+
+      :
+
+      ""
+     }
+
+    </div>
+
+
+    ${
+     p.stock
+
+     ?
+
+     `<button
+      class="btn"
+      onclick="addToCart(${p.id})"
+     >
+      Add to Cart
+     </button>`
+
+     :
+
+     `<button
+      class="btn"
+      disabled
+      style="
+       background:#999;
+       cursor:not-allowed;
+      "
+     >
+      Out of Stock
+     </button>`
+    }
+
+   </div>
+
+  </article>
+
+  `;
+
+ }).join("");
 
 }
 
 
-// =========================
-// STOCK ON/OFF
-// =========================
+// ========================================
+// CATEGORY FILTER
+// ========================================
 
-async function toggleStock(id,currentStock){
+function filterCat(cat){
 
- const token =
- localStorage.getItem("ak_token");
+ const filter =
+ document.getElementById("filter");
 
- const r =
- await fetch(
-  SUPABASE_URL +
-  "/rest/v1/products?id=eq." +
-  id,
-  {
-   method:"PATCH",
-   headers:{
-    "apikey":SUPABASE_KEY,
-    "Authorization":
-     "Bearer " + token,
-    "Content-Type":
-     "application/json",
-    "Prefer":
-     "return=minimal"
-   },
-   body:
-   JSON.stringify({
-    stock:!currentStock
-   })
-  }
- );
+ if(filter){
 
- if(r.ok){
+  filter.value = cat;
 
-  loadProducts();
+ }
+
+ if(cat === "All"){
+
+  renderProducts(products);
 
  }else{
 
-  const error =
-  await r.text();
+  renderProducts(
+   products.filter(
+    p => p.cat === cat
+   )
+  );
 
-  alert(
-   "Stock update nahi hua:\n" +
-   error
+ }
+
+ const section =
+ document.getElementById("products");
+
+ if(section){
+
+  section.scrollIntoView({
+   behavior:"smooth"
+  });
+
+ }
+
+}
+
+
+// ========================================
+// CART
+// ========================================
+
+function addToCart(id){
+
+ const p =
+ products.find(x => x.id === id);
+
+ if(!p) return;
+
+ if(!p.stock){
+
+  alert("Ye product abhi Out of Stock hai.");
+
+  return;
+ }
+
+ const found =
+ cart.find(x => x.id === id);
+
+ if(found){
+
+  found.qty++;
+
+ }else{
+
+  cart.push({
+   ...p,
+   qty:1
+  });
+
+ }
+
+ updateCart();
+
+ openCart();
+
+}
+
+
+// ========================================
+// UPDATE CART
+// ========================================
+
+function updateCart(){
+
+ const count =
+ document.getElementById("cartCount");
+
+ const items =
+ document.getElementById("cartItems");
+
+ const total =
+ document.getElementById("cartTotal");
+
+
+ if(count){
+
+  count.textContent =
+  cart.reduce(
+   (s,p)=>s+p.qty,
+   0
+  );
+
+ }
+
+
+ if(items){
+
+  items.innerHTML =
+  cart.length
+
+  ?
+
+  cart.map(p=>`
+
+   <div class="cartRow">
+
+    <span>
+     ${p.icon}
+     ${escapeHTML(p.name)}
+     × ${p.qty}
+    </span>
+
+    <b>
+     ₹${p.price * p.qty}
+    </b>
+
+   </div>
+
+  `).join("")
+
+  :
+
+  "<p>Your cart is empty.</p>";
+
+ }
+
+
+ if(total){
+
+  total.textContent =
+  cart.reduce(
+   (s,p)=>
+    s + p.price * p.qty,
+   0
   );
 
  }
@@ -922,105 +597,135 @@ async function toggleStock(id,currentStock){
 }
 
 
-// =========================
-// CLEAR FORM
-// =========================
+// ========================================
+// OPEN CART
+// ========================================
 
-function clearForm(){
+function openCart(){
 
- document
- .getElementById("productName")
- .value="";
+ const modal =
+ document.getElementById("cartModal");
 
- document
- .getElementById("price")
- .value="";
+ if(modal){
 
- document
- .getElementById("oldPrice")
- .value="";
+  modal.classList.remove("hidden");
 
- document
- .getElementById("productPhoto")
- .value="";
+ }
 
- document
- .getElementById("description")
- .value="";
-
- document
- .getElementById("photoPreview")
- .style.display="none";
+ updateCart();
 
 }
 
 
-// =========================
-// CANCEL EDIT
-// =========================
+// ========================================
+// CLOSE CART
+// ========================================
 
-function cancelEdit(){
+function closeCart(){
 
- editingId = null;
+ const modal =
+ document.getElementById("cartModal");
 
- document
- .getElementById("formTitle")
- .textContent =
- "➕ Add Product";
+ if(modal){
 
- document
- .getElementById("saveBtn")
- .textContent =
- "Add Product";
+  modal.classList.add("hidden");
 
- document
- .getElementById("cancelBtn")
- .classList
- .add("hidden");
-
- clearForm();
+ }
 
 }
 
 
-// =========================
-// LOGOUT
-// =========================
+// ========================================
+// WHATSAPP TEXT
+// ========================================
 
-function logout(){
+function orderText(extra=""){
 
- localStorage.removeItem(
-  "ak_token"
+ const lines =
+ cart.map(p =>
+  `${p.name} x ${p.qty} = ₹${p.price*p.qty}`
+ ).join("\n");
+
+
+ const total =
+ cart.reduce(
+  (s,p)=>
+   s+p.price*p.qty,
+  0
  );
 
- location.reload();
+
+ return (
+  `Namaste A.K Nursery,%0A%0A` +
+  `${encodeURIComponent(lines || "Website enquiry")}` +
+  `%0A%0ATotal: ₹${total}` +
+  `%0A${extra}`
+ );
 
 }
 
 
-// =========================
-// AUTO LOGIN
-// =========================
+// ========================================
+// CART CHECKOUT
+// ========================================
 
-if(
- localStorage.getItem("ak_token")
-){
+function checkout(){
 
- document
- .getElementById("loginBox")
- .classList
- .add("hidden");
+ if(!cart.length){
 
- document
- .getElementById("adminBox")
- .classList
- .remove("hidden");
+  alert("Cart is empty.");
 
- loadProducts();
+  return;
+ }
+
+ window.open(
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText()}`,
+  "_blank"
+ );
 
 }
 
-</script>
+
+// ========================================
+// CONTACT ORDER
+// ========================================
+
+function sendOrder(e){
+
+ e.preventDefault();
+
+ const name =
+ document.getElementById("name").value;
+
+ const phone =
+ document.getElementById("phone").value;
+
+ const address =
+ document.getElementById("address").value;
+
+
+ const extra =
+  `Name: ${encodeURIComponent(name)}%0A` +
+  `Mobile: ${encodeURIComponent(phone)}%0A` +
+  `Address: ${encodeURIComponent(address)}`;
+
+
+ window.open(
+  `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText(extra)}`,
+  "_blank"
+ );
+
+}
+
+
+// ========================================
+// START
+// ========================================
+
+loadProducts();
+
+updateCart();
+ </script>
 
 </body>
 </html>
