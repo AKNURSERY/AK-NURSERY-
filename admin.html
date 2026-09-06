@@ -1,397 +1,369 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>A.K Nursery Admin</title>
-
-<style>
-*{
-  box-sizing:border-box;
-}
+<title>A.K Nursery Admin</title><style>
+*{box-sizing:border-box}
 
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f3f7f3;
-  color:#12351f;
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f3f7f2;
+ color:#163b24;
+}
+
+header{
+ background:#064b2a;
+ color:#fff;
+ padding:18px;
+}
+
+.headerInner{
+ max-width:1100px;
+ margin:auto;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+}
+
+header h1{
+ margin:0;
+ font-size:24px;
 }
 
 .container{
-  width:min(1000px,94%);
-  margin:30px auto;
+ max-width:1100px;
+ margin:25px auto;
+ padding:0 15px;
 }
 
-.header{
-  background:#064b2a;
-  color:white;
-  padding:20px;
-  border-radius:14px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-}
-
-.header h1{
-  margin:0;
-  font-size:24px;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-}
-
-.btn{
-  background:#087c35;
-  color:white;
-  padding:11px 18px;
-  border-radius:8px;
-  font-weight:bold;
-}
-
-.btn:hover{
-  background:#065f29;
-}
-
-.logout{
-  background:#fff;
-  color:#064b2a;
-}
-
-.card{
-  background:white;
-  margin-top:20px;
-  padding:20px;
-  border-radius:14px;
-  box-shadow:0 3px 15px #0001;
-}
-
-.login{
-  max-width:450px;
-  margin:80px auto;
+.box{
+ background:#fff;
+ border-radius:14px;
+ padding:20px;
+ margin-bottom:20px;
+ box-shadow:0 3px 15px #00000012;
 }
 
 h2{
-  margin-top:0;
+ margin-top:0;
+ color:#064b2a;
 }
 
-input,
-textarea,
-select{
-  width:100%;
-  padding:12px;
-  margin:6px 0 12px;
-  border:1px solid #ccd8cd;
-  border-radius:8px;
-  font-size:15px;
+input,select,textarea{
+ width:100%;
+ padding:12px;
+ border:1px solid #ccd8cd;
+ border-radius:8px;
+ font-size:15px;
+ margin-top:6px;
 }
 
 textarea{
-  min-height:90px;
-  resize:vertical;
+ min-height:100px;
+ resize:vertical;
 }
 
 label{
-  font-weight:bold;
-  font-size:14px;
+ display:block;
+ font-weight:700;
+ margin-top:13px;
 }
 
-.product{
-  border:1px solid #dde6dd;
-  border-radius:12px;
-  padding:15px;
-  margin-top:15px;
-  display:flex;
-  gap:15px;
-  align-items:center;
+.row{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:15px;
 }
 
-.product img{
-  width:90px;
-  height:90px;
-  object-fit:contain;
-  background:#f5f8f4;
-  border-radius:8px;
+button{
+ border:0;
+ border-radius:8px;
+ padding:11px 16px;
+ cursor:pointer;
+ font-weight:700;
 }
 
-.productInfo{
-  flex:1;
+.primary{
+ background:#087c35;
+ color:#fff;
 }
 
-.productInfo h3{
-  margin:0 0 6px;
+.primary:hover{
+ background:#065f29;
 }
 
-.productInfo p{
-  margin:4px 0;
-  color:#66756b;
+.secondary{
+ background:#e8f3e7;
+ color:#087c35;
+}
+
+.danger{
+ background:#d93025;
+ color:#fff;
+}
+
+.logout{
+ background:#fff;
+ color:#064b2a;
 }
 
 .actions{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-.edit{
-  background:#eaf6e9;
-  color:#087c35;
-}
-
-.delete{
-  background:#ffe9e9;
-  color:#b00020;
-}
-
-.stock{
-  margin:10px 0;
+ display:flex;
+ gap:10px;
+ flex-wrap:wrap;
+ margin-top:18px;
 }
 
 .hidden{
-  display:none;
+ display:none!important;
 }
 
 .message{
-  padding:12px;
-  border-radius:8px;
-  margin-top:10px;
-  background:#eef8e9;
+ padding:12px;
+ border-radius:8px;
+ margin-bottom:15px;
+ display:none;
+}
+
+.success{
+ display:block;
+ background:#e7f7e8;
+ color:#176b2a;
+}
+
+.error{
+ display:block;
+ background:#fdeaea;
+ color:#a32121;
+}
+
+.login{
+ max-width:450px;
+ margin:60px auto;
+ padding:20px;
+}
+
+.previewGrid{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+ margin-top:12px;
 }
 
 .preview{
-  width:120px;
-  height:120px;
-  object-fit:contain;
-  background:#f5f8f4;
-  border-radius:10px;
-  display:block;
-  margin:10px 0;
+ position:relative;
+ height:150px;
+ border:1px solid #ddd;
+ border-radius:10px;
+ overflow:hidden;
+ background:#f5f5f5;
 }
 
-@media(max-width:600px){
-
-  .header{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .product{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .product img{
-    width:120px;
-    height:120px;
-  }
-
-  .actions{
-    width:100%;
-  }
+.preview img{
+ width:100%;
+ height:100%;
+ object-fit:contain;
 }
-</style>
-</head>
 
-<body>
+.removePhoto{
+ position:absolute;
+ top:5px;
+ right:5px;
+ background:#d93025;
+ color:white;
+ border-radius:50%;
+ width:30px;
+ height:30px;
+ padding:0;
+}
 
-<div id="loginBox" class="container login">
+.productsGrid{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:15px;
+}
 
-  <div class="card">
+.product{
+ border:1px solid #e0e7e0;
+ border-radius:12px;
+ overflow:hidden;
+ background:#fff;
+}
 
-    <h2>🔐 A.K Nursery Admin</h2>
+.productPhoto{
+ height:220px;
+ background:#f4f7f3;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+}
 
-    <p>Admin account se login karein.</p>
+.productPhoto img{
+ width:100%;
+ height:100%;
+ object-fit:contain;
+}
 
-    <form id="loginForm">
+.productInfo{
+ padding:14px;
+}
 
-      <label>Email</label>
-      <input
-        id="email"
-        type="email"
-        required
-        placeholder="Admin email">
+.productInfo h3{
+ margin:0 0 7px;
+}
 
-      <label>Password</label>
-      <input
-        id="password"
-        type="password"
-        required
-        placeholder="Password">
+.price{
+ color:#087c35;
+ font-size:20px;
+ font-weight:800;
+}
 
-      <button class="btn" type="submit">
-        Login
-      </button>
+.old{
+ color:#999;
+ text-decoration:line-through;
+ font-size:13px;
+ margin-left:5px;
+}
 
-    </form>
+.badge{
+ display:inline-block;
+ padding:4px 8px;
+ border-radius:10px;
+ background:#e8f6e8;
+ font-size:12px;
+ margin-bottom:7px;
+}
 
-    <div id="loginMessage"></div>
+.notice{
+ background:#f5f8f4;
+ padding:10px;
+ border-radius:8px;
+ font-size:13px;
+ line-height:1.6;
+ margin-top:12px;
+}
 
-  </div>
+.search{
+ margin-bottom:15px;
+}
 
+.loading{
+ text-align:center;
+ padding:20px;
+}
+
+@media(max-width:800px){
+ .productsGrid{
+  grid-template-columns:repeat(2,1fr);
+ }
+ .previewGrid{
+  grid-template-columns:repeat(3,1fr);
+ }
+}
+
+@media(max-width:550px){
+ .row{
+  grid-template-columns:1fr;
+ }
+ .productsGrid{
+  grid-template-columns:1fr;
+ }
+ .previewGrid{
+  grid-template-columns:repeat(2,1fr);
+ }
+ .headerInner{
+  align-items:flex-start;
+ }
+}
+</style></head><body><header>
+<div class="headerInner">
+<h1>🌱 A.K Nursery Admin</h1>
+<button class="logout hidden" id="logoutBtn" onclick="logout()">Logout</button>
 </div>
+</header><!-- LOGIN --><div id="loginBox" class="login box"><h2>🔐 Admin Login</h2><div id="loginMessage" class="message"></div><label>Email</label>
+<input id="loginEmail" type="email" placeholder="Admin email">
 
+<label>Password</label>
+<input id="loginPassword" type="password" placeholder="Password">
 
-<div id="adminBox" class="container hidden">
+<div class="actions">
+<button class="primary" onclick="login()">Login</button>
+</div></div><!-- ADMIN --><main id="adminPanel" class="container hidden"><div id="message" class="message"></div><!-- ADD / EDIT --><div class="box"><h2 id="formTitle">➕ Add New Product</h2><input type="hidden" id="productId"><div class="row"><div>
+<label>Product Name *</label>
+<input id="productName" placeholder="Example: Plastic pot 15">
+</div><div>
+<label>Category *</label>
+<select id="productCat">
+<option value="Plants">Plants</option>
+<option value="Pots">Pots</option>
+<option value="Vermicompost">Vermicompost</option>
+<option value="Wall Compound">Wall Compound</option>
+</select>
+</div></div><div class="row"><div>
+<label>New Price (₹) *</label>
+<input id="productPrice" type="number" min="0" placeholder="419">
+</div><div>
+<label>Old Price (₹) — optional</label>
+<input id="productOldPrice" type="number" min="0" placeholder="499">
+</div></div><label>Colors — optional</label>
+<input id="productColors" placeholder="Red, Green, White">
 
-  <div class="header">
+<label>Description — optional</label>
 
-    <div>
-      <h1>🌱 A.K Nursery Admin</h1>
-      <small>Product Management</small>
-    </div>
+<textarea id="productDescription" placeholder="Product details"></textarea><label>Stock</label>
 
-    <button
-      class="btn logout"
-      onclick="logout()">
-      Logout
-    </button>
+<select id="productStock">
+<option value="true">In Stock</option>
+<option value="false">Out of Stock</option>
+</select><label>📸 Product Photos</label>
 
-  </div>
+<input
+id="photoInput"
+type="file"
+accept="image/*"
+multiple
+onchange="handlePhotos(event)"
 
+«»
 
-  <!-- ADD / EDIT PRODUCT -->
+<div class="notice">
+📱 Phone ki Gallery se ek ya multiple photos select kar sakte ho.
+<br>
+🖼️ Photo automatically resize/compress hokar database me save hogi.
+<br>
+🔗 Photo URL manually dalne ki zarurat nahi.
+</div><div id="previewGrid" class="previewGrid"></div><div class="notice">🚚 <b>Delivery charges extra</b><br>
+🪴 <b>Plant & Pot fixing charge extra</b><br><br>
 
-  <div class="card">
+Ye dono charges product price me automatically add nahi honge.
+Customer ko order ke time extra bataya jayega.
 
-    <h2 id="formTitle">
-      ➕ Add New Product
-    </h2>
+</div><div class="actions"><button class="primary" onclick="saveProduct()">
+💾 Save Product
+</button><button
+class="secondary hidden"
+id="cancelEditBtn"
+onclick="resetForm()">
+Cancel Edit
+</button>
 
-    <form id="productForm">
+</div></div><!-- PRODUCTS --><div class="box"><h2>📦 Your Products</h2><input
+class="search"
+id="searchBox"
+placeholder="🔍 Search product..."
+oninput="searchProducts()"
 
-      <input
-        id="productId"
-        type="hidden">
+«»
 
+<div id="productsList">
+<p class="loading">Loading products...</p>
+</div></div></main><script>
 
-      <label>Product Name</label>
-
-      <input
-        id="productName"
-        required
-        placeholder="Example: Plastic Pot 15&quot;">
-
-
-      <label>Price ₹</label>
-
-      <input
-        id="productPrice"
-        type="number"
-        min="0"
-        required
-        placeholder="419">
-
-
-      <label>Old Price ₹</label>
-
-      <input
-        id="oldPrice"
-        type="number"
-        min="0"
-        placeholder="499">
-
-
-      <label>Category</label>
-
-      <select id="productCat">
-
-        <option value="Plants">
-          Plants
-        </option>
-
-        <option value="Pots">
-          Pots
-        </option>
-
-        <option value="Vermicompost">
-          Vermicompost
-        </option>
-
-        <option value="Wall Compound">
-          Wall Compound
-        </option>
-
-      </select>
-
-
-      <label>Photo URL</label>
-
-      <input
-        id="imageUrl"
-        type="url"
-        placeholder="https://...">
-
-
-      <img
-        id="preview"
-        class="preview hidden"
-        alt="Photo preview">
-
-
-      <label>Description</label>
-
-      <textarea
-        id="description"
-        placeholder="Product description"></textarea>
-
-
-      <label>Colors</label>
-
-      <input
-        id="colors"
-        placeholder="Black, White, Green">
-
-
-      <label class="stock">
-        <input
-          id="stock"
-          type="checkbox"
-          checked
-          style="width:auto;">
-        Product In Stock
-      </label>
-
-
-      <button
-        class="btn"
-        type="submit">
-        💾 Save Product
-      </button>
-
-      <button
-        type="button"
-        class="btn edit hidden"
-        id="cancelBtn"
-        onclick="cancelEdit()">
-        Cancel Edit
-      </button>
-
-    </form>
-
-    <div id="formMessage"></div>
-
-  </div>
-
-
-  <!-- PRODUCT LIST -->
-
-  <div class="card">
-
-    <h2>📦 Your Products</h2>
-
-    <div id="products">
-      Loading products...
-    </div>
-
-  </div>
-
-</div>
-
-
-<script>
+/* ==========================================
+   A.K NURSERY SETTINGS
+========================================== */
 
 const SUPABASE_URL =
 "https://mudpcroftnctbbdqxisj.supabase.co";
@@ -400,765 +372,1250 @@ const SUPABASE_KEY =
 "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
 
 
-const headers = {
+let products = [];
+let selectedPhotos = [];
+let editingId = null;
+
+
+/* ==========================================
+   SUPABASE REQUEST
+========================================== */
+
+async function supabaseRequest(url, options={}){
+
+ const headers = {
   "apikey": SUPABASE_KEY,
   "Authorization": "Bearer " + SUPABASE_KEY,
-  "Content-Type": "application/json"
-};
+  "Content-Type": "application/json",
+  ...(options.headers || {})
+ };
 
-
-let currentProducts = [];
-
-
-// ======================================
-// LOGIN
-// ======================================
-
-document
-.getElementById("loginForm")
-.addEventListener("submit", async function(e){
-
-  e.preventDefault();
-
-  const email =
-    document.getElementById("email").value.trim();
-
-  const password =
-    document.getElementById("password").value;
-
-
-  const message =
-    document.getElementById("loginMessage");
-
-  message.innerHTML =
-    "Logging in...";
-
-
-  try{
-
-    const response =
-      await fetch(
-        SUPABASE_URL +
-        "/auth/v1/token?grant_type=password",
-        {
-          method:"POST",
-
-          headers:{
-            "apikey":SUPABASE_KEY,
-            "Content-Type":"application/json"
-          },
-
-          body:JSON.stringify({
-            email:email,
-            password:password
-          })
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if(!response.ok){
-
-      message.innerHTML =
-        "❌ Login failed: " +
-        (data.error_description ||
-         data.msg ||
-         "Invalid login");
-
-      return;
-    }
-
-
-    localStorage.setItem(
-      "ak_access_token",
-      data.access_token
-    );
-
-
-    localStorage.setItem(
-      "ak_user_id",
-      data.user?.id || ""
-    );
-
-
-    showAdmin();
-
-  }catch(error){
-
-    console.error(error);
-
-    message.innerHTML =
-      "❌ Internet/Supabase connection problem.";
-
+ return fetch(
+  SUPABASE_URL + url,
+  {
+   ...options,
+   headers
   }
-
-});
-
-
-// ======================================
-// CHECK LOGIN
-// ======================================
-
-function checkLogin(){
-
-  const token =
-    localStorage.getItem(
-      "ak_access_token"
-    );
-
-  if(token){
-
-    showAdmin();
-
-  }
+ );
 
 }
 
 
-// ======================================
-// SHOW ADMIN
-// ======================================
+/* ==========================================
+   LOGIN
+========================================== */
+
+async function login(){
+
+ const email =
+ document.getElementById("loginEmail").value.trim();
+
+ const password =
+ document.getElementById("loginPassword").value;
+
+
+ const box =
+ document.getElementById("loginMessage");
+
+
+ if(!email || !password){
+
+  showLoginMessage(
+   "Email aur password dono bharna zaroori hai.",
+   "error"
+  );
+
+  return;
+ }
+
+
+ try{
+
+  const response =
+   await fetch(
+    SUPABASE_URL +
+    "/auth/v1/token?grant_type=password",
+    {
+     method:"POST",
+     headers:{
+      "apikey":SUPABASE_KEY,
+      "Content-Type":"application/json"
+     },
+     body:JSON.stringify({
+      email,
+      password
+     })
+    }
+   );
+
+
+  const data =
+   await response.json();
+
+
+  if(!response.ok){
+
+   showLoginMessage(
+    data.error_description ||
+    data.msg ||
+    "Login failed.",
+    "error"
+   );
+
+   return;
+  }
+
+
+  localStorage.setItem(
+   "ak_access_token",
+   data.access_token
+  );
+
+
+  localStorage.setItem(
+   "ak_refresh_token",
+   data.refresh_token || ""
+  );
+
+
+  showAdmin();
+
+ }catch(error){
+
+  showLoginMessage(
+   "Internet connection check karo.",
+   "error"
+  );
+
+ }
+
+}
+
+
+/* ==========================================
+   SHOW ADMIN
+========================================== */
 
 function showAdmin(){
 
-  document
-    .getElementById("loginBox")
-    .classList.add("hidden");
+ document
+  .getElementById("loginBox")
+  .classList.add("hidden");
 
-  document
-    .getElementById("adminBox")
-    .classList.remove("hidden");
+ document
+  .getElementById("adminPanel")
+  .classList.remove("hidden");
 
-  loadProducts();
+ document
+  .getElementById("logoutBtn")
+  .classList.remove("hidden");
 
-}
-
-
-// ======================================
-// LOGOUT
-// ======================================
-
-async function logout(){
-
-  const token =
-    localStorage.getItem(
-      "ak_access_token"
-    );
-
-
-  if(token){
-
-    try{
-
-      await fetch(
-        SUPABASE_URL +
-        "/auth/v1/logout",
-        {
-          method:"POST",
-          headers:{
-            "apikey":SUPABASE_KEY,
-            "Authorization":
-              "Bearer " + token
-          }
-        }
-      );
-
-    }catch(e){}
-
-  }
-
-
-  localStorage.removeItem(
-    "ak_access_token"
-  );
-
-  localStorage.removeItem(
-    "ak_user_id"
-  );
-
-
-  location.reload();
+ loadProducts();
 
 }
 
 
-// ======================================
-// LOAD PRODUCTS
-// ======================================
+/* ==========================================
+   LOGOUT
+========================================== */
+
+function logout(){
+
+ localStorage.removeItem("ak_access_token");
+ localStorage.removeItem("ak_refresh_token");
+
+ location.reload();
+
+}
+
+
+/* ==========================================
+   LOAD PRODUCTS
+========================================== */
 
 async function loadProducts(){
 
-  const box =
-    document.getElementById("products");
+ const list =
+ document.getElementById("productsList");
 
-  box.innerHTML =
-    "Loading products...";
-
-
-  try{
-
-    const response =
-      await fetch(
-        SUPABASE_URL +
-        "/rest/v1/products?select=*&order=id.desc",
-        {
-          headers:headers
-        }
-      );
+ list.innerHTML =
+ `<p class="loading">Loading products...</p>`;
 
 
-    const data =
-      await response.json();
+ try{
+
+  const response =
+   await supabaseRequest(
+    "/rest/v1/products?select=*&order=id.desc"
+   );
 
 
-    if(!response.ok){
-
-      box.innerHTML =
-        "❌ Products load nahi ho rahe.";
-
-      console.error(data);
-
-      return;
-    }
+  const data =
+   await response.json();
 
 
-    currentProducts = data;
+  if(!response.ok){
 
-    renderAdminProducts();
+   list.innerHTML =
+    `<p class="error">Products load nahi ho rahe.</p>`;
 
-  }catch(error){
+   console.error(data);
 
-    console.error(error);
-
-    box.innerHTML =
-      "❌ Connection error.";
-
+   return;
   }
+
+
+  products =
+   data.map(p=>({
+
+    ...p,
+
+    price:Number(p.price)||0,
+
+    old_price:Number(p.old_price)||0,
+
+    stock:p.stock !== false,
+
+    image_url:p.image_url || "",
+
+    images:parseImages(p.images),
+
+    colors:p.colors || ""
+
+   }));
+
+
+  renderProducts(products);
+
+
+ }catch(error){
+
+  console.error(error);
+
+  list.innerHTML =
+   `<p class="error">Connection error.</p>`;
+
+ }
 
 }
 
 
-// ======================================
-// SHOW PRODUCTS
-// ======================================
+/* ==========================================
+   PARSE IMAGES
+========================================== */
 
-function renderAdminProducts(){
+function parseImages(value){
 
-  const box =
-    document.getElementById("products");
+ if(Array.isArray(value)){
+  return value;
+ }
+
+ if(typeof value === "string"){
+
+  try{
+
+   const parsed =
+    JSON.parse(value);
+
+   if(Array.isArray(parsed)){
+    return parsed;
+   }
+
+  }catch(e){}
+
+ }
+
+ return [];
+
+}
 
 
-  if(!currentProducts.length){
+/* ==========================================
+   PHOTO PROCESSING
+========================================== */
 
-    box.innerHTML =
-      "<p>No products found.</p>";
+function handlePhotos(event){
 
-    return;
+ const files =
+  Array.from(event.target.files || []);
+
+
+ if(!files.length) return;
+
+
+ selectedPhotos = [];
+
+
+ Promise.all(
+  files.map(file => compressImage(file))
+ )
+ .then(images=>{
+
+  selectedPhotos =
+   images.filter(Boolean);
+
+  renderPreview();
+
+ })
+ .catch(error=>{
+
+  console.error(error);
+
+  showMessage(
+   "Photo process nahi ho paayi.",
+   "error"
+  );
+
+ });
+
+}
+
+
+/* ==========================================
+   COMPRESS IMAGE
+========================================== */
+
+function compressImage(file){
+
+ return new Promise((resolve,reject)=>{
+
+  if(!file.type.startsWith("image/")){
+
+   resolve(null);
+   return;
+
   }
 
 
+  const reader =
+   new FileReader();
+
+
+  reader.onload = function(e){
+
+   const img =
+    new Image();
+
+
+   img.onload = function(){
+
+    const maxSize = 1200;
+
+    let width = img.width;
+    let height = img.height;
+
+
+    if(width > maxSize || height > maxSize){
+
+     if(width > height){
+
+      height =
+       Math.round(
+        height * maxSize / width
+       );
+
+      width = maxSize;
+
+     }else{
+
+      width =
+       Math.round(
+        width * maxSize / height
+       );
+
+      height = maxSize;
+
+     }
+
+    }
+
+
+    const canvas =
+     document.createElement("canvas");
+
+    canvas.width = width;
+    canvas.height = height;
+
+
+    const ctx =
+     canvas.getContext("2d");
+
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(
+     0,
+     0,
+     width,
+     height
+    );
+
+
+    ctx.drawImage(
+     img,
+     0,
+     0,
+     width,
+     height
+    );
+
+
+    const result =
+     canvas.toDataURL(
+      "image/jpeg",
+      0.82
+     );
+
+
+    resolve(result);
+
+   };
+
+
+   img.onerror =
+    () => reject("Image error");
+
+
+   img.src = e.target.result;
+
+  };
+
+
+  reader.onerror =
+   () => reject("File error");
+
+
+  reader.readAsDataURL(file);
+
+ });
+
+}
+
+
+/* ==========================================
+   PREVIEW
+========================================== */
+
+function renderPreview(){
+
+ const box =
+  document.getElementById("previewGrid");
+
+
+ if(!selectedPhotos.length){
+
+  box.innerHTML = "";
+  return;
+
+ }
+
+
+ box.innerHTML =
+  selectedPhotos.map(
+   (src,index)=>`
+
+    <div class="preview">
+
+      <img
+       src="${src}"
+       alt="Product photo"
+      >
+
+      <button
+       class="removePhoto"
+       onclick="removePhoto(${index})">
+       ×
+      </button>
+
+    </div>
+
+   `
+  ).join("");
+
+}
+
+
+/* ==========================================
+   REMOVE PHOTO
+========================================== */
+
+function removePhoto(index){
+
+ selectedPhotos.splice(
+  index,
+  1
+ );
+
+ renderPreview();
+
+}
+
+
+/* ==========================================
+   SAVE PRODUCT
+========================================== */
+
+async function saveProduct(){
+
+ const name =
+  document
+   .getElementById("productName")
+   .value.trim();
+
+
+ const cat =
+  document
+   .getElementById("productCat")
+   .value;
+
+
+ const price =
+  Number(
+   document
+    .getElementById("productPrice")
+    .value
+  );
+
+
+ const oldPrice =
+  Number(
+   document
+    .getElementById("productOldPrice")
+    .value
+  ) || 0;
+
+
+ const description =
+  document
+   .getElementById("productDescription")
+   .value.trim();
+
+
+ const colorsText =
+  document
+   .getElementById("productColors")
+   .value.trim();
+
+
+ const stock =
+  document
+   .getElementById("productStock")
+   .value === "true";
+
+
+ if(!name){
+
+  showMessage(
+   "Product name bharna zaroori hai.",
+   "error"
+  );
+
+  return;
+
+ }
+
+
+ if(!Number.isFinite(price) || price < 0){
+
+  showMessage(
+   "Valid price dalo.",
+   "error"
+  );
+
+  return;
+
+ }
+
+
+ const colors =
+  colorsText
+   ?
+   colorsText
+    .split(",")
+    .map(x=>x.trim())
+    .filter(Boolean)
+   :
+   [];
+
+
+ const payload = {
+
+  name:name,
+
+  cat:cat,
+
+  price:price,
+
+  old_price:oldPrice,
+
+  stock:stock,
+
+  description:description,
+
+  colors:colors
+
+ };
+
+
+ /*
+    PHOTO
+
+    New photos selected:
+    first photo -> image_url
+    all photos -> images
+ */
+
+ if(selectedPhotos.length){
+
+  payload.image_url =
+   selectedPhotos[0];
+
+  payload.images =
+   selectedPhotos;
+
+ }
+
+
+ const saveButton =
+  document.querySelector(
+   "#adminPanel .primary"
+  );
+
+
+ if(saveButton){
+
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving...";
+
+ }
+
+
+ try{
+
+  let response;
+
+
+  if(editingId){
+
+   response =
+    await supabaseRequest(
+     "/rest/v1/products?id=eq." +
+     encodeURIComponent(editingId),
+     {
+      method:"PATCH",
+      headers:{
+       "Prefer":"return=representation"
+      },
+      body:JSON.stringify(payload)
+     }
+    );
+
+  }else{
+
+   response =
+    await supabaseRequest(
+     "/rest/v1/products",
+     {
+      method:"POST",
+      headers:{
+       "Prefer":"return=representation"
+      },
+      body:JSON.stringify(payload)
+     }
+    );
+
+  }
+
+
+  const data =
+   await response.json();
+
+
+  if(!response.ok){
+
+   console.error(data);
+
+   showMessage(
+    data.message ||
+    data.error ||
+    "Product save nahi hua.",
+    "error"
+   );
+
+   return;
+
+  }
+
+
+  showMessage(
+   editingId
+    ? "✅ Product updated successfully."
+    : "✅ Product added successfully.",
+   "success"
+  );
+
+
+  resetForm();
+
+  await loadProducts();
+
+
+ }catch(error){
+
+  console.error(error);
+
+  showMessage(
+   "Internet/Supabase connection error.",
+   "error"
+  );
+
+ }finally{
+
+  if(saveButton){
+
+   saveButton.disabled = false;
+   saveButton.textContent = "💾 Save Product";
+
+  }
+
+ }
+
+}
+
+
+/* ==========================================
+   EDIT PRODUCT
+========================================== */
+
+function editProduct(id){
+
+ const product =
+  products.find(
+   p => String(p.id) === String(id)
+  );
+
+
+ if(!product) return;
+
+
+ editingId =
+  product.id;
+
+
+ document
+  .getElementById("formTitle")
+  .textContent =
+  "✏️ Edit Product";
+
+
+ document
+  .getElementById("productId")
+  .value =
+  product.id;
+
+
+ document
+  .getElementById("productName")
+  .value =
+  product.name || "";
+
+
+ document
+  .getElementById("productCat")
+  .value =
+  product.cat || "Plants";
+
+
+ document
+  .getElementById("productPrice")
+  .value =
+  product.price || 0;
+
+
+ document
+  .getElementById("productOldPrice")
+  .value =
+  product.old_price || "";
+
+
+ document
+  .getElementById("productDescription")
+  .value =
+  product.description || "";
+
+
+ document
+  .getElementById("productStock")
+  .value =
+  product.stock
+   ? "true"
+   : "false";
+
+
+ document
+  .getElementById("productColors")
+  .value =
+  Array.isArray(product.colors)
+   ? product.colors.join(", ")
+   : product.colors || "";
+
+
+ selectedPhotos =
+  product.images.length
+   ? [...product.images]
+   : product.image_url
+     ? [product.image_url]
+     : [];
+
+
+ renderPreview();
+
+
+ document
+  .getElementById("cancelEditBtn")
+  .classList.remove("hidden");
+
+
+ window.scrollTo({
+  top:0,
+  behavior:"smooth"
+ });
+
+}
+
+
+/* ==========================================
+   DELETE PRODUCT
+========================================== */
+
+async function deleteProduct(id){
+
+ const product =
+  products.find(
+   p => String(p.id) === String(id)
+  );
+
+
+ if(!product) return;
+
+
+ const yes =
+  confirm(
+   `Kya "${product.name}" delete karna hai?`
+  );
+
+
+ if(!yes) return;
+
+
+ try{
+
+  const response =
+   await supabaseRequest(
+    "/rest/v1/products?id=eq." +
+    encodeURIComponent(id),
+    {
+     method:"DELETE"
+    }
+   );
+
+
+  if(!response.ok){
+
+   const data =
+    await response.json();
+
+   console.error(data);
+
+   showMessage(
+    "Product delete nahi hua.",
+    "error"
+   );
+
+   return;
+
+  }
+
+
+  showMessage(
+   "🗑️ Product deleted.",
+   "success"
+  );
+
+
+  await loadProducts();
+
+
+ }catch(error){
+
+  console.error(error);
+
+  showMessage(
+   "Delete error.",
+   "error"
+  );
+
+ }
+
+}
+
+
+/* ==========================================
+   RESET FORM
+========================================== */
+
+function resetForm(){
+
+ editingId = null;
+
+ selectedPhotos = [];
+
+
+ document
+  .getElementById("formTitle")
+  .textContent =
+  "➕ Add New Product";
+
+
+ document
+  .getElementById("productId")
+  .value = "";
+
+
+ document
+  .getElementById("productName")
+  .value = "";
+
+
+ document
+  .getElementById("productCat")
+  .value = "Plants";
+
+
+ document
+  .getElementById("productPrice")
+  .value = "";
+
+
+ document
+  .getElementById("productOldPrice")
+  .value = "";
+
+
+ document
+  .getElementById("productDescription")
+  .value = "";
+
+
+ document
+  .getElementById("productColors")
+  .value = "";
+
+
+ document
+  .getElementById("productStock")
+  .value = "true";
+
+
+ document
+  .getElementById("photoInput")
+  .value = "";
+
+
+ renderPreview();
+
+
+ document
+  .getElementById("cancelEditBtn")
+  .classList.add("hidden");
+
+}
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+function searchProducts(){
+
+ const query =
+  document
+   .getElementById("searchBox")
+   .value
+   .trim()
+   .toLowerCase();
+
+
+ const filtered =
+  products.filter(p=>{
+
+   return (
+    String(p.name || "")
+     .toLowerCase()
+     .includes(query)
+    ||
+    String(p.cat || "")
+     .toLowerCase()
+     .includes(query)
+   );
+
+  });
+
+
+ renderProducts(filtered);
+
+}
+
+
+/* ==========================================
+   RENDER PRODUCTS
+========================================== */
+
+function renderProducts(list){
+
+ const box =
+  document.getElementById("productsList");
+
+
+ if(!list.length){
+
   box.innerHTML =
-    currentProducts.map(p => `
+   `<p>No products found.</p>`;
+
+  return;
+
+ }
+
+
+ box.innerHTML =
+  `<div class="productsGrid">
+
+   ${
+    list.map(p=>{
+
+     const image =
+      p.image_url ||
+      (p.images && p.images[0]) ||
+      "";
+
+
+     return `
 
       <div class="product">
 
+       <div class="productPhoto">
+
         ${
-          p.image_url
+         image
+
+         ?
+
+         `
+         <img
+          src="${image}"
+          alt="${escapeHTML(p.name)}"
+         >
+         `
+
+         :
+
+         `
+         <span style="font-size:60px">
+          🌱
+         </span>
+         `
+        }
+
+       </div>
+
+
+       <div class="productInfo">
+
+        <span class="badge">
+         ${escapeHTML(p.cat || "Plants")}
+        </span>
+
+
+        <h3>
+         ${escapeHTML(p.name || "Product")}
+        </h3>
+
+
+        <div class="price">
+
+         ₹${formatPrice(p.price)}
+
+         ${
+          p.old_price > 0
           ?
-          `<img
-            src="${escapeHTML(p.image_url)}"
-            alt="${escapeHTML(p.name || "Product")}"
-            onerror="this.style.display='none';"
-          >`
+          `<span class="old">
+           ₹${formatPrice(p.old_price)}
+          </span>`
           :
-          `<img
-            src=""
-            alt="No photo"
-            style="display:none;">
-          `
+          ""
+         }
+
+        </div>
+
+
+        <p>
+         ${
+          p.stock
+          ? "✅ In Stock"
+          : "❌ Out of Stock"
+         }
+        </p>
+
+
+        ${
+         p.description
+         ?
+         `<p>${escapeHTML(p.description)}</p>`
+         :
+         ""
         }
 
 
-        <div class="productInfo">
+        <div class="notice">
 
-          <h3>
-            ${escapeHTML(
-              p.name || "Product"
-            )}
-          </h3>
-
-          <p>
-            Category:
-            ${escapeHTML(
-              p.cat || "Plants"
-            )}
-          </p>
-
-          <p>
-            Price:
-            ₹${Number(p.price) || 0}
-          </p>
-
-          <p>
-            ${
-              p.stock !== false
-              ? "🟢 In Stock"
-              : "🔴 Out of Stock"
-            }
-          </p>
+         🚚 Delivery charges extra<br>
+         🪴 Plant & Pot fixing charge extra
 
         </div>
 
 
         <div class="actions">
 
-          <button
-            class="btn edit"
-            onclick="editProduct(${p.id})">
-            ✏️ Edit
-          </button>
+         <button
+          class="secondary"
+          onclick="editProduct(${p.id})">
+          ✏️ Edit
+         </button>
 
-          <button
-            class="btn delete"
-            onclick="deleteProduct(${p.id})">
-            🗑️ Delete
-          </button>
+
+         <button
+          class="danger"
+          onclick="deleteProduct(${p.id})">
+          🗑️ Delete
+         </button>
 
         </div>
 
+       </div>
+
       </div>
 
-    `).join("");
+     `;
+
+    }).join("")
+   }
+
+  </div>`;
 
 }
 
 
-// ======================================
-// ADD / UPDATE
-// ======================================
+/* ==========================================
+   FORMAT PRICE
+========================================== */
 
-document
-.getElementById("productForm")
-.addEventListener("submit", async function(e){
+function formatPrice(value){
 
-  e.preventDefault();
+ const number =
+  Number(value);
 
 
-  const id =
-    document.getElementById("productId").value;
+ if(!Number.isFinite(number)){
+  return "0";
+ }
 
 
-  const name =
-    document.getElementById("productName")
-      .value.trim();
-
-
-  const price =
-    Number(
-      document.getElementById("productPrice")
-        .value
-    );
-
-
-  const oldPrice =
-    Number(
-      document.getElementById("oldPrice")
-        .value
-    ) || 0;
-
-
-  const cat =
-    document.getElementById("productCat")
-      .value;
-
-
-  const imageUrl =
-    document.getElementById("imageUrl")
-      .value.trim();
-
-
-  const description =
-    document.getElementById("description")
-      .value.trim();
-
-
-  const colors =
-    document.getElementById("colors")
-      .value.trim();
-
-
-  const stock =
-    document.getElementById("stock")
-      .checked;
-
-
-  const payload = {
-
-    name:name,
-
-    price:price,
-
-    old_price:oldPrice,
-
-    cat:cat,
-
-    image_url:imageUrl,
-
-    description:description,
-
-    colors:colors,
-
-    stock:stock
-
-  };
-
-
-  const message =
-    document.getElementById("formMessage");
-
-
-  message.innerHTML =
-    "Saving...";
-
-
-  try{
-
-    let response;
-
-
-    if(id){
-
-      response =
-        await fetch(
-          SUPABASE_URL +
-          "/rest/v1/products?id=eq." +
-          encodeURIComponent(id),
-          {
-            method:"PATCH",
-            headers:{
-              ...headers,
-              "Prefer":"return=minimal"
-            },
-            body:JSON.stringify(payload)
-          }
-        );
-
-    }else{
-
-      response =
-        await fetch(
-          SUPABASE_URL +
-          "/rest/v1/products",
-          {
-            method:"POST",
-            headers:{
-              ...headers,
-              "Prefer":"return=minimal"
-            },
-            body:JSON.stringify(payload)
-          }
-        );
-
-    }
-
-
-    if(!response.ok){
-
-      const error =
-        await response.json();
-
-      console.error(error);
-
-      message.innerHTML =
-        "❌ Save failed. Supabase RLS policy check karo.";
-
-      return;
-    }
-
-
-    message.innerHTML =
-      "✅ Product saved successfully.";
-
-
-    resetForm();
-
-    loadProducts();
-
-
-  }catch(error){
-
-    console.error(error);
-
-    message.innerHTML =
-      "❌ Connection error.";
-
-  }
-
-});
-
-
-// ======================================
-// EDIT PRODUCT
-// ======================================
-
-function editProduct(id){
-
-  const p =
-    currentProducts.find(
-      x => x.id === id
-    );
-
-
-  if(!p) return;
-
-
-  document.getElementById("productId")
-    .value = p.id;
-
-
-  document.getElementById("productName")
-    .value = p.name || "";
-
-
-  document.getElementById("productPrice")
-    .value = p.price || 0;
-
-
-  document.getElementById("oldPrice")
-    .value = p.old_price || 0;
-
-
-  document.getElementById("productCat")
-    .value = p.cat || "Plants";
-
-
-  document.getElementById("imageUrl")
-    .value = p.image_url || "";
-
-
-  document.getElementById("description")
-    .value = p.description || "";
-
-
-  document.getElementById("colors")
-    .value =
-      Array.isArray(p.colors)
-      ? p.colors.join(", ")
-      : (p.colors || "");
-
-
-  document.getElementById("stock")
-    .checked = p.stock !== false;
-
-
-  document.getElementById("formTitle")
-    .textContent =
-      "✏️ Edit Product";
-
-
-  document.getElementById("cancelBtn")
-    .classList.remove("hidden");
-
-
-  updatePreview();
-
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+ return number.toLocaleString("en-IN");
 
 }
 
 
-// ======================================
-// DELETE
-// ======================================
-
-async function deleteProduct(id){
-
-  const p =
-    currentProducts.find(
-      x => x.id === id
-    );
-
-
-  if(!p) return;
-
-
-  const ok =
-    confirm(
-      `Delete "${p.name}"?`
-    );
-
-
-  if(!ok) return;
-
-
-  try{
-
-    const response =
-      await fetch(
-        SUPABASE_URL +
-        "/rest/v1/products?id=eq." +
-        encodeURIComponent(id),
-        {
-          method:"DELETE",
-          headers:{
-            ...headers,
-            "Prefer":"return=minimal"
-          }
-        }
-      );
-
-
-    if(!response.ok){
-
-      const error =
-        await response.json();
-
-      console.error(error);
-
-      alert(
-        "Delete failed. Supabase RLS policy check karo."
-      );
-
-      return;
-    }
-
-
-    alert(
-      "Product deleted."
-    );
-
-
-    loadProducts();
-
-
-  }catch(error){
-
-    console.error(error);
-
-    alert(
-      "Connection error."
-    );
-
-  }
-
-}
-
-
-// ======================================
-// IMAGE PREVIEW
-// ======================================
-
-document
-.getElementById("imageUrl")
-.addEventListener(
-  "input",
-  updatePreview
-);
-
-
-function updatePreview(){
-
-  const url =
-    document.getElementById("imageUrl")
-      .value.trim();
-
-
-  const preview =
-    document.getElementById("preview");
-
-
-  if(url){
-
-    preview.src = url;
-
-    preview.classList.remove(
-      "hidden"
-    );
-
-  }else{
-
-    preview.src = "";
-
-    preview.classList.add(
-      "hidden"
-    );
-
-  }
-
-}
-
-
-// ======================================
-// RESET FORM
-// ======================================
-
-function resetForm(){
-
-  document
-    .getElementById("productForm")
-    .reset();
-
-
-  document.getElementById("productId")
-    .value = "";
-
-
-  document.getElementById("stock")
-    .checked = true;
-
-
-  document.getElementById("formTitle")
-    .textContent =
-      "➕ Add New Product";
-
-
-  document.getElementById("cancelBtn")
-    .classList.add("hidden");
-
-
-  document.getElementById("preview")
-    .classList.add("hidden");
-
-}
-
-
-function cancelEdit(){
-
-  resetForm();
-
-}
-
-
-// ======================================
-// ESCAPE HTML
-// ======================================
+/* ==========================================
+   ESCAPE
+========================================== */
 
 function escapeHTML(value){
 
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+ return String(value)
+  .replace(/&/g,"&amp;")
+  .replace(/</g,"&lt;")
+  .replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;")
+  .replace(/'/g,"&#039;");
 
 }
 
 
-// ======================================
-// START
-// ======================================
+/* ==========================================
+   MESSAGES
+========================================== */
 
-checkLogin();
+function showMessage(text,type){
 
-</script>
+ const box =
+  document.getElementById("message");
 
-</body>
+
+ box.className =
+  "message " + type;
+
+
+ box.textContent =
+  text;
+
+
+ setTimeout(()=>{
+
+  box.className =
+   "message";
+
+ },5000);
+
+}
+
+
+function showLoginMessage(text,type){
+
+ const box =
+  document.getElementById("loginMessage");
+
+
+ box.className =
+  "message " + type;
+
+
+ box.textContent =
+  text;
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+document.addEventListener(
+ "DOMContentLoaded",
+ ()=>{
+
+  const token =
+   localStorage.getItem(
+    "ak_access_token"
+   );
+
+
+  if(token){
+
+   showAdmin();
+
+  }
+
+ }
+);
+
+</script></body>
 </html>
