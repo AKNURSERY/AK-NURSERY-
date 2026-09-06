@@ -562,3 +562,148 @@ footer p{
  }
 
 }
+/* ========================================
+   FULL PRODUCT PHOTO
+======================================== */
+
+.pic{
+  height:320px !important;
+  background:#fff !important;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.productImage{
+  width:100%;
+  height:100%;
+  object-fit:contain !important;
+  display:block;
+  cursor:pointer;
+  background:#fff;
+}
+
+
+/* ========================================
+   FULL SCREEN PHOTO
+======================================== */
+
+.imageViewer{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.92);
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.imageViewer.hidden{
+  display:none;
+}
+
+.imageViewer img{
+  max-width:100%;
+  max-height:90vh;
+  width:auto;
+  height:auto;
+  object-fit:contain;
+}
+
+.imageViewerClose{
+  position:absolute;
+  top:15px;
+  right:20px;
+  width:45px;
+  height:45px;
+  border:0;
+  border-radius:50%;
+  background:#fff;
+  color:#111;
+  font-size:32px;
+  line-height:40px;
+  cursor:pointer;
+}
+
+
+/* ========================================
+   EXTRA CHARGES
+======================================== */
+
+.extraCharges{
+  margin-top:10px;
+  padding:9px;
+  border-radius:8px;
+  background:#f5f8f4;
+  color:#555;
+  font-size:13px;
+  line-height:1.7;
+}
+
+
+/* ========================================
+   CART PHOTO
+======================================== */
+
+.cartProduct{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.cartImage{
+  width:60px;
+  height:60px;
+  object-fit:contain;
+  background:#fff;
+  border-radius:8px;
+}
+
+.cartImageFallback{
+  width:60px;
+  height:60px;
+  display:grid;
+  place-items:center;
+  background:#eef6ed;
+  border-radius:8px;
+  font-size:28px;
+}
+
+
+/* ========================================
+   QUANTITY BUTTONS
+======================================== */
+
+.qtyControls{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:7px;
+}
+
+.qtyControls button{
+  border:1px solid #ccd8cd;
+  background:#fff;
+  border-radius:5px;
+  padding:3px 9px;
+  cursor:pointer;
+}
+
+
+/* ========================================
+   MOBILE PHOTO
+======================================== */
+
+@media(max-width:480px){
+
+  .pic{
+    height:320px !important;
+  }
+
+  .productImage{
+    object-fit:contain !important;
+  }
+
+}
