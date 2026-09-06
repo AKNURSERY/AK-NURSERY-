@@ -383,12 +383,15 @@ let editingId = null;
 
 async function supabaseRequest(url, options={}){
 
- const headers = {
+ const accessToken =
+  localStorage.getItem("ak_access_token");
+
+const headers = {
   "apikey": SUPABASE_KEY,
-  "Authorization": "Bearer " + SUPABASE_KEY,
+  "Authorization": "Bearer " + (accessToken || SUPABASE_KEY),
   "Content-Type": "application/json",
   ...(options.headers || {})
- };
+};
 
  return fetch(
   SUPABASE_URL + url,
