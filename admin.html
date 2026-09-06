@@ -1,33 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>A.K Nursery Admin</title>
 
 <style>
+
+*{
+ box-sizing:border-box;
+}
+
 body{
  font-family:Arial,sans-serif;
  background:#f4f7f4;
  margin:0;
- padding:20px
+ padding:20px;
+ color:#12351f;
 }
-.container{max-width:600px;margin:auto}
-h1{color:#176b35}
+
+.container{
+ max-width:650px;
+ margin:auto;
+}
+
+h1{
+ color:#176b35;
+}
+
 .box{
  background:white;
  padding:20px;
  border-radius:12px;
- margin-bottom:20px
+ margin-bottom:20px;
+ box-shadow:0 3px 12px #0000000d;
 }
-input,textarea,select{
+
+input,
+textarea,
+select{
  width:100%;
  box-sizing:border-box;
  padding:12px;
  margin:7px 0 14px;
  border:1px solid #ccc;
- border-radius:8px
+ border-radius:8px;
+ font-size:15px;
 }
+
+textarea{
+ min-height:100px;
+ resize:vertical;
+}
+
 button{
  padding:10px 14px;
  border:0;
@@ -36,41 +63,69 @@ button{
  color:white;
  font-weight:bold;
  cursor:pointer;
- margin:3px
+ margin:3px;
 }
-.danger{background:#c62828}
-.editBtn{background:#1976d2}
-.stockBtn{background:#ef8f00}
-.cancelBtn{background:#777}
+
+button:disabled{
+ opacity:.6;
+ cursor:not-allowed;
+}
+
+.danger{
+ background:#c62828;
+}
+
+.editBtn{
+ background:#1976d2;
+}
+
+.stockBtn{
+ background:#ef8f00;
+}
+
+.cancelBtn{
+ background:#777;
+}
+
 .product{
  border:1px solid #ddd;
  padding:12px;
  border-radius:10px;
- margin:10px 0
+ margin:10px 0;
 }
+
 .product img{
- width:100px;
- height:100px;
+ width:110px;
+ height:110px;
  object-fit:cover;
- border-radius:8px
+ border-radius:8px;
+ display:block;
+ margin-bottom:10px;
 }
+
 .preview{
  width:150px;
  height:150px;
  object-fit:cover;
  border-radius:10px;
  display:none;
- margin:10px 0
+ margin:10px 0;
 }
-.hidden{display:none}
+
+.hidden{
+ display:none;
+}
+
 .error{
  color:#c62828;
- word-break:break-word
+ word-break:break-word;
 }
+
 .success{
  color:green;
- font-weight:bold
+ font-weight:bold;
 }
+
 .uploadBtn{
  display:inline-block;
  background:#176b35;
@@ -78,21 +133,43 @@ button{
  padding:12px 18px;
  border-radius:8px;
  cursor:pointer;
- margin:5px 0 10px
+ margin:5px 0 10px;
 }
+
 .small{
  font-size:13px;
- color:#666
+ color:#666;
 }
+
 .out{
  color:#c62828;
- font-weight:bold
+ font-weight:bold;
 }
+
 .in{
  color:green;
- font-weight:bold
+ font-weight:bold;
 }
+
+.price{
+ font-size:18px;
+ font-weight:bold;
+ color:#087c35;
+}
+
+.old{
+ text-decoration:line-through;
+ color:#999;
+ font-size:13px;
+ margin-left:6px;
+}
+
+.loading{
+ color:#777;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -101,631 +178,92 @@ button{
 
 <h1>🌱 A.K Nursery Admin</h1>
 
+
+<!-- ========================= -->
 <!-- LOGIN -->
+<!-- ========================= -->
 
 <div id="loginBox" class="box">
 
-<h2>Admin Login</h2>
+<h2>🔐 Admin Login</h2>
 
-<input id="email" type="email" placeholder="Admin Email">
+<input
+ id="email"
+ type="email"
+ placeholder="Admin Email"
+ autocomplete="email"
+>
 
-<input id="password" type="password" placeholder="Password">
+<input
+ id="password"
+ type="password"
+ placeholder="Password"
+ autocomplete="current-password"
+>
 
-<button onclick="login()">Login</button>
+<button onclick="login()">
+ Login
+</button>
 
 <p id="loginMsg"></p>
 
 </div>
 
 
-<!-- ADMIN -->
+<!-- ========================= -->
+<!-- ADMIN PANEL -->
+<!-- ========================= -->
 
 <div id="adminBox" class="hidden">
 
+
+<!-- ========================= -->
+<!-- ADD / EDIT PRODUCT -->
+<!-- ========================= -->
+
 <div class="box">
 
-<h2 id="formTitle">➕ Add Product</h2>
+<h2 id="formTitle">
+➕ Add Product
+</h2>
 
-<input id="productName" placeholder="Product name">
-
-<select id="category">
-<option value="Plants">Plants</option>
-<option value="Pots">Pots</option>
-<option value="Vermicompost">Vermicompost</option>
-<option value="Wall Compound">Wall Compound</option>
-</select>
-
-<input id="price" type="number" placeholder="Price">
-
-<input id="oldPrice" type="number" placeholder="Old Price (optional)">
-
-<label class="uploadBtn">
-📸 Choose Product Photo
 
 <input
- id="productPhoto"
- type="file"
- accept="image/*"
- style="display:none"
- onchange="previewPhoto(event)"
+ id="productName"
+ placeholder="Product name"
 >
-</label>
 
-<p class="small">
-Phone gallery se photo select karo.
-</p>
 
-<img id="photoPreview" class="preview">
+<select id="category">
 
-<textarea
- id="description"
- placeholder="Product description">
-</textarea>
+<option value="Plants">
+🌿 Plants
+</option>
 
-<button id="saveBtn" onclick="saveProduct()">
-Add Product
-</button>
+<option value="Pots">
+🪴 Pots
+</option>
 
-<button
- id="cancelBtn"
- class="cancelBtn hidden"
- onclick="cancelEdit()">
-Cancel Edit
-</button>
+<option value="Vermicompost">
+♻️ Vermicompost
+</option>
 
-<p id="msg"></p>
+<option value="Wall Compound">
+🧱 Wall Compound
+</option>
 
-</div>
+</select>
 
 
-<!-- PRODUCTS -->
+<input
+ id="price"
+ type="number"
+ min="0"
+ placeholder="Selling Price"
+>
 
-<div class="box">
 
-<h2>📦 Products</h2>
-
-<div id="productList">
-Loading...
-</div>
-
-</div>
-
-
-<button class="danger" onclick="logout()">
-Logout
-</button>
-
-</div>
-
-</div>
-
-
-<script>
- // ========================================
-// A.K NURSERY WEBSITE
-// ========================================
-
-const WHATSAPP_NUMBER = "919555322038";
-
-const SUPABASE_URL =
-"https://mudpcroftnctbbdqxisj.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
-
-let products = [];
-let cart = [];
-
-
-// ========================================
-// LOAD PRODUCTS
-// ========================================
-
-async function loadProducts(){
-
- try{
-
-  const r = await fetch(
-   SUPABASE_URL +
-   "/rest/v1/products?select=*&order=id.desc",
-   {
-    headers:{
-     "apikey":SUPABASE_KEY
-    }
-   }
-  );
-
-  const data = await r.json();
-
-  if(!r.ok){
-
-   console.error("Supabase Error:",data);
-
-   return;
-  }
-
-  products = data.map(p => ({
-
-   id:p.id,
-
-   name:p.name || "Product",
-
-   cat:p.cat || "Plants",
-
-   price:Number(p.price) || 0,
-
-   old:Number(p.old_price) || 0,
-
-   icon:"🌱",
-
-   image:p.image_url || "",
-
-   description:p.description || "",
-
-   stock:p.stock !== false
-
-  }));
-
-  renderProducts();
-
- }catch(error){
-
-  console.error(
-   "Product loading error:",
-   error
-  );
-
- }
-
-}
-
-
-// ========================================
-// ESCAPE HTML
-// ========================================
-
-function escapeHTML(value){
-
- return String(value || "")
-  .replace(/&/g,"&amp;")
-  .replace(/</g,"&lt;")
-  .replace(/>/g,"&gt;")
-  .replace(/"/g,"&quot;")
-  .replace(/'/g,"&#039;");
-
-}
-
-
-// ========================================
-// SHOW PRODUCTS
-// ========================================
-
-function renderProducts(list=products){
-
- const grid =
- document.getElementById("productGrid");
-
- if(!grid) return;
-
- if(!list.length){
-
-  grid.innerHTML =
-  "<p>No products available.</p>";
-
-  return;
- }
-
- grid.innerHTML =
- list.map(p=>{
-
-  const name =
-  escapeHTML(p.name);
-
-  const cat =
-  escapeHTML(p.cat);
-
-  const description =
-  escapeHTML(p.description);
-
-  return `
-
-  <article class="card">
-
-   <div class="pic">
-
-    ${
-     p.image
-
-     ?
-
-     `<img
-      src="${p.image}"
-      alt="${name}"
-      style="
-       width:100%;
-       height:100%;
-       object-fit:cover;
-       border-radius:10px;
-      "
-     >`
-
-     :
-
-     p.icon
-    }
-
-   </div>
-
-
-   <div class="cardBody">
-
-    <span class="tag">
-     ${cat}
-    </span>
-
-
-    <h3>
-     ${name}
-    </h3>
-
-
-    ${
-     description
-
-     ?
-
-     `<p>${description}</p>`
-
-     :
-
-     ""
-    }
-
-
-    <div class="price">
-
-     ₹${p.price}
-
-     ${
-      p.old
-
-      ?
-
-      `<span class="old">
-       ₹${p.old}
-       </span>`
-
-      :
-
-      ""
-     }
-
-    </div>
-
-
-    ${
-     p.stock
-
-     ?
-
-     `<button
-      class="btn"
-      onclick="addToCart(${p.id})"
-     >
-      Add to Cart
-     </button>`
-
-     :
-
-     `<button
-      class="btn"
-      disabled
-      style="
-       background:#999;
-       cursor:not-allowed;
-      "
-     >
-      Out of Stock
-     </button>`
-    }
-
-   </div>
-
-  </article>
-
-  `;
-
- }).join("");
-
-}
-
-
-// ========================================
-// CATEGORY FILTER
-// ========================================
-
-function filterCat(cat){
-
- const filter =
- document.getElementById("filter");
-
- if(filter){
-
-  filter.value = cat;
-
- }
-
- if(cat === "All"){
-
-  renderProducts(products);
-
- }else{
-
-  renderProducts(
-   products.filter(
-    p => p.cat === cat
-   )
-  );
-
- }
-
- const section =
- document.getElementById("products");
-
- if(section){
-
-  section.scrollIntoView({
-   behavior:"smooth"
-  });
-
- }
-
-}
-
-
-// ========================================
-// CART
-// ========================================
-
-function addToCart(id){
-
- const p =
- products.find(x => x.id === id);
-
- if(!p) return;
-
- if(!p.stock){
-
-  alert("Ye product abhi Out of Stock hai.");
-
-  return;
- }
-
- const found =
- cart.find(x => x.id === id);
-
- if(found){
-
-  found.qty++;
-
- }else{
-
-  cart.push({
-   ...p,
-   qty:1
-  });
-
- }
-
- updateCart();
-
- openCart();
-
-}
-
-
-// ========================================
-// UPDATE CART
-// ========================================
-
-function updateCart(){
-
- const count =
- document.getElementById("cartCount");
-
- const items =
- document.getElementById("cartItems");
-
- const total =
- document.getElementById("cartTotal");
-
-
- if(count){
-
-  count.textContent =
-  cart.reduce(
-   (s,p)=>s+p.qty,
-   0
-  );
-
- }
-
-
- if(items){
-
-  items.innerHTML =
-  cart.length
-
-  ?
-
-  cart.map(p=>`
-
-   <div class="cartRow">
-
-    <span>
-     ${p.icon}
-     ${escapeHTML(p.name)}
-     × ${p.qty}
-    </span>
-
-    <b>
-     ₹${p.price * p.qty}
-    </b>
-
-   </div>
-
-  `).join("")
-
-  :
-
-  "<p>Your cart is empty.</p>";
-
- }
-
-
- if(total){
-
-  total.textContent =
-  cart.reduce(
-   (s,p)=>
-    s + p.price * p.qty,
-   0
-  );
-
- }
-
-}
-
-
-// ========================================
-// OPEN CART
-// ========================================
-
-function openCart(){
-
- const modal =
- document.getElementById("cartModal");
-
- if(modal){
-
-  modal.classList.remove("hidden");
-
- }
-
- updateCart();
-
-}
-
-
-// ========================================
-// CLOSE CART
-// ========================================
-
-function closeCart(){
-
- const modal =
- document.getElementById("cartModal");
-
- if(modal){
-
-  modal.classList.add("hidden");
-
- }
-
-}
-
-
-// ========================================
-// WHATSAPP TEXT
-// ========================================
-
-function orderText(extra=""){
-
- const lines =
- cart.map(p =>
-  `${p.name} x ${p.qty} = ₹${p.price*p.qty}`
- ).join("\n");
-
-
- const total =
- cart.reduce(
-  (s,p)=>
-   s+p.price*p.qty,
-  0
- );
-
-
- return (
-  `Namaste A.K Nursery,%0A%0A` +
-  `${encodeURIComponent(lines || "Website enquiry")}` +
-  `%0A%0ATotal: ₹${total}` +
-  `%0A${extra}`
- );
-
-}
-
-
-// ========================================
-// CART CHECKOUT
-// ========================================
-
-function checkout(){
-
- if(!cart.length){
-
-  alert("Cart is empty.");
-
-  return;
- }
-
- window.open(
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText()}`,
-  "_blank"
- );
-
-}
-
-
-// ========================================
-// CONTACT ORDER
-// ========================================
-
-function sendOrder(e){
-
- e.preventDefault();
-
- const name =
- document.getElementById("name").value;
-
- const phone =
- document.getElementById("phone").value;
-
- const address =
- document.getElementById("address").value;
-
-
- const extra =
-  `Name: ${encodeURIComponent(name)}%0A` +
-  `Mobile: ${encodeURIComponent(phone)}%0A` +
-  `Address: ${encodeURIComponent(address)}`;
-
-
- window.open(
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${orderText(extra)}`,
-  "_blank"
- );
-
-}
-
-
-// ========================================
-// START
-// ========================================
-
-loadProducts();
-
-updateCart();
- </script>
-
-</body>
-</html>
+<input
+ id="oldPrice"
+ type="number"
+ min
