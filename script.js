@@ -1,4 +1,4 @@
-// ====== A.K NURSERY WEBSITE SETTINGS ======
+===== A.K NURSERY WEBSITE SETTINGS ======
 
 const WHATSAPP_NUMBER = "919555322038";
 
@@ -492,4 +492,4 @@ Address: ${address}`;
 
 loadProducts();
 
-updateCart();
+updateCart()
