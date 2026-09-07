@@ -12,6 +12,7 @@ const SUPABASE_KEY =
 "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
 
 let products = [];
+let categories = [];
 let cart = [];
 
 
@@ -22,7 +23,103 @@ let cart = [];
 let galleryImages = [];
 let galleryIndex = 0;
 
+// ========================================
+// LOAD CATEGORIES FROM SUPABASE
+// ========================================
 
+async function loadCategories(){
+
+  try{
+
+    const response = await fetch(
+      SUPABASE_URL +
+      "/rest/v1/categories?select=*&active=eq.true&order=sort_order.asc",
+      {
+        method:"GET",
+        headers:{
+          "apikey":SUPABASE_KEY,
+          "Authorization":"Bearer " + SUPABASE_KEY
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if(!response.ok){
+      console.error("CATEGORY ERROR:", data);
+      return;
+    }
+
+    categories = data;
+
+    renderCategories();
+    updateCategoryFilter();
+
+  }catch(error){
+
+    console.error("CATEGORY ERROR:", error);
+
+  }
+
+}
+
+
+// ========================================
+// SHOW CATEGORIES
+// ========================================
+
+function renderCategories(){
+
+  const box =
+    document.querySelector(".categories");
+
+  if(!box) return;
+
+  box.innerHTML = categories.map(c => `
+
+    <button onclick="filterCat('${escapeJS(c.name)}')">
+
+      ${c.icon || "🌱"}
+
+      ${escapeHTML(c.name)}
+
+    </button>
+
+  `).join("");
+
+}
+
+
+// ========================================
+// UPDATE PRODUCT FILTER
+// ========================================
+
+function updateCategoryFilter(){
+
+  const filter =
+    document.getElementById("filter");
+
+  if(!filter) return;
+
+  filter.innerHTML = `
+
+    <option value="All">
+      All Products
+    </option>
+
+    ${
+      categories.map(c => `
+
+        <option value="${escapeHTML(c.name)}">
+          ${escapeHTML(c.name)}
+        </option>
+
+      `).join("")
+    }
+
+  `;
+
+}
 // ========================================
 // LOAD PRODUCTS
 // ========================================
@@ -1380,9 +1477,11 @@ document.addEventListener(
   "DOMContentLoaded",
   function(){
 
-    loadProducts();
+    loadCategories();
+loadProducts();
+updateCart();
 
-    updateCart();
+    
 
   }
 );
