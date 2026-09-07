@@ -936,15 +936,14 @@ function formatPrice(value){
 // ESCAPE HTML
 // ========================================
 
-function escapeJS(value){
+function escapeHTML(value){
 
   return String(value)
-
-    .replace(/\\/g,"\\\\")
-    .replace(/'/g,"\\'")
-    .replace(/"/g,'\\"')
-    .replace(/\n/g,"\\n")
-    .replace(/\r/g,"\\r");
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
@@ -956,15 +955,10 @@ function escapeJS(value){
 function escapeJS(value){
 
   return String(value)
-
     .replace(/\\/g,"\\\\")
-
     .replace(/'/g,"\\'")
-
-    .replace(/"/g,"&quot;")
-
+    .replace(/"/g,'\\"')
     .replace(/\n/g,"\\n")
-
     .replace(/\r/g,"\\r");
 
 }
