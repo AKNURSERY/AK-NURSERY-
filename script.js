@@ -1,5 +1,6 @@
 // ========================================
 // A.K NURSERY - FINAL SCRIPT.JS
+// MULTI PHOTO PRODUCT GALLERY
 // ========================================
 
 const WHATSAPP_NUMBER = "919555322038";
@@ -12,6 +13,14 @@ const SUPABASE_KEY =
 
 let products = [];
 let cart = [];
+
+
+// ========================================
+// PRODUCT GALLERY STATE
+// ========================================
+
+let galleryImages = [];
+let galleryIndex = 0;
 
 
 // ========================================
@@ -43,7 +52,7 @@ async function loadProducts(){
 
     const data = await response.json();
 
-    console.log("SUPABASE:",data);
+    console.log("SUPABASE PRODUCTS:", data);
 
     if(!response.ok){
 
@@ -54,6 +63,7 @@ async function loadProducts(){
 
       return;
     }
+
 
     products = data.map(p => {
 
@@ -67,6 +77,66 @@ async function loadProducts(){
           .replace(/[₹,\s]/g,"")
       );
 
+
+      // ====================================
+      // GET ALL PRODUCT PHOTOS
+      // ====================================
+
+      let allImages = [];
+
+
+      // images column
+      if(Array.isArray(p.images)){
+
+        allImages = p.images
+          .filter(x => typeof x === "string" && x.trim())
+          .map(x => x.trim());
+
+      }
+
+
+      // images column may sometimes be JSON text
+      else if(typeof p.images === "string"){
+
+        try{
+
+          const parsed = JSON.parse(p.images);
+
+          if(Array.isArray(parsed)){
+
+            allImages = parsed
+              .filter(x => typeof x === "string" && x.trim())
+              .map(x => x.trim());
+
+          }
+
+        }catch(e){
+
+          console.log("Images JSON parse skipped");
+
+        }
+
+      }
+
+
+      // image_url ko bhi gallery me add karo
+      if(
+        typeof p.image_url === "string" &&
+        p.image_url.trim()
+      ){
+
+        const mainImage =
+          p.image_url.trim();
+
+        if(!allImages.includes(mainImage)){
+
+          allImages.unshift(mainImage);
+
+        }
+
+      }
+
+
       return {
 
         id:p.id,
@@ -75,20 +145,30 @@ async function loadProducts(){
 
         cat:p.cat || "Plants",
 
-        price:Number.isFinite(price) ? price : 0,
+        price:
+          Number.isFinite(price)
+          ? price
+          : 0,
 
-        old:Number.isFinite(oldPrice) ? oldPrice : 0,
+        old:
+          Number.isFinite(oldPrice)
+          ? oldPrice
+          : 0,
 
         image:
-          typeof p.image_url === "string"
-          ? p.image_url.trim()
-          : "",
+          allImages[0] || "",
 
-        stock:p.stock !== false,
+        images:
+          allImages,
 
-        description:p.description || "",
+        stock:
+          p.stock !== false,
 
-        colors:p.colors || "",
+        description:
+          p.description || "",
+
+        colors:
+          p.colors || "",
 
         icon:"🌱"
 
@@ -96,9 +176,15 @@ async function loadProducts(){
 
     });
 
-    console.log("FINAL PRODUCTS:",products);
+
+    console.log(
+      "FINAL PRODUCTS WITH GALLERY:",
+      products
+    );
+
 
     renderProducts();
+
 
   }catch(error){
 
@@ -123,91 +209,91 @@ function renderProducts(list = products){
 
   if(!grid) return;
 
+
   if(!list.length){
 
     grid.innerHTML =
       `<p class="loading">No products available.</p>`;
 
     return;
+
   }
 
 
-  grid.innerHTML = list.map(p => `
+  grid.innerHTML = list.map(p => {
 
-    <article class="card">
-
-      <div class="pic">
-
-        ${
-          p.image
-
-          ?
-
-          `
-          <img
-            src="${escapeHTML(p.image)}"
-            alt="${escapeHTML(p.name)}"
-            class="productImage"
-            loading="lazy"
-            onclick="openProductImage('${escapeJS(p.image)}','${escapeJS(p.name)}')"
-            onerror="this.style.display='none';this.nextElementSibling.style.display='grid';"
-          >
-
-          <div
-            class="imageFallback"
-            style="display:none;">
-            ${p.icon}
-          </div>
-          `
-
-          :
-
-          `
-          <div class="imageFallback">
-            ${p.icon}
-          </div>
-          `
-        }
-
-      </div>
+    const images =
+      Array.isArray(p.images)
+      ? p.images
+      : p.image
+        ? [p.image]
+        : [];
 
 
-      <div class="cardBody">
-
-        <span class="tag">
-          ${escapeHTML(p.cat)}
-        </span>
-
-        <h3>
-          ${escapeHTML(p.name)}
-        </h3>
+    const firstImage =
+      images[0] || "";
 
 
-        ${
-          p.description
+    return `
 
-          ?
+      <article class="card">
 
-          `<p>${escapeHTML(p.description)}</p>`
-
-          :
-
-          ""
-        }
-
-
-        <div class="price">
-
-          ₹${formatPrice(p.price)}
+        <div class="pic">
 
           ${
-            p.old > 0
+            firstImage
 
             ?
 
-            `<span class="old">
-              ₹${formatPrice(p.old)}
-            </span>`
+            `
+            <img
+              src="${escapeHTML(firstImage)}"
+              alt="${escapeHTML(p.name)}"
+              class="productImage"
+              loading="lazy"
+              onclick="openProductGallery(${p.id})"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='grid';"
+            >
+
+            <div
+              class="imageFallback"
+              style="display:none;">
+              ${p.icon}
+            </div>
+            `
+
+            :
+
+            `
+            <div class="imageFallback">
+              ${p.icon}
+            </div>
+            `
+          }
+
+
+          ${
+            images.length > 1
+
+            ?
+
+            `
+            <div
+              style="
+                position:absolute;
+                bottom:10px;
+                right:10px;
+                background:#064b2a;
+                color:#fff;
+                padding:6px 10px;
+                border-radius:15px;
+                font-size:13px;
+                font-weight:700;
+                z-index:2;
+              ">
+              📷 ${images.length} Photos
+            </div>
+            `
 
             :
 
@@ -217,113 +303,516 @@ function renderProducts(list = products){
         </div>
 
 
-        <div class="extraCharges">
+        <div class="cardBody">
 
-          🚚 Delivery charges extra
+          <span class="tag">
+            ${escapeHTML(p.cat)}
+          </span>
 
-          <br>
 
-          🪴 Plant & Pot fixing charge extra
+          <h3>
+            ${escapeHTML(p.name)}
+          </h3>
+
+
+          ${
+            p.description
+
+            ?
+
+            `<p>${escapeHTML(p.description)}</p>`
+
+            :
+
+            ""
+          }
+
+
+          <div class="price">
+
+            ₹${formatPrice(p.price)}
+
+            ${
+              p.old > 0
+
+              ?
+
+              `<span class="old">
+                ₹${formatPrice(p.old)}
+              </span>`
+
+              :
+
+              ""
+            }
+
+          </div>
+
+
+          <div class="extraCharges">
+
+            🚚 Delivery charges extra
+
+            <br>
+
+            🪴 Plant & Pot fixing charge extra
+
+          </div>
+
+
+          ${
+            p.stock
+
+            ?
+
+            `
+            <button
+              class="btn"
+              onclick="addToCart(${p.id})">
+              🛒 Add to Cart
+            </button>
+            `
+
+            :
+
+            `
+            <button
+              class="btn"
+              disabled>
+              ❌ Out of Stock
+            </button>
+            `
+          }
 
         </div>
 
+      </article>
 
-        ${
-          p.stock
+    `;
 
-          ?
+  }).join("");
 
-          `
-          <button
-            class="btn"
-            onclick="addToCart(${p.id})">
-            🛒 Add to Cart
-          </button>
-          `
 
-          :
+  // Make photo container relative
+  document
+    .querySelectorAll(".pic")
+    .forEach(pic => {
 
-          `
-          <button
-            class="btn"
-            disabled>
-            ❌ Out of Stock
-          </button>
-          `
-        }
+      pic.style.position = "relative";
 
-      </div>
-
-    </article>
-
-  `).join("");
+    });
 
 }
 
 
 // ========================================
-// FULL SCREEN PRODUCT PHOTO
+// OPEN PRODUCT GALLERY
+// ========================================
+
+function openProductGallery(id){
+
+  const product =
+    products.find(
+      p => String(p.id) === String(id)
+    );
+
+
+  if(!product) return;
+
+
+  galleryImages =
+    Array.isArray(product.images)
+    ? product.images.filter(Boolean)
+    : product.image
+      ? [product.image]
+      : [];
+
+
+  if(!galleryImages.length){
+
+    return;
+
+  }
+
+
+  galleryIndex = 0;
+
+
+  createGalleryViewer();
+
+
+  updateGalleryViewer(product.name);
+
+}
+
+
+// ========================================
+// CREATE GALLERY VIEWER
+// ========================================
+
+function createGalleryViewer(){
+
+  let viewer =
+    document.getElementById("productGalleryViewer");
+
+
+  if(viewer) return;
+
+
+  viewer =
+    document.createElement("div");
+
+
+  viewer.id =
+    "productGalleryViewer";
+
+
+  viewer.style.cssText = `
+
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.94);
+    z-index:99999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+
+  `;
+
+
+  viewer.innerHTML = `
+
+    <button
+      id="galleryClose"
+      onclick="closeProductGallery()"
+      style="
+        position:absolute;
+        top:15px;
+        right:18px;
+        width:45px;
+        height:45px;
+        border:0;
+        border-radius:50%;
+        background:#fff;
+        color:#111;
+        font-size:30px;
+        cursor:pointer;
+        z-index:5;
+      ">
+      ×
+    </button>
+
+
+    <button
+      id="galleryPrev"
+      onclick="previousGalleryImage()"
+      style="
+        position:absolute;
+        left:15px;
+        top:50%;
+        transform:translateY(-50%);
+        width:48px;
+        height:48px;
+        border:0;
+        border-radius:50%;
+        background:#fff;
+        color:#064b2a;
+        font-size:28px;
+        font-weight:bold;
+        cursor:pointer;
+        z-index:5;
+      ">
+      ‹
+    </button>
+
+
+    <div
+      style="
+        width:100%;
+        height:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+      ">
+
+      <img
+        id="galleryMainImage"
+        src=""
+        alt="Product"
+        style="
+          max-width:92%;
+          max-height:82vh;
+          width:auto;
+          height:auto;
+          object-fit:contain;
+          display:block;
+        ">
+
+
+      <div
+        id="galleryCounter"
+        style="
+          color:#fff;
+          font-size:15px;
+          font-weight:700;
+          background:rgba(0,0,0,.55);
+          padding:7px 12px;
+          border-radius:15px;
+        ">
+      </div>
+
+    </div>
+
+
+    <button
+      id="galleryNext"
+      onclick="nextGalleryImage()"
+      style="
+        position:absolute;
+        right:15px;
+        top:50%;
+        transform:translateY(-50%);
+        width:48px;
+        height:48px;
+        border:0;
+        border-radius:50%;
+        background:#fff;
+        color:#064b2a;
+        font-size:28px;
+        font-weight:bold;
+        cursor:pointer;
+        z-index:5;
+      ">
+      ›
+    </button>
+
+  `;
+
+
+  document.body.appendChild(viewer);
+
+}
+
+
+// ========================================
+// UPDATE GALLERY VIEWER
+// ========================================
+
+function updateGalleryViewer(name="Product"){
+
+  const viewer =
+    document.getElementById("productGalleryViewer");
+
+  const image =
+    document.getElementById("galleryMainImage");
+
+  const counter =
+    document.getElementById("galleryCounter");
+
+  const prev =
+    document.getElementById("galleryPrev");
+
+  const next =
+    document.getElementById("galleryNext");
+
+
+  if(!viewer || !image) return;
+
+
+  viewer.style.display = "flex";
+
+
+  image.src =
+    galleryImages[galleryIndex];
+
+
+  image.alt =
+    name || "Product";
+
+
+  if(counter){
+
+    counter.textContent =
+      `${galleryIndex + 1} / ${galleryImages.length}`;
+
+  }
+
+
+  // One photo = no arrows
+  if(galleryImages.length <= 1){
+
+    if(prev) prev.style.display = "none";
+    if(next) next.style.display = "none";
+
+  }else{
+
+    if(prev) prev.style.display = "block";
+    if(next) next.style.display = "block";
+
+  }
+
+}
+
+
+// ========================================
+// NEXT PHOTO
+// ========================================
+
+function nextGalleryImage(){
+
+  if(galleryImages.length <= 1) return;
+
+
+  galleryIndex++;
+
+  if(galleryIndex >= galleryImages.length){
+
+    galleryIndex = 0;
+
+  }
+
+
+  updateGalleryViewer();
+
+}
+
+
+// ========================================
+// PREVIOUS PHOTO
+// ========================================
+
+function previousGalleryImage(){
+
+  if(galleryImages.length <= 1) return;
+
+
+  galleryIndex--;
+
+  if(galleryIndex < 0){
+
+    galleryIndex =
+      galleryImages.length - 1;
+
+  }
+
+
+  updateGalleryViewer();
+
+}
+
+
+// ========================================
+// CLOSE GALLERY
+// ========================================
+
+function closeProductGallery(){
+
+  const viewer =
+    document.getElementById("productGalleryViewer");
+
+
+  if(viewer){
+
+    viewer.remove();
+
+  }
+
+
+  galleryImages = [];
+
+  galleryIndex = 0;
+
+}
+
+
+// ========================================
+// OLD IMAGE VIEWER SUPPORT
 // ========================================
 
 function openProductImage(image,name){
 
-  const viewer =
-    document.getElementById("imageViewer");
+  const product =
+    products.find(
+      p =>
+        p.image === image ||
+        (
+          Array.isArray(p.images) &&
+          p.images.includes(image)
+        )
+    );
 
-  const viewerImage =
-    document.getElementById("viewerImage");
 
-  if(!viewer || !viewerImage) return;
+  if(product){
 
-  viewerImage.src = image;
+    openProductGallery(product.id);
 
-  viewerImage.alt = name || "Product";
+    return;
 
-  viewer.classList.remove("hidden");
+  }
+
+
+  galleryImages = [image];
+
+  galleryIndex = 0;
+
+  createGalleryViewer();
+
+  updateGalleryViewer(name || "Product");
 
 }
 
 
 // ========================================
-// CLOSE FULL SCREEN PHOTO
+// CLOSE OLD VIEWER
 // ========================================
 
 function closeProductImage(){
 
-  const viewer =
-    document.getElementById("imageViewer");
-
-  const viewerImage =
-    document.getElementById("viewerImage");
-
-  if(viewer){
-
-    viewer.classList.add("hidden");
-
-  }
-
-  if(viewerImage){
-
-    viewerImage.src = "";
-
-  }
+  closeProductGallery();
 
 }
 
 
 // ========================================
-// CLOSE PHOTO WITH ESCAPE
+// KEYBOARD GALLERY CONTROLS
 // ========================================
 
-document.addEventListener("keydown",function(e){
+document.addEventListener(
+  "keydown",
+  function(e){
 
-  if(e.key === "Escape"){
+    const viewer =
+      document.getElementById("productGalleryViewer");
 
-    closeProductImage();
+
+    if(!viewer) return;
+
+
+    if(e.key === "Escape"){
+
+      closeProductGallery();
+
+    }
+
+
+    if(e.key === "ArrowRight"){
+
+      nextGalleryImage();
+
+    }
+
+
+    if(e.key === "ArrowLeft"){
+
+      previousGalleryImage();
+
+    }
 
   }
-
-});
+);
 
 
 // ========================================
@@ -332,9 +821,14 @@ document.addEventListener("keydown",function(e){
 
 function formatPrice(value){
 
-  const number = Number(value);
+  const number =
+    Number(value);
 
-  if(!Number.isFinite(number)) return "0";
+  if(!Number.isFinite(number)){
+
+    return "0";
+
+  }
 
   return number.toLocaleString("en-IN");
 
@@ -367,10 +861,13 @@ function escapeJS(value){
   return String(value)
 
     .replace(/\\/g,"\\\\")
+
     .replace(/'/g,"\\'")
+
     .replace(/"/g,"&quot;")
 
     .replace(/\n/g,"\\n")
+
     .replace(/\r/g,"\\r");
 
 }
@@ -384,6 +881,7 @@ function filterCat(cat){
 
   const filter =
     document.getElementById("filter");
+
 
   if(filter){
 
@@ -416,10 +914,13 @@ function filterCat(cat){
   const section =
     document.getElementById("products");
 
+
   if(section){
 
     section.scrollIntoView({
+
       behavior:"smooth"
+
     });
 
   }
@@ -434,14 +935,19 @@ function filterCat(cat){
 function addToCart(id){
 
   const product =
-    products.find(p => p.id === id);
+    products.find(
+      p => p.id === id
+    );
+
 
   if(!product) return;
 
 
   if(!product.stock){
 
-    alert("Ye product abhi Out of Stock hai.");
+    alert(
+      "Ye product abhi Out of Stock hai."
+    );
 
     return;
 
@@ -449,7 +955,9 @@ function addToCart(id){
 
 
   const existing =
-    cart.find(p => p.id === id);
+    cart.find(
+      p => p.id === id
+    );
 
 
   if(existing){
@@ -483,7 +991,9 @@ function addToCart(id){
 function removeFromCart(id){
 
   cart =
-    cart.filter(p => p.id !== id);
+    cart.filter(
+      p => p.id !== id
+    );
 
   updateCart();
 
@@ -497,7 +1007,10 @@ function removeFromCart(id){
 function changeQty(id,change){
 
   const item =
-    cart.find(p => p.id === id);
+    cart.find(
+      p => p.id === id
+    );
+
 
   if(!item) return;
 
@@ -539,7 +1052,8 @@ function updateCart(){
 
     count.textContent =
       cart.reduce(
-        (sum,p) => sum + p.qty,
+        (sum,p) =>
+          sum + p.qty,
         0
       );
 
@@ -592,6 +1106,7 @@ function updateCart(){
                   ${escapeHTML(p.name)}
                 </strong>
 
+
                 <div>
                   ₹${formatPrice(p.price)}
                 </div>
@@ -604,14 +1119,17 @@ function updateCart(){
                     −
                   </button>
 
+
                   <span>
                     ${p.qty}
                   </span>
+
 
                   <button
                     onclick="changeQty(${p.id},1)">
                     +
                   </button>
+
 
                   <button
                     onclick="removeFromCart(${p.id})">
@@ -652,6 +1170,7 @@ function updateCart(){
 
       );
 
+
     total.textContent =
       formatPrice(cartTotal);
 
@@ -669,11 +1188,13 @@ function openCart(){
   const modal =
     document.getElementById("cartModal");
 
+
   if(modal){
 
     modal.classList.remove("hidden");
 
   }
+
 
   updateCart();
 
@@ -688,6 +1209,7 @@ function closeCart(){
 
   const modal =
     document.getElementById("cartModal");
+
 
   if(modal){
 
@@ -805,15 +1327,24 @@ function sendOrder(e){
 
 
   const name =
-    document.getElementById("name").value.trim();
+    document
+      .getElementById("name")
+      .value
+      .trim();
 
 
   const phone =
-    document.getElementById("phone").value.trim();
+    document
+      .getElementById("phone")
+      .value
+      .trim();
 
 
   const address =
-    document.getElementById("address").value.trim();
+    document
+      .getElementById("address")
+      .value
+      .trim();
 
 
   const extra = `
