@@ -1243,3 +1243,157 @@ footer p{
   }
 
  }
+/* ========================================
+   A.K NURSERY - NEW HERO BANNER
+======================================== */
+
+.hero-banner{
+  position:relative;
+  min-height:520px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,55,30,.95) 0%,
+      rgba(0,75,40,.78) 42%,
+      rgba(0,0,0,.12) 100%
+    ),
+    url("https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1800&q=85")
+    center/cover no-repeat;
+}
+
+.hero-content{
+  width:min(1180px,92%);
+  margin:auto;
+  padding:65px 0;
+  color:#fff;
+}
+
+.hero-small-title{
+  font-size:18px;
+  font-weight:600;
+  margin-bottom:18px;
+}
+
+.hero-content h1{
+  max-width:650px;
+  margin:0 0 18px;
+  font-size:48px;
+  line-height:1.12;
+  font-weight:800;
+}
+
+.hero-content h1 span{
+  display:block;
+  color:#b8ff55;
+}
+
+.hero-products{
+  max-width:700px;
+  margin:0 0 25px;
+  font-size:17px;
+  line-height:1.8;
+  font-weight:500;
+}
+
+.hero-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-bottom:30px;
+}
+
+.hero-buttons button{
+  border:2px solid #fff;
+  border-radius:30px;
+  padding:13px 25px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.hero-shop-btn{
+  background:#087c3d;
+  color:#fff;
+}
+
+.hero-whatsapp-btn{
+  background:#16a34a;
+  color:#fff;
+}
+
+.hero-buttons button:hover{
+  transform:translateY(-2px);
+  opacity:.92;
+}
+
+.hero-features{
+  display:flex;
+  flex-wrap:wrap;
+  gap:25px;
+}
+
+.hero-features div{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:14px;
+}
+
+.hero-features div:first-letter{
+  font-size:22px;
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media(max-width:768px){
+
+  .hero-banner{
+    min-height:560px;
+    background-position:center;
+  }
+
+  .hero-content{
+    width:90%;
+    padding:45px 0;
+  }
+
+  .hero-small-title{
+    font-size:14px;
+  }
+
+  .hero-content h1{
+    font-size:34px;
+  }
+
+  .hero-products{
+    font-size:14px;
+    line-height:1.7;
+  }
+
+  .hero-buttons{
+    gap:10px;
+  }
+
+  .hero-buttons button{
+    padding:11px 18px;
+    font-size:14px;
+  }
+
+  .hero-features{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+  }
+
+  .hero-features div{
+    font-size:12px;
+  }
+
+}
