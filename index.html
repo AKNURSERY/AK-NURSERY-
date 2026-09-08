@@ -32,22 +32,130 @@
 
 
 <!-- ========================================
-     TOP BAR
+     TOP INFORMATION BAR
 ======================================== -->
 
-<header>
+<div class="topInfoBar">
 
-  <div class="topbar">
+  <div class="topInfoLeft">
+    <span>🌿 Fresh Plants</span>
+    <i>|</i>
+    <span>🪴 Quality Pots</span>
+    <i>|</i>
+    <span>♻️ Organic Compost</span>
+    <i>|</i>
+    <span>🧱 Wall Compound</span>
+  </div>
 
-    <span>
-      🌱 Welcome to A.K Nursery & Wall Compound
-    </span>
+  <div class="topInfoRight">
+    <span>🚚 Free Delivery on Orders Above ₹999</span>
+    <span>📞 +91 98765 43210</span>
+    <span>◎</span>
+    <span>f</span>
+    <span>▶</span>
+  </div>
 
-    <span>
-      📍 Sonipat, Haryana
-    </span>
+</div>
+
+
+<!-- ========================================
+     MAIN HEADER
+======================================== -->
+
+<header class="mainHeader">
+
+  <a href="#home" class="newBrand">
+
+    <div class="brandLeaf">
+      🌿
+    </div>
+
+    <div class="brandText">
+
+      <strong>
+        A.K NURSERY
+      </strong>
+
+      <small>
+        & WALL COMPOUND
+      </small>
+
+    </div>
+
+  </a>
+
+
+  <nav class="mainNav">
+
+    <a href="#home" class="active">
+      Home
+    </a>
+
+    <a href="#categories">
+      Shop
+    </a>
+
+    <a href="#about">
+      About Us
+    </a>
+
+    <a href="#products">
+      Blog
+    </a>
+
+    <a href="#contact">
+      Contact
+    </a>
+
+  </nav>
+
+
+  <div class="headerActions">
+
+    <div class="searchBox">
+
+      <input
+        type="search"
+        placeholder="Search for plants, pots, compost..."
+        id="siteSearch"
+      >
+
+      <button
+        type="button"
+        onclick="searchProducts()"
+      >
+        🔍
+      </button>
+
+    </div>
+
+
+    <button class="headerIcon" type="button">
+      ♙
+    </button>
+
+    <button class="headerIcon" type="button">
+      ♡
+    </button>
+
+
+    <button
+      class="headerCart"
+      onclick="openCart()"
+      aria-label="Open cart"
+    >
+
+      🛒
+
+      <span id="cartCount">
+        0
+      </span>
+
+    </button>
 
   </div>
+
+</header>
 
 
 <!-- ========================================
