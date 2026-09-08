@@ -896,3 +896,21 @@ footer p{
   }
 
 }
+/* ================================
+   MAIN BANNER
+================================ */
+
+.mainBanner{
+  width:100%;
+  margin:0;
+  padding:0;
+  background:#064b2a;
+  overflow:hidden;
+}
+
+.mainBanner img{
+  width:100%;
+  height:auto;
+  display:block;
+  object-fit:cover;
+}
