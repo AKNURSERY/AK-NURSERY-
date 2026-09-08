@@ -5,10 +5,7 @@
 
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta
     name="google-site-verification"
@@ -24,24 +21,15 @@
     content="A.K Nursery Sonipat - Plants, nursery pots, vermicompost, gardening products and wall compound at affordable prices."
   >
 
-  <meta
-    name="theme-color"
-    content="#064b2a"
-  >
+  <meta name="theme-color" content="#064b2a">
 
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  >
+  <link rel="stylesheet" href="styles.css">
 
 </head>
 
 
 <body>
-<!-- A.K NURSERY BANNER -->
-<section class="hero-banner">
-  <img src="banner.png" alt="A.K Nursery & Wall Compound">
-</section>
+
 
 <!-- ========================================
      TOP BAR
@@ -68,10 +56,7 @@
 
   <nav class="nav">
 
-    <a
-      href="#home"
-      class="brand"
-    >
+    <a href="#home" class="brand">
 
       <div class="logo">
         🌿
@@ -145,74 +130,18 @@
 
 
 <!-- ========================================
-     A.K NURSERY - NEW HERO BANNER
-========================================= -->
+     HOME / BANNER
+======================================== -->
 
-<section class="hero-banner">
+<section
+  id="home"
+  class="mainBanner"
+>
 
-  <div class="hero-content">
-
-    <div class="hero-small-title">
-      🌿 Green Living &nbsp; | &nbsp; Better Tomorrow
-    </div>
-
-    <h1>
-      Your One Stop Shop for
-      <span>Plants & Garden Essentials</span>
-    </h1>
-
-    <p class="hero-products">
-      Indoor Plants &nbsp; | &nbsp;
-      Flower Plants &nbsp; | &nbsp;
-      Fruit Plants &nbsp; | &nbsp;
-      Garden Plants
-      <br>
-      Quality Pots &nbsp; | &nbsp;
-      Vermicompost &nbsp; | &nbsp;
-      Wall Compound
-    </p>
-
-    <div class="hero-buttons">
-
-      <button
-        class="hero-shop-btn"
-        onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">
-        🛒 Shop Now →
-      </button>
-
-      <button
-        class="hero-whatsapp-btn"
-        onclick="window.open('https://wa.me/919555322038','_blank')">
-        💬 WhatsApp Order
-      </button>
-
-    </div>
-
-    <div class="hero-features">
-
-      <div>
-        🏆
-        <strong>Premium Quality</strong>
-      </div>
-
-      <div>
-        🌱
-        <strong>Fresh & Healthy Plants</strong>
-      </div>
-
-      <div>
-        📦
-        <strong>Secure Packaging</strong>
-      </div>
-
-      <div>
-        🚚
-        <strong>Pan India Delivery</strong>
-      </div>
-
-    </div>
-
-  </div>
+  <img
+    src="banner.png"
+    alt="A.K Nursery Plants, Pots and Garden Products"
+  >
 
 </section>
 
@@ -226,7 +155,7 @@
 
   <div>
 
-    <span>
+    <span class="featureEmoji">
       🌱
     </span>
 
@@ -247,7 +176,7 @@
 
   <div>
 
-    <span>
+    <span class="featureEmoji">
       💰
     </span>
 
@@ -268,7 +197,7 @@
 
   <div>
 
-    <span>
+    <span class="featureEmoji">
       🚚
     </span>
 
@@ -289,7 +218,7 @@
 
   <div>
 
-    <span>
+    <span class="featureEmoji">
       💬
     </span>
 
@@ -337,14 +266,6 @@
   </div>
 
 
-  <!--
-    Categories yahan Supabase se automatically
-    load hongi.
-
-    Aap jitni categories database me add karoge,
-    website par automatically show hongi.
-  -->
-
   <div class="categories">
 
     <p class="loading">
@@ -375,7 +296,7 @@
       </span>
 
       <h2>
-        Our Products
+        Featured Products
       </h2>
 
       <p class="muted">
@@ -415,7 +336,7 @@
 
 
 <!-- ========================================
-     PROMO SECTION
+     PROMO BANNERS
 ======================================== -->
 
 <section class="promoSection">
@@ -423,66 +344,98 @@
 
   <div class="promoCard">
 
-    <span>
+    <div class="promoIcon">
       🌿
-    </span>
+    </div>
 
-    <h3>
-      Plants
-    </h3>
+    <div>
 
-    <p>
-      Indoor, outdoor, flowering
-      and seasonal plants.
-    </p>
+      <span class="promoSmall">
+        GREEN LIVING
+      </span>
 
-    <a href="#categories">
-      Explore Plants →
-    </a>
+      <h3>
+        Fresh Plants
+      </h3>
+
+      <p>
+        Indoor, outdoor, flowering
+        and seasonal plants.
+      </p>
+
+      <button
+        onclick="filterCat('Plants')"
+      >
+        Explore Plants →
+      </button>
+
+    </div>
 
   </div>
 
 
+
   <div class="promoCard">
 
-    <span>
+    <div class="promoIcon">
       🪴
-    </span>
+    </div>
 
-    <h3>
-      Pots & Stands
-    </h3>
+    <div>
 
-    <p>
-      Plastic, earthen, cement,
-      ceramic pots and stands.
-    </p>
+      <span class="promoSmall">
+        GARDEN STYLE
+      </span>
 
-    <a href="#categories">
-      Explore Pots →
-    </a>
+      <h3>
+        Premium Pots
+      </h3>
+
+      <p>
+        Plastic, earthen, cement,
+        ceramic pots and stands.
+      </p>
+
+      <button
+        onclick="filterCat('Pots')"
+      >
+        Explore Pots →
+      </button>
+
+    </div>
 
   </div>
 
 
+
   <div class="promoCard">
 
-    <span>
+    <div class="promoIcon">
       ♻️
-    </span>
+    </div>
 
-    <h3>
-      Garden Care
-    </h3>
+    <div>
 
-    <p>
-      Vermicompost, cocopeat,
-      neem khali and bone meal.
-    </p>
+      <span class="promoSmall">
+        GARDEN CARE
+      </span>
 
-    <a href="#categories">
-      Explore Products →
-    </a>
+      <h3>
+        Vermicompost
+      </h3>
+
+      <p>
+        Cocopeat, neem khali,
+        bone meal and garden care.
+      </p>
+
+      <button
+        onclick="filterCat('Vermicompost')"
+      >
+        Explore Garden Care →
+      </button>
+
+    </div>
 
   </div>
 
@@ -596,7 +549,7 @@
 
 
 <!-- ========================================
-     CONTACT / ORDER
+     CONTACT
 ======================================== -->
 
 <section
@@ -615,17 +568,14 @@
     </h2>
 
     <p class="muted">
-
       Fill the form and send your
       details directly on WhatsApp.
-
     </p>
 
   </div>
 
 
   <form onsubmit="sendOrder(event)">
-
 
     <input
       id="name"
@@ -657,7 +607,6 @@
       📲 Send Order on WhatsApp
     </button>
 
-
   </form>
 
 </section>
@@ -672,7 +621,6 @@
 ======================================== -->
 
 <footer>
-
 
   <div>
 
@@ -691,11 +639,11 @@
   <div>
 
     <b>
-      Location
+      Quick Links
     </b>
 
     <p>
-      Sonipat, Haryana, India
+      Home · Categories · Shop · About · Contact
     </p>
 
   </div>
@@ -704,8 +652,12 @@
   <div>
 
     <b>
-      Business Hours
+      Location
     </b>
+
+    <p>
+      Sonipat, Haryana, India
+    </p>
 
     <p>
       Mon–Sat: 9 AM–7 PM
@@ -713,13 +665,12 @@
 
   </div>
 
-
 </footer>
 
 
 
 <!-- ========================================
-     CART MODAL
+     CART
 ======================================== -->
 
 <div
@@ -727,9 +678,7 @@
   class="modal hidden"
 >
 
-
   <div class="cart">
-
 
     <button
       class="close"
@@ -763,7 +712,6 @@
       📲 Order Cart on WhatsApp
     </button>
 
-
   </div>
 
 </div>
@@ -771,14 +719,13 @@
 
 
 <!-- ========================================
-     OLD IMAGE VIEWER
+     IMAGE VIEWER
 ======================================== -->
 
 <div
   id="imageViewer"
   class="imageViewer hidden"
 >
-
 
   <button
     class="imageViewerClose"
@@ -795,13 +742,12 @@
     alt="Product"
   >
 
-
 </div>
 
 
 
 <!-- ========================================
-     SCRIPT
+     JAVASCRIPT
 ======================================== -->
 
 <script src="script.js"></script>
@@ -809,4 +755,4 @@
 
 </body>
 
-  </html>
+</html>
