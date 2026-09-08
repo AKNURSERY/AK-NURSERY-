@@ -914,3 +914,305 @@ footer p{
   display:block;
   object-fit:cover;
 }
+/* ========================================
+   A.K NURSERY - REAL HERO
+======================================== */
+
+.realHero{
+  min-height:520px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 80% 35%,#1c7548 0%,transparent 32%),
+    linear-gradient(135deg,#04351f,#08703d 55%,#064b2a);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:70px 7%;
+  gap:40px;
+}
+
+.realHeroContent{
+  position:relative;
+  z-index:3;
+  max-width:650px;
+}
+
+.heroBadge{
+  display:inline-block;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  padding:9px 15px;
+  border-radius:30px;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+.realHero h1{
+  font-size:58px;
+  line-height:1.05;
+  margin-bottom:20px;
+  letter-spacing:-1px;
+}
+
+.realHero h1 span{
+  display:block;
+  color:#b5ed82;
+}
+
+.realHeroContent > p{
+  max-width:590px;
+  color:#e2f1e7;
+  font-size:17px;
+  line-height:1.8;
+  margin-bottom:28px;
+}
+
+.realHeroButtons{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.heroPrimaryBtn,
+.heroWhatsAppBtn{
+  border:0;
+  padding:14px 23px;
+  border-radius:9px;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.heroPrimaryBtn{
+  background:#fff;
+  color:#064b2a;
+}
+
+.heroWhatsAppBtn{
+  background:#25d366;
+  color:#fff;
+}
+
+.heroPrimaryBtn:hover,
+.heroWhatsAppBtn:hover{
+  transform:translateY(-3px);
+}
+
+.heroTrust{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:38px;
+  max-width:650px;
+}
+
+.heroTrust div{
+  padding:12px 10px;
+  border-radius:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.1);
+}
+
+.heroTrust strong,
+.heroTrust span{
+  display:block;
+}
+
+.heroTrust strong{
+  font-size:13px;
+}
+
+.heroTrust span{
+  color:#c9dfd0;
+  font-size:10px;
+  margin-top:2px;
+}
+
+
+/* ========================================
+   HERO PLANT VISUAL
+======================================== */
+
+.heroPlantVisual{
+  width:390px;
+  height:390px;
+  position:relative;
+  display:grid;
+  place-items:center;
+  flex-shrink:0;
+}
+
+.plantCircle{
+  width:310px;
+  height:310px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:145px;
+  background:
+    radial-gradient(circle,#b5ed82 0%,#63bd68 45%,#12643b 75%);
+  box-shadow:
+    0 0 0 25px rgba(255,255,255,.05),
+    0 25px 70px rgba(0,0,0,.25);
+}
+
+.floatingCard{
+  position:absolute;
+  background:#fff;
+  color:#17482e;
+  padding:12px 17px;
+  border-radius:12px;
+  font-size:13px;
+  font-weight:800;
+  box-shadow:0 12px 30px rgba(0,0,0,.2);
+}
+
+.cardOne{
+  top:35px;
+  left:0;
+}
+
+.cardTwo{
+  right:-5px;
+  top:125px;
+}
+
+.cardThree{
+  bottom:35px;
+  left:30px;
+}
+
+
+/* ========================================
+   HERO DECORATION
+======================================== */
+
+.heroGlow{
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+.glow1{
+  width:350px;
+  height:350px;
+  right:-120px;
+  bottom:-180px;
+  background:rgba(181,237,130,.12);
+}
+
+.glow2{
+  width:180px;
+  height:180px;
+  left:-80px;
+  top:-70px;
+  background:rgba(181,237,130,.08);
+}
+
+
+/* ========================================
+   HERO MOBILE
+======================================== */
+
+@media(max-width:900px){
+
+  .realHero{
+    padding:55px 5%;
+    flex-direction:column;
+    text-align:center;
+  }
+
+  .realHeroContent{
+    max-width:700px;
+  }
+
+  .realHero h1{
+    font-size:45px;
+  }
+
+  .realHeroContent > p{
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .realHeroButtons{
+    justify-content:center;
+  }
+
+  .heroTrust{
+    width:100%;
+  }
+
+  .heroPlantVisual{
+    width:330px;
+    height:330px;
+  }
+
+  .plantCircle{
+    width:250px;
+    height:250px;
+    font-size:115px;
+  }
+
+}
+
+
+@media(max-width:650px){
+
+  .realHero{
+    min-height:auto;
+    padding:45px 18px 55px;
+  }
+
+  .heroBadge{
+    font-size:11px;
+  }
+
+  .realHero h1{
+    font-size:38px;
+  }
+
+  .realHeroContent > p{
+    font-size:14px;
+  }
+
+  .heroTrust{
+    grid-template-columns:1fr 1fr;
+    margin-top:28px;
+  }
+
+  .heroPlantVisual{
+    width:290px;
+    height:290px;
+  }
+
+  .plantCircle{
+    width:220px;
+    height:220px;
+    font-size:95px;
+  }
+
+  .floatingCard{
+    padding:9px 11px;
+    font-size:10px;
+  }
+
+  .cardOne{
+    top:20px;
+    left:-5px;
+  }
+
+  .cardTwo{
+    right:-8px;
+    top:100px;
+  }
+
+  .cardThree{
+    bottom:20px;
+    left:5px;
+  }
+
+}
