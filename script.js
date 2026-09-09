@@ -28,27 +28,33 @@ document.addEventListener("DOMContentLoaded", function () {
 // ========================================
 // LOAD CATEGORIES FROM SUPABASE
 // ========================================
-async function loadCategories() {
-  try {
-    const response = await fetch(
-      SUPABASE_URL +
-        "/rest/v1/categories?select=*&active=eq.true&order=sort_order.asc",
-      {
-        method: "GET",
-        headers: {
-          apikey: SUPABASE_KEY,
-          Authorization: "Bearer " + SUPABASE_KEY,
-        },
-      }
-    );
+// Fix: All 17 categories fetch karne ke liye script.js update
+async function loadCategories(isAdmin = false) {
+    try {
+        // Range header (0-99) add karne se default limits bypass ho jati hain
+        const response = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=id.asc`, {
+            method: "GET",
+            headers: {
+                "apikey": SUPABASE_KEY,
+                "Authorization": `Bearer ${SUPABASE_KEY}`,
+                "Range": "0-99" // Force fully load all items up to 100
+            }
+        });
 
-    categories = await response.json();
-    renderCategoriesGrid(); // Corrected Rendering logic
-    updateCategoryFilterMenu();
-  } catch (error) {
-    console.error("CATEGORY ERROR:", error);
-  }
+        if (!response.ok) throw new Error("Failed to load categories");
+        
+        categories = await response.json();
+
+        if (isAdmin) {
+            renderCategoriesAdmin(); // Admin table display
+        } else {
+            renderCategoriesFrontPage(); // Frontend website grid
+        }
+    } catch (error) {
+        console.error("Categories loading error:", error);
+    }
 }
+
 
 // ========================================
 // RENDER CATEGORIES AS GRID CARDS (FIXED LAYOUT)
