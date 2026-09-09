@@ -1216,3 +1216,269 @@ footer p{
   }
 
 }
+/* ========================================
+   NEW TOP BAR + HEADER
+======================================== */
+
+.topInfoBar{
+  background:#075b32;
+  color:#fff;
+  min-height:30px;
+  padding:6px 4%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+  font-size:11px;
+}
+
+.topInfoLeft,
+.topInfoRight{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.topInfoLeft i{
+  opacity:.6;
+}
+
+.topInfoRight{
+  font-size:10px;
+}
+
+
+/* MAIN HEADER */
+
+.mainHeader{
+  min-height:78px;
+  background:#fff;
+  padding:10px 4%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:25px;
+  border-bottom:1px solid #e5ece7;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+
+/* BRAND */
+
+.newBrand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#075b32;
+  flex-shrink:0;
+}
+
+.brandLeaf{
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  font-size:32px;
+}
+
+.brandText strong{
+  display:block;
+  font-size:25px;
+  line-height:1;
+  letter-spacing:.5px;
+}
+
+.brandText small{
+  display:block;
+  margin-top:4px;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:1.5px;
+}
+
+
+/* NAVIGATION */
+
+.mainNav{
+  display:flex;
+  align-items:center;
+  gap:27px;
+}
+
+.mainNav a{
+  color:#183b29;
+  font-size:13px;
+  font-weight:600;
+  padding:27px 0 22px;
+  position:relative;
+}
+
+.mainNav a:hover,
+.mainNav a.active{
+  color:#08743e;
+}
+
+.mainNav a.active::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:13px;
+  height:2px;
+  background:#08743e;
+  border-radius:5px;
+}
+
+
+/* HEADER ACTIONS */
+
+.headerActions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.searchBox{
+  width:245px;
+  height:40px;
+  border:1px solid #dce5df;
+  border-radius:22px;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  background:#fff;
+}
+
+.searchBox input{
+  width:100%;
+  height:100%;
+  border:0;
+  outline:0;
+  padding:0 12px;
+  font-size:11px;
+  color:#183b29;
+}
+
+.searchBox button{
+  width:42px;
+  height:100%;
+  border:0;
+  background:transparent;
+  cursor:pointer;
+}
+
+.headerIcon{
+  border:0;
+  background:transparent;
+  color:#16452d;
+  font-size:23px;
+  cursor:pointer;
+}
+
+.headerCart{
+  width:43px;
+  height:43px;
+  border:0;
+  border-radius:50%;
+  background:#075b32;
+  color:#fff;
+  cursor:pointer;
+  font-size:19px;
+  position:relative;
+}
+
+.headerCart #cartCount{
+  top:-4px;
+  right:-4px;
+}
+
+
+/* MOBILE */
+
+@media(max-width:1050px){
+
+  .mainNav{
+    gap:14px;
+  }
+
+  .searchBox{
+    width:190px;
+  }
+
+  .brandText strong{
+    font-size:21px;
+  }
+
+}
+
+
+@media(max-width:800px){
+
+  .topInfoBar{
+    justify-content:center;
+  }
+
+  .topInfoRight{
+    display:none;
+  }
+
+  .mainHeader{
+    padding:10px 15px;
+  }
+
+  .mainNav{
+    display:none;
+  }
+
+  .headerActions{
+    margin-left:auto;
+  }
+
+  .searchBox{
+    width:170px;
+  }
+
+  .headerIcon{
+    display:none;
+  }
+
+}
+
+
+@media(max-width:500px){
+
+  .topInfoLeft span:nth-of-type(n+3),
+  .topInfoLeft i:nth-of-type(n+2){
+    display:none;
+  }
+
+  .topInfoBar{
+    font-size:10px;
+  }
+
+  .brandLeaf{
+    width:42px;
+    height:42px;
+    font-size:27px;
+  }
+
+  .brandText strong{
+    font-size:17px;
+  }
+
+  .brandText small{
+    font-size:8px;
+    letter-spacing:1px;
+  }
+
+  .searchBox{
+    width:135px;
+  }
+
+  .searchBox input{
+    font-size:9px;
+  }
+
+}
