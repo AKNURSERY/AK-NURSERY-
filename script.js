@@ -28,9 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
 // ========================================
 // LOAD CATEGORIES FROM SUPABASE
 // ========================================
-// ========================================
-// LOAD CATEGORIES FROM SUPABASE
-// ========================================
 async function loadCategories() {
   try {
     const response = await fetch(
