@@ -1,868 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <meta
-    name="google-site-verification"
-    content="sQ-aHETpJEIWprl9ZOSk3eqHw9ZoTO61gKbJNMEJOfk"
-  >
-
-  <title>
-    A.K Nursery | Plants, Pots, Vermicompost & Wall Compound
-  </title>
-
-  <meta
-    name="description"
-    content="A.K Nursery Sonipat - Plants, nursery pots, vermicompost, gardening products and wall compound at affordable prices."
-  >
-
-  <meta name="theme-color" content="#064b2a">
-
-  <link rel="stylesheet" href="styles.css">
-
+  <title>A.K NURSERY & WALL COMPOUND</title>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
-
 <body>
 
-
-<!-- ========================================
-     TOP INFORMATION BAR
-======================================== -->
-
-<div class="topInfoBar">
-
-  <div class="topInfoLeft">
-    <span>🌿 Fresh Plants</span>
-    <i>|</i>
-    <span>🪴 Quality Pots</span>
-    <i>|</i>
-    <span>♻️ Organic Compost</span>
-    <i>|</i>
-    <span>🧱 Wall Compound</span>
+  <!-- Top Announcement Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span>🌿 Fresh Plants</span> | <span>📍 Quality Pots</span> | <span>🍃 Organic Compost</span> | <span>🧱 Wall Compound</span>
+    </div>
+    <div class="top-bar-right">
+      <span>🚚 Free Delivery on Orders Above ₹999</span>
+      <span><i class="fa-solid fa-phone"></i> +91 98765 43210</span>
+      <div class="social-icons">
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
   </div>
 
-  <div class="topInfoRight">
-    <span>🚚 Free Delivery on Orders Above ₹999</span>
-    <span>📞 +91 98765 43210</span>
-    <span>◎</span>
-    <span>f</span>
-    <span>▶</span>
-  </div>
-
-</div>
-
-
-<!-- ========================================
-     MAIN HEADER
-======================================== -->
-
-<header class="mainHeader">
-
-  <a href="#home" class="newBrand">
-
-    <div class="brandLeaf">
-      🌿
-    </div>
-
-    <div class="brandText">
-
-      <strong>
-        A.K NURSERY
-      </strong>
-
-      <small>
-        & WALL COMPOUND
-      </small>
-
-    </div>
-
-  </a>
-
-
-  <nav class="mainNav">
-
-    <a href="#home" class="active">
-      Home
-    </a>
-
-    <a href="#categories">
-      Shop
-    </a>
-
-    <a href="#about">
-      About Us
-    </a>
-
-    <a href="#products">
-      Blog
-    </a>
-
-    <a href="#contact">
-      Contact
-    </a>
-
-  </nav>
-
-
-  <div class="headerActions">
-
-    <div class="searchBox">
-
-      <input
-        type="search"
-        placeholder="Search for plants, pots, compost..."
-        id="siteSearch"
-      >
-
-      <button
-        type="button"
-        onclick="searchProducts()"
-      >
-        🔍
-      </button>
-
-    </div>
-
-
-    <button class="headerIcon" type="button">
-      ♙
-    </button>
-
-    <button class="headerIcon" type="button">
-      ♡
-    </button>
-
-
-    <button
-      class="headerCart"
-      onclick="openCart()"
-      aria-label="Open cart"
-    >
-
-      🛒
-
-      <span id="cartCount">
-        0
-      </span>
-
-    </button>
-
-  </div>
-
-</header>
-
-
-
-
-<main>
-
-
-<!-- ========================================
-     A.K NURSERY HERO
-======================================== -->
-
-<section id="home" class="realHero">
-
-  <div class="heroGlow glow1"></div>
-  <div class="heroGlow glow2"></div>
-
-  <div class="realHeroContent">
-
-    <div class="heroBadge">
-      🌿 A.K NURSERY & WALL COMPOUND
-    </div>
-
-    <h1>
-      Bring Nature
-      <span>Into Your Space</span>
-    </h1>
-
-    <p>
-      Fresh plants, premium pots, vermicompost,
-      gardening essentials & wall compound —
-      all at one place.
-    </p>
-
-    <div class="realHeroButtons">
-
-      <button
-        class="heroPrimaryBtn"
-        onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})"
-      >
-        🛒 Shop Now →
-      </button>
-
-      <button
-        class="heroWhatsAppBtn"
-        onclick="window.open('https://wa.me/919555322038','_blank')"
-      >
-        💬 WhatsApp Order
-      </button>
-
-    </div>
-
-    <div class="heroTrust">
-
+  <!-- Header Section -->
+  <header class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-leaf logo-icon"></i>
       <div>
-        <strong>🌱 Fresh</strong>
-        <span>Healthy Plants</span>
+        <h1>A.K NURSERY</h1>
+        <span>& WALL COMPOUND</span>
       </div>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Shop</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Blog</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="search-box">
+      <input type="text" placeholder="Search for plants, pots, compost...">
+      <button><i class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    <div class="header-icons">
+      <a href="#"><i class="fa-regular fa-user"></i></a>
+      <a href="#"><i class="fa-regular fa-heart"></i></a>
+      <a href="#" class="cart-icon"><i class="fa-solid fa-cart-shopping"></i><span class="badge">0</span></a>
+    </div>
+  </header>
 
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="sub-title">Green Living | Better Tomorrow</p>
+      <h2>Your One Stop Shop for <br><span>Plants & Garden Essentials</span></h2>
+      <p class="tagline">Indoor plants | Flower plants | Fruit plants | Garden plants | Quality pots | Vermi compost | Wall compound</p>
+      <div class="hero-buttons">
+        <a href="#" class="btn btn-primary"><i class="fa-solid fa-cart-shopping"></i> Shop Now</a>
+        <a href="https://wa.me/919876543210" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp Order</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Highlights Strip -->
+  <section class="highlights-strip">
+    <div class="highlight-item"><i class="fa-solid fa-award"></i> Premium Quality</div>
+    <div class="highlight-item"><i class="fa-solid fa-seedling"></i> Fresh & Healthy Plants</div>
+    <div class="highlight-item"><i class="fa-solid fa-box-open"></i> Secure Packaging</div>
+    <div class="highlight-item"><i class="fa-solid fa-truck-fast"></i> Pan India Delivery</div>
+  </section>
+
+  <!-- Shop by Category -->
+  <section class="section container">
+    <div class="section-header">
       <div>
-        <strong>🪴 Premium</strong>
-        <span>Quality Pots</span>
+        <h2>Shop by Category</h2>
+        <p>Explore our wide range of plants, pots, and gardening products</p>
       </div>
+      <a href="#" class="view-all">View All Categories &rarr;</a>
+    </div>
+    <div class="grid category-grid">
+      <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1545241047-6083a3684587?w=500" alt="Indoor Plants">
+        <h3>Indoor Plants</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1508610048659-a06b669e3321?w=500" alt="Flower Plants">
+        <h3>Flower Plants</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=500" alt="Fruit Plants">
+        <h3>Fruit Plants</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=500" alt="Garden Plants">
+        <h3>Garden Plants</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=500" alt="Quality Pots">
+        <h3>Quality Pots</h3>
+      </div>
+      <div class="category-card">
+        <img src="https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=500" alt="Vermicompost">
+        <h3>Vermicompost</h3>
+      </div>
+    </div>
+  </section>
 
+  <!-- Features Strip -->
+  <section class="features-bar">
+    <div class="feature-box"><i class="fa-solid fa-leaf"></i> <div><h4>100% Organic</h4><p>Eco friendly products</p></div></div>
+    <div class="feature-box"><i class="fa-solid fa-truck"></i> <div><h4>Fast Delivery</h4><p>Across India</p></div></div>
+    <div class="feature-box"><i class="fa-solid fa-shield-halved"></i> <div><h4>Secure Payment</h4><p>Multiple options</p></div></div>
+    <div class="feature-box"><i class="fa-solid fa-headset"></i> <div><h4>Expert Support</h4><p>We're here to help</p></div></div>
+  </section>
+
+  <!-- Featured Products -->
+  <section class="section container">
+    <div class="section-header">
       <div>
-        <strong>♻️ Natural</strong>
-        <span>Vermicompost</span>
+        <h2>Featured Products</h2>
+        <p>Best selling plants, pots and more</p>
       </div>
-
-      <div>
-        <strong>🚚 Easy</strong>
-        <span>Delivery</span>
+      <a href="#" class="view-all">View All Products &rarr;</a>
+    </div>
+    <div class="grid product-grid">
+      <!-- Product Card 1 -->
+      <div class="product-card">
+        <span class="badge badge-seller">Best Seller</span>
+        <button class="wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+        <img src="https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=500" alt="Snake Plant">
+        <h4>Snake Plant (Sansevieria)</h4>
+        <div class="rating">⭐⭐⭐⭐⭐ (120)</div>
+        <div class="price">₹299 <span class="old-price">₹499</span></div>
+        <button class="btn-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
       </div>
-
-    </div>
-
-  </div>
-
-  <div class="heroPlantVisual">
-
-    <div class="plantCircle">
-      🌿
-    </div>
-
-    <div class="floatingCard cardOne">
-      🌱 Fresh Plants
-    </div>
-
-    <div class="floatingCard cardTwo">
-      🪴 Premium Pots
-    </div>
-
-    <div class="floatingCard cardThree">
-      ♻️ Vermicompost
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- ========================================
-     FEATURE STRIP
-======================================== -->
-
-<section class="featureStrip">
-
-  <div>
-
-    <span class="featureEmoji">
-      🌱
-    </span>
-
-    <div>
-
-      <strong>
-        Fresh Plants
-      </strong>
-
-      <span>
-        Healthy nursery stock
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <div>
-
-    <span class="featureEmoji">
-      💰
-    </span>
-
-    <div>
-
-      <strong>
-        Best Prices
-      </strong>
-
-      <span>
-        Affordable products
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <div>
-
-    <span class="featureEmoji">
-      🚚
-    </span>
-
-    <div>
-
-      <strong>
-        Delivery
-      </strong>
-
-      <span>
-        Delivery options available
-      </span>
-
-    </div>
-
-  </div>
-
-
-  <div>
-
-    <span class="featureEmoji">
-      💬
-    </span>
-
-    <div>
-
-      <strong>
-        WhatsApp Support
-      </strong>
-
-      <span>
-        Easy direct ordering
-      </span>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-
-<!-- ========================================
-     CATEGORIES
-======================================== -->
-
-<section
-  id="categories"
-  class="section categorySection"
->
-
-  <div class="sectionTitle">
-
-    <span>
-      EXPLORE
-    </span>
-
-    <h2>
-      Shop By Category
-    </h2>
-
-    <p class="muted">
-      Choose the products you need
-    </p>
-
-  </div>
-
-
-  <div class="categories">
-
-    <p class="loading">
-      Loading categories...
-    </p>
-
-  </div>
-
-</section>
-
-
-
-<!-- ========================================
-     PRODUCTS
-======================================== -->
-
-<section
-  id="products"
-  class="section productsSection"
->
-
-  <div class="sectionHead">
-
-    <div>
-
-      <span class="sectionMiniTitle">
-        OUR COLLECTION
-      </span>
-
-      <h2>
-        Featured Products
-      </h2>
-
-      <p class="muted">
-        Fresh nursery products at the best prices.
-      </p>
-
-    </div>
-
-
-    <select
-      id="filter"
-      onchange="filterCat(this.value)"
-    >
-
-      <option value="All">
-        All Products
-      </option>
-
-    </select>
-
-  </div>
-
-
-  <div
-    id="productGrid"
-    class="grid"
-  >
-
-    <p class="loading">
-      Loading products...
-    </p>
-
-  </div>
-
-</section>
-
-
-
-<!-- ========================================
-     PROMO BANNERS
-======================================== -->
-
-<section class="promoSection">
-
-
-  <div class="promoCard">
-
-    <div class="promoIcon">
-      🌿
-    </div>
-
-    <div>
-
-      <span class="promoSmall">
-        GREEN LIVING
-      </span>
-
-      <h3>
-        Fresh Plants
-      </h3>
-
-      <p>
-        Indoor, outdoor, flowering
-        and seasonal plants.
-      </p>
-
-      <button
-        onclick="filterCat('Plants')"
-      >
-        Explore Plants →
-      </button>
-
-    </div>
-
-  </div>
-
-
-
-  <div class="promoCard">
-
-    <div class="promoIcon">
-      🪴
-    </div>
-
-    <div>
-
-      <span class="promoSmall">
-        GARDEN STYLE
-      </span>
-
-      <h3>
-        Premium Pots
-      </h3>
-
-      <p>
-        Plastic, earthen, cement,
-        ceramic pots and stands.
-      </p>
-
-      <button
-        onclick="filterCat('Pots')"
-      >
-        Explore Pots →
-      </button>
-
-    </div>
-
-  </div>
-
-
-
-  <div class="promoCard">
-
-    <div class="promoIcon">
-      ♻️
-    </div>
-
-    <div>
-
-      <span class="promoSmall">
-        GARDEN CARE
-      </span>
-
-      <h3>
-        Vermicompost
-      </h3>
-
-      <p>
-        Cocopeat, neem khali,
-        bone meal and garden care.
-      </p>
-
-      <button
-        onclick="filterCat('Vermicompost')"
-      >
-        Explore Garden Care →
-      </button>
-
-    </div>
-
-  </div>
-
-
-</section>
-
-
-
-<!-- ========================================
-     ABOUT
-======================================== -->
-
-<section
-  id="about"
-  class="about section"
->
-
-  <div class="sectionTitle">
-
-    <span>
-      WHY US
-    </span>
-
-    <h2>
-      Why Choose A.K Nursery?
-    </h2>
-
-    <p class="muted">
-      Quality products and direct service
-      from our nursery.
-    </p>
-
-  </div>
-
-
-  <div class="features">
-
-
-    <div>
-
-      <div class="featureIcon">
-        🌱
+      <!-- Product Card 2 -->
+      <div class="product-card">
+        <span class="badge badge-new">New</span>
+        <button class="wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+        <img src="https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=500" alt="Anthurium">
+        <h4>Anthurium Plant</h4>
+        <div class="rating">⭐⭐⭐⭐⭐ (98)</div>
+        <div class="price">₹399 <span class="old-price">₹599</span></div>
+        <button class="btn-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
       </div>
-
-      <b>
-        Fresh Plants
-      </b>
-
-      <span>
-        Healthy nursery stock
-      </span>
-
-    </div>
-
-
-    <div>
-
-      <div class="featureIcon">
-        💰
+      <!-- Product Card 3 -->
+      <div class="product-card">
+        <span class="badge badge-seller">Best Seller</span>
+        <button class="wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+        <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=500" alt="Areca Palm">
+        <h4>Areca Palm</h4>
+        <div class="rating">⭐⭐⭐⭐⭐ (87)</div>
+        <div class="price">₹249 <span class="old-price">₹349</span></div>
+        <button class="btn-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
       </div>
-
-      <b>
-        Good Prices
-      </b>
-
-      <span>
-        Value for money
-      </span>
-
-    </div>
-
-
-    <div>
-
-      <div class="featureIcon">
-        🚚
+      <!-- Product Card 4 -->
+      <div class="product-card">
+        <span class="badge badge-new">New</span>
+        <button class="wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+        <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=500" alt="Rose Plant">
+        <h4>Rose Plant (Dwarf)</h4>
+        <div class="rating">⭐⭐⭐⭐⭐ (102)</div>
+        <div class="price">₹149 <span class="old-price">₹199</span></div>
+        <button class="btn-cart"><i class="fa-solid fa-cart-shopping"></i> Add to Cart</button>
       </div>
-
-      <b>
-        Delivery
-      </b>
-
-      <span>
-        Delivery options available
-      </span>
-
     </div>
+  </section>
 
+  <!-- Get in Touch Bar -->
+  <section class="get-in-touch">
+    <div class="touch-info">
+      <h3>Get in Touch</h3>
+      <p>Have a question? We're here to help!</p>
+    </div>
+    <div class="contact-items">
+      <div><i class="fa-solid fa-phone"></i> +91 98765 43210</div>
+      <div><i class="fa-solid fa-envelope"></i> aknursery@gmail.com</div>
+      <div><i class="fa-solid fa-location-dot"></i> Kabirpur, Sonipat, Haryana, India</div>
+    </div>
+    <button class="btn btn-primary">Send Message &rarr;</button>
+  </section>
 
-    <div>
-
-      <div class="featureIcon">
-        💬
+  <!-- Footer Section -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-about">
+        <h2>A.K NURSERY</h2>
+        <p>& WALL COMPOUND</p>
+        <p>Green Living | Better Tomorrow</p>
       </div>
-
-      <b>
-        WhatsApp Support
-      </b>
-
-      <span>
-        Easy direct ordering
-      </span>
-
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="#">Indoor Plants</a></li>
+          <li><a href="#">Flower Plants</a></li>
+          <li><a href="#">Vermicompost</a></li>
+          <li><a href="#">Wall Compound</a></li>
+        </ul>
+      </div>
+      <div class="footer-newsletter">
+        <h4>Newsletter</h4>
+        <p>Get latest updates & offers!</p>
+        <input type="email" placeholder="Enter your email">
+        <button>Subscribe</button>
+      </div>
     </div>
-
-
-  </div>
-
-</section>
-
-
-
-<!-- ========================================
-     CONTACT
-======================================== -->
-
-<section
-  id="contact"
-  class="section contact"
->
-
-  <div class="sectionTitle">
-
-    <span>
-      GET IN TOUCH
-    </span>
-
-    <h2>
-      Order / Contact Us
-    </h2>
-
-    <p class="muted">
-      Fill the form and send your
-      details directly on WhatsApp.
-    </p>
-
-  </div>
-
-
-  <form onsubmit="sendOrder(event)">
-
-    <input
-      id="name"
-      type="text"
-      required
-      placeholder="Your name"
-    >
-
-
-    <input
-      id="phone"
-      type="tel"
-      required
-      placeholder="Mobile number"
-    >
-
-
-    <textarea
-      id="address"
-      required
-      placeholder="Delivery address"
-    ></textarea>
-
-
-    <button
-      class="btn"
-      type="submit"
-    >
-      📲 Send Order on WhatsApp
-    </button>
-
-  </form>
-
-</section>
-
-
-</main>
-
-
-
-<!-- ========================================
-     FOOTER
-======================================== -->
-
-<footer>
-
-  <div>
-
-    <b>
-      A.K NURSERY & WALL COMPOUND
-    </b>
-
-    <p>
-      Plants, pots, vermicompost,
-      gardening products and wall compound.
-    </p>
-
-  </div>
-
-
-  <div>
-
-    <b>
-      Quick Links
-    </b>
-
-    <p>
-      Home · Categories · Shop · About · Contact
-    </p>
-
-  </div>
-
-
-  <div>
-
-    <b>
-      Location
-    </b>
-
-    <p>
-      Sonipat, Haryana, India
-    </p>
-
-    <p>
-      Mon–Sat: 9 AM–7 PM
-    </p>
-
-  </div>
-
-</footer>
-
-
-
-<!-- ========================================
-     CART
-======================================== -->
-
-<div
-  id="cartModal"
-  class="modal hidden"
->
-
-  <div class="cart">
-
-    <button
-      class="close"
-      onclick="closeCart()"
-      aria-label="Close cart"
-    >
-      ×
-    </button>
-
-
-    <h2>
-      🛒 Your Cart
-    </h2>
-
-
-    <div id="cartItems"></div>
-
-
-    <div class="total">
-
-      Total:
-      ₹<span id="cartTotal">0</span>
-
+    <div class="footer-bottom">
+      <p>© 2026 A.K Nursery & Wall Compound. All Rights Reserved.</p>
     </div>
-
-
-    <button
-      class="btn checkoutBtn"
-      onclick="checkout()"
-    >
-      📲 Order Cart on WhatsApp
-    </button>
-
-  </div>
-
-</div>
-
-
-
-<!-- ========================================
-     IMAGE VIEWER
-======================================== -->
-
-<div
-  id="imageViewer"
-  class="imageViewer hidden"
->
-
-  <button
-    class="imageViewerClose"
-    onclick="closeProductImage()"
-    aria-label="Close image"
-  >
-    ×
-  </button>
-
-
-  <img
-    id="viewerImage"
-    src=""
-    alt="Product"
-  >
-
-</div>
-
-
-
-<!-- ========================================
-     JAVASCRIPT
-======================================== -->
-
-<script src="script.js"></script>
-
+  </footer>
 
 </body>
-
 </html>
