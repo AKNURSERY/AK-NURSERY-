@@ -5,33 +5,677 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>A.K NURSERY & WALL COMPOUND</title>
   
-  <!-- Font Awesome & Google Fonts -->
+  <!-- Font Awesome for Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Integrated styles to fix cache and path issues -->
+  <style>
+    /* GLOBAL RESETS & DESIGN TARGET */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: #f7faf7;
+      color: #173b29;
+      line-height: 1.5;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      background: #064b2a;
+      color: #fff;
+      padding: 9px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    /* NAVIGATION */
+    .nav {
+      background: #fff;
+      padding: 12px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e5eee7;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #064b2a;
+    }
+
+    .logo-icon {
+      width: 42px;
+      height: 42px;
+      background: #064b2a;
+      color: #ffffff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+    }
+
+    .brand b {
+      font-size: 18px;
+      display: block;
+      line-height: 1.1;
+      font-weight: 800;
+    }
+
+    .brand small {
+      font-size: 10px;
+      letter-spacing: 1px;
+      display: block;
+      color: #064b2a;
+      font-weight: 600;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .links a {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2b4536;
+    }
+
+    .links a.active, .links a:hover {
+      color: #064b2a;
+    }
+
+    .admin-tag {
+      color: #e74c3c !important;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      border: 1px solid #cce0d2;
+      border-radius: 20px;
+      padding: 4px 12px;
+      background: #f4f8f5;
+      width: 200px;
+    }
+
+    .search-bar input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 12px;
+    }
+
+    .search-bar button {
+      border: none;
+      background: transparent;
+      color: #064b2a;
+      cursor: pointer;
+    }
+
+    .cartBtn {
+      border: none;
+      background: transparent;
+      color: #064b2a;
+      font-size: 20px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    #cartCount {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: #064b2a;
+      color: #fff;
+      font-size: 10px;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-weight: 700;
+    }
+
+    /* HERO SECTION */
+    .hero-banner {
+      background: linear-gradient(135deg, #032b17 0%, #064b2a 100%), url('https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=1200') center/cover;
+      background-blend-mode: overlay;
+      color: #ffffff;
+      padding: 40px 5%;
+      position: relative;
+    }
+
+    .hero-container {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .hero-left {
+      max-width: 650px;
+    }
+
+    .hero-tagline-bar {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .hero-left h1 {
+      font-size: 38px;
+      line-height: 1.2;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hero-left h1 span {
+      color: #a4f59e;
+    }
+
+    .hero-subtext {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-bottom: 25px;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      padding: 10px 22px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-shop {
+      background: #004d25;
+      color: #fff;
+      border: 1px solid #1ba359;
+    }
+
+    .btn-whatsapp {
+      background: #25d366;
+      color: #ffffff;
+    }
+
+    .hero-features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      padding-top: 15px;
+    }
+
+    .hero-features-grid div {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .hero-features-grid i {
+      font-size: 16px;
+      color: #a4f59e;
+    }
+
+    .hero-badge-sign {
+      background: #c38c4c;
+      color: #2b1704;
+      padding: 25px 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: 3px solid #8d5c22;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      width: 170px;
+    }
+
+    .hero-badge-sign h3 {
+      font-size: 20px;
+      line-height: 1.2;
+      font-weight: 800;
+      font-family: serif;
+    }
+
+    .hero-badge-sign i {
+      margin-top: 10px;
+      color: #064b2a;
+    }
+
+    /* SECTIONS & CATEGORIES GRID */
+    .section {
+      max-width: 1200px;
+      margin: auto;
+      padding: 35px 5%;
+    }
+
+    .section-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .title-with-icon {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .green-icon {
+      font-size: 26px;
+      color: #064b2a;
+    }
+
+    .title-with-icon h2 {
+      font-size: 22px;
+      color: #064b2a;
+      font-weight: 700;
+    }
+
+    .title-with-icon p {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .view-all {
+      font-size: 12px;
+      font-weight: 700;
+      color: #064b2a;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+
+    .cat-card {
+      background: #fff;
+      border: 1px solid #ccd8cd;
+      border-radius: 12px;
+      overflow: hidden;
+      text-align: center;
+      padding: 12px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .cat-card:hover {
+      transform: translateY(-3px);
+      border-color: #064b2a;
+    }
+
+    .cat-card-img {
+      height: 90px;
+      background: #eef5ef;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .cat-badge-icon {
+      position: absolute;
+      bottom: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 26px;
+      background: #064b2a;
+      color: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      border: 2px solid #fff;
+    }
+
+    .cat-card h4 {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #173b29;
+    }
+
+    .cat-card p {
+      font-size: 9px;
+      color: #77847c;
+    }
+
+    /* FEATURE STRIP */
+    .feature-strip-bar {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 8px 25px rgba(0,0,0,.06);
+      padding: 20px;
+      display: flex;
+      justify-content: space-around;
+      max-width: 1150px;
+      margin: 10px auto;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: #064b2a;
+      color: #fff;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+    }
+
+    .feature-item strong {
+      display: block;
+      font-size: 13px;
+      color: #064b2a;
+    }
+
+    .feature-item span {
+      font-size: 11px;
+      color: #666;
+    }
+
+    /* PRODUCTS GRID */
+    .filter-box {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    #filter {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccd8cd;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
+      gap: 20px;
+    }
+
+    .card {
+      border: 1px solid #e0e7e0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-tag {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #064b2a;
+      color: #fff;
+      font-size: 9px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      z-index: 2;
+    }
+
+    .pic {
+      height: 200px;
+      background: #f4f7f3;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .productImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .cardBody {
+      padding: 15px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #edf7ef;
+      color: #064b2a;
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .card h3 {
+      margin: 8px 0;
+      font-size: 16px;
+    }
+
+    .rating {
+      font-size: 10px;
+      color: #f39c12;
+      margin-bottom: 6px;
+    }
+
+    .price {
+      font-size: 18px;
+      font-weight: 700;
+      color: #064b2a;
+    }
+
+    .old {
+      font-size: 13px;
+      color: #888;
+      text-decoration: line-through;
+      margin-left: 6px;
+    }
+
+    .extraCharges {
+      font-size: 11px;
+      color: #666;
+      margin: 8px 0;
+      background: #f9f9f9;
+      padding: 5px;
+      border-radius: 6px;
+    }
+
+    .btn-cart-grid {
+      width: 100%;
+      background: #064b2a;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+
+    /* MODAL / CART */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .modal-content {
+      background: white;
+      width: 90%;
+      max-width: 450px;
+      border-radius: 10px;
+      padding: 20px;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .cart-items {
+      margin: 15px 0;
+    }
+
+    .total {
+      text-align: right;
+      font-size: 18px;
+      font-weight: 800;
+      margin: 15px 0;
+    }
+
+    .notice {
+      font-size: 11px;
+      color: #666;
+      text-align: right;
+      margin-bottom: 15px;
+    }
+
+    .full-btn {
+      width: 100%;
+    }
+
+    /* MOBILE DESIGN */
+    @media(max-width:900px){
+      .grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .categories{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .feature-strip-bar{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .hero-left h1{
+        font-size:38px;
+      }
+    }
+
+    @media(max-width:650px){
+      .nav{
+        padding:10px 15px;
+      }
+      .brand b{
+        font-size:16px;
+      }
+      .links{
+        display:none;
+      }
+      .hero-content{
+        padding:45px 18px;
+      }
+      .hero-left h1{
+        font-size:31px;
+      }
+      .categories{
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+      }
+      .sectionHead{
+        align-items:stretch;
+        flex-direction:column;
+      }
+      .grid{
+        grid-template-columns:1fr 1fr;
+        gap:12px;
+      }
+      .card h3{
+        font-size:16px;
+      }
+      .price{
+        font-size:18px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- Top Announcement Bar -->
+  <!-- TOP BAR -->
   <div class="topbar">
-    <div class="topbar-left">
-      <span>🌱 Fresh Plants</span> <span>|</span> 
-      <span>🪴 Quality Pots</span> <span>|</span> 
-      <span>🍃 Organic Compost</span> <span>|</span> 
-      <span>🧱 Wall Compound</span>
-    </div>
-    <div class="topbar-right">
-      <span>🚚 Free Delivery on Orders Above ₹999</span>
-      <span><i class="fa-solid fa-phone"></i> +91 95553 22038</span>
-      <div class="social-links">
-        <a href="#"><i class="fa-brands fa-instagram"></i></a>
-        <a href="#"><i class="fa-brands fa-facebook"></i></a>
-        <a href="#"><i class="fa-brands fa-youtube"></i></a>
-      </div>
-    </div>
+    <div>🌱 A.K Nursery & Wall Compound | Sonipat, Haryana</div>
+    <div>📞 +91 95553 22038</div>
   </div>
 
-  <!-- Header / Navigation Bar -->
+  <!-- NAVIGATION -->
   <header class="nav">
     <div class="brand">
       <div class="logo-icon"><i class="fa-solid fa-leaf"></i></div>
@@ -42,46 +686,43 @@
     </div>
 
     <nav class="links">
-      <a href="#" class="active">Home</a>
+      <a href="#">Home</a>
       <a href="#products">Shop</a>
       <a href="#about">About Us</a>
-      <a href="#categories">Blog</a>
       <a href="#contact">Contact</a>
       <a href="admin.html" target="_blank" class="admin-tag">🔑 Admin</a>
     </nav>
 
-    <div class="header-right">
+    <div class="header-actions">
       <div class="search-bar">
         <input type="text" placeholder="Search for plants, pots, compost...">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-      <div class="header-actions">
-        <a href="#"><i class="fa-regular fa-user"></i></a>
-        <a href="#"><i class="fa-regular fa-heart"></i></a>
-        <button class="cartBtn" onclick="openCart()">
-          <i class="fa-solid fa-cart-shopping"></i>
-          <span id="cartCount">0</span>
-        </button>
-      </div>
+      <button class="cartBtn" onclick="openCart()">
+        🛒
+        <span id="cartCount">0</span>
+      </button>
     </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero-section">
+  <!-- HERO SECTION -->
+  <section class="hero-banner">
     <div class="hero-container">
       <div class="hero-left">
         <div class="hero-tagline-bar">
-          <span>Green Living</span> <span>|</span> <span>Better Tomorrow</span>
+          <span>Green Living</span> | <span>Better Tomorrow</span>
         </div>
-        <h1>Your One Stop Shop for <br><span>Plants & Garden Essentials</span></h1>
+        <h1>Your One Stop Shop for <span>Plants & Garden Essentials</span></h1>
         <p class="hero-subtext">
           Indoor plants | Flower plants | Fruit plants | Garden plants <br>
           Quality pots | Vermi compost | Wall compound
         </p>
+        
         <div class="hero-buttons">
           <a href="#products" class="btn btn-shop"><i class="fa-solid fa-cart-shopping"></i> Shop Now &rarr;</a>
           <a href="https://wa.me/919555322038" target="_blank" class="btn btn-whatsapp"><i class="fa-brands fa-whatsapp"></i> WhatsApp Order</a>
         </div>
+
         <div class="hero-features-grid">
           <div><i class="fa-solid fa-shield-halved"></i> <span>Premium Quality</span></div>
           <div><i class="fa-solid fa-seedling"></i> <span>Fresh & Healthy Plants</span></div>
@@ -90,33 +731,14 @@
         </div>
       </div>
       
-      <div class="hero-right">
-        <div class="hero-badge-sign">
-          <h3>Plants <br>Make Life <br>Better</h3>
-          <i class="fa-solid fa-heart"></i>
-        </div>
+      <div class="hero-badge-sign">
+        <h3>Plants <br>Make Life <br>Better</h3>
+        <i class="fa-solid fa-heart"></i>
       </div>
     </div>
   </section>
 
-  <!-- Categories Section -->
-  <section class="section" id="categories">
-    <div class="section-title-row">
-      <div class="title-with-icon">
-        <i class="fa-solid fa-leaf green-icon"></i>
-        <div>
-          <h2>Shop by Category</h2>
-          <p>Explore our wide range of plants, pots, and gardening products</p>
-        </div>
-      </div>
-      <a href="#products" class="view-all">View All Categories &rarr;</a>
-    </div>
-
-    <!-- Dynamic categories rendered via script.js -->
-    <div class="categories"></div>
-  </section>
-
-  <!-- Feature Strip -->
+  <!-- FEATURE STRIP -->
   <div class="feature-strip-bar">
     <div class="feature-item">
       <div class="feature-icon"><i class="fa-solid fa-leaf"></i></div>
@@ -148,7 +770,25 @@
     </div>
   </div>
 
-  <!-- Featured Products Section -->
+  <!-- CATEGORIES SECTION -->
+  <section class="section" id="categories">
+    <div class="section-title-row">
+      <div class="title-with-icon">
+        <i class="fa-solid fa-leaf green-icon"></i>
+        <div>
+          <h2>Shop by Category</h2>
+          <p>Explore our wide range of plants, pots, and gardening products</p>
+        </div>
+      </div>
+      <a href="#products" class="view-all">View All Categories &rarr;</a>
+    </div>
+
+    <div class="categories">
+      <!-- Dynamic Category Cards go here via script.js -->
+    </div>
+  </section>
+
+  <!-- PRODUCTS SECTION -->
   <section class="section productsSection" id="products">
     <div class="section-title-row">
       <div class="title-with-icon">
@@ -171,211 +811,49 @@
     </div>
   </section>
 
-  <!-- Promo Banners Grid -->
-  <section class="section promo-grid">
-    <div class="promo-card promo-vermi">
-      <div class="promo-content">
-        <h3>Vermi Compost</h3>
-        <p>Healthy Soil | Healthy Plants | Healthy Life</p>
-        <a href="#products" onclick="filterCat('Vermi Compost')" class="btn btn-shop-sm">Shop Now &rarr;</a>
-      </div>
+  <!-- ABOUT SECTION -->
+  <section class="section" id="about">
+    <div class="title-with-icon" style="margin-bottom: 20px;">
+      <i class="fa-solid fa-leaf green-icon"></i>
+      <h2>About A.K Nursery & Wall Compound</h2>
     </div>
-    <div class="promo-card promo-wall">
-      <div class="promo-content">
-        <h3>Wall Compound</h3>
-        <p>Strong Walls for a Better Future</p>
-        <a href="#products" onclick="filterCat('Wall Compound')" class="btn btn-shop-sm">Shop Now &rarr;</a>
-      </div>
-    </div>
-    <div class="promo-card promo-pots">
-      <div class="promo-content">
-        <h3>Premium Pots</h3>
-        <p>Add Style to Your Green Space</p>
-        <a href="#products" onclick="filterCat('Pots')" class="btn btn-shop-sm">Shop Now &rarr;</a>
-      </div>
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.03);">
+      <p>We are a trusted nursery and garden supplier offering a wide range of plants, high-quality pots, organic vermicompost, and durable wall compounds. Sonipat's reliable nursery partner for fresh plants and gardening needs.</p>
     </div>
   </section>
 
-  <!-- About Section -->
-  <section class="section about-section" id="about">
-    <div class="about-card">
-      <div class="about-image-col">
-        <div class="about-sign-board">
-          <i class="fa-solid fa-leaf"></i>
-          <h3>A.K NURSERY</h3>
-          <span>& WALL COMPOUND</span>
-        </div>
-      </div>
-      <div class="about-content-col">
-        <div class="about-header">
-          <i class="fa-solid fa-leaf green-icon"></i>
-          <h2>About A.K Nursery & Wall Compound</h2>
-        </div>
-        <p>We are a trusted nursery and garden supplier, offering a wide range of plants, high-quality pots, organic vermicompost and durable wall compound. Our mission is to bring greenery to every home and create a healthier, cleaner and more beautiful environment.</p>
-        
-        <div class="about-features-grid">
-          <div class="about-feature">
-            <div class="af-icon"><i class="fa-solid fa-award"></i></div>
-            <div>
-              <strong>Premium Quality</strong>
-              <span>Plants & Products</span>
-            </div>
-          </div>
-          <div class="about-feature">
-            <div class="af-icon"><i class="fa-solid fa-seedling"></i></div>
-            <div>
-              <strong>Organic & Natural</strong>
-              <span>Farming Practices</span>
-            </div>
-          </div>
-          <div class="about-feature">
-            <div class="af-icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
-            <div>
-              <strong>Affordable Prices</strong>
-              <span>Best Value</span>
-            </div>
-          </div>
-          <div class="about-feature">
-            <div class="af-icon"><i class="fa-solid fa-boxes-packing"></i></div>
-            <div>
-              <strong>Wide Range</strong>
-              <span>All Gardening Needs</span>
-            </div>
-          </div>
-        </div>
-
-        <a href="#contact" class="btn btn-dark-green">Learn More &rarr;</a>
-      </div>
+  <!-- CONTACT SECTION -->
+  <section class="section contact" id="contact">
+    <div class="title-with-icon" style="margin-bottom: 20px;">
+      <i class="fa-solid fa-phone green-icon"></i>
+      <h2>Get in Touch</h2>
+    </div>
+    <div style="background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,.03); text-align: center;">
+      <p>Sonipat, Haryana, India</p>
+      <a href="https://wa.me/919555322038" target="_blank" class="btn btn-whatsapp full-btn" style="width: 100%; justify-content: center;"><i class="fa-brands fa-whatsapp"></i> WhatsApp Order</a>
     </div>
   </section>
 
-  <!-- Get in Touch Bar -->
-  <section class="get-in-touch-bar" id="contact">
-    <div class="touch-left">
-      <i class="fa-solid fa-leaf touch-icon"></i>
-      <div>
-        <h3>Get in Touch</h3>
-        <p>Have a question? We're here to help!</p>
-      </div>
-    </div>
-    <div class="touch-contacts">
-      <div class="touch-item">
-        <div class="circle-icon"><i class="fa-solid fa-phone"></i></div>
-        <div>
-          <strong>+91 95553 22038</strong>
-          <span>Call / WhatsApp</span>
-        </div>
-      </div>
-      <div class="touch-item">
-        <div class="circle-icon"><i class="fa-solid fa-envelope"></i></div>
-        <div>
-          <strong>aknursery@gmail.com</strong>
-          <span>Email Us</span>
-        </div>
-      </div>
-      <div class="touch-item">
-        <div class="circle-icon"><i class="fa-solid fa-location-dot"></i></div>
-        <div>
-          <strong>Kabirpur, Sonipat</strong>
-          <span>Haryana, India</span>
-        </div>
-      </div>
-    </div>
-    <a href="https://wa.me/919555322038" target="_blank" class="btn btn-touch">Send Message &rarr;</a>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <i class="fa-solid fa-leaf"></i>
-          <div>
-            <h3>A.K NURSERY</h3>
-            <span>& WALL COMPOUND</span>
-          </div>
-        </div>
-        <p class="tagtext">Green Living | Better Tomorrow</p>
-        <div class="footer-socials">
-          <a href="#"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#"><i class="fa-brands fa-facebook"></i></a>
-          <a href="#"><i class="fa-brands fa-youtube"></i></a>
-        </div>
-      </div>
-
-      <div class="footer-links-col">
-        <h4>Quick Links</h4>
-        <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#products">Shop</a></li>
-          <li><a href="#about">About Us</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-links-col">
-        <h4>Categories</h4>
-        <ul>
-          <li><a href="#products">Indoor Plants</a></li>
-          <li><a href="#products">Flower Plants</a></li>
-          <li><a href="#products">Fruit Plants</a></li>
-          <li><a href="#products">Garden Plants</a></li>
-          <li><a href="#products">Quality Pots</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-links-col">
-        <h4 style="visibility: hidden;">More</h4>
-        <ul>
-          <li><a href="#products">Grow Bags</a></li>
-          <li><a href="#products">Vermicompost</a></li>
-          <li><a href="#products">Wall Compound</a></li>
-        </ul>
-      </div>
-
-      <div class="footer-newsletter">
-        <h4>Newsletter</h4>
-        <p>Get the latest updates on new products and offers!</p>
-        <form class="newsletter-form" onsubmit="event.preventDefault();">
-          <input type="email" placeholder="Enter your email address">
-          <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
-        </form>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <p>© 2026 A.K Nursery & Wall Compound. All Rights Reserved.</p>
-      <div class="legal-links">
-        <a href="#">Privacy Policy</a> | 
-        <a href="#">Terms & Conditions</a> | 
-        <a href="#">Shipping Policy</a>
-      </div>
-    </div>
+  <!-- FOOTER -->
+  <footer style="background: #073822; color: #fff; padding: 30px 5% 10px; text-align: center; font-size: 13px;">
+    <b>A.K NURSERY & WALL COMPOUND</b>
+    <p>Green Living | Better Tomorrow</p>
+    <p>© 2026 A.K Nursery & Wall Compound. All Rights Reserved.</p>
   </footer>
 
-  <!-- Cart Modal -->
+  <!-- CART MODAL -->
   <div id="cartModal" class="modal hidden">
-    <div class="cart">
-      <button class="close" onclick="closeCart()">&times;</button>
-      <h2>🛒 Your Shopping Cart</h2>
-
+    <div class="modal-content">
+      <button class="close-btn" onclick="closeCart()">&times;</button>
+      <h3>🛒 Shopping Cart</h3>
       <div id="cartItems">
         <p>Your cart is empty.</p>
       </div>
-
       <div class="total">
         Total: ₹<span id="cartTotal">0</span>
       </div>
-
-      <p class="muted-charges">
-        🚚 Delivery charges extra <br>
-        🪴 Plant & Pot fixing charge extra
-      </p>
-
-      <button class="btn btn-whatsapp full-btn" onclick="checkout()">
-        <i class="fa-brands fa-whatsapp"></i> Order via WhatsApp
-      </button>
+      <p class="notice">🚚 Delivery & Fixing charges extra</p>
+      <button class="btn btn-whatsapp full-btn" onclick="checkout()" style="width: 100%; justify-content: center;"><i class="fa-brands fa-whatsapp"></i> Checkout via WhatsApp</button>
     </div>
   </div>
 
