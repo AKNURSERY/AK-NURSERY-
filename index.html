@@ -770,23 +770,25 @@
     </div>
   </div>
 
-  <!-- CATEGORIES SECTION -->
-  <section class="section" id="categories">
+  <!-- ======================================== -->
+<!-- CATEGORIES SECTION (DYNAMIC GRID)        -->
+<!-- ======================================== -->
+<section class="section" id="categories">
     <div class="section-title-row">
-      <div class="title-with-icon">
-        <i class="fa-solid fa-leaf green-icon"></i>
-        <div>
-          <h2>Shop by Category</h2>
-          <p>Explore our wide range of plants, pots, and gardening products</p>
+        <div class="title-with-icon">
+            <i class="fa-solid fa-leaf green"></i>
+            <div>
+                <h2>Shop by Category</h2>
+                <p>Explore our wide range of products</p>
+            </div>
         </div>
-      </div>
-      <a href="#products" class="view-all">View All Categories &rarr;</a>
+        <a href="#products" class="view-all">View All</a>
     </div>
 
-    <div class="categories">
-      <!-- Dynamic Category Cards go here via script.js -->
-    </div>
-  </section>
+    <!-- Script dwara 17 categories automatic render karne ke liye container ko empty rakha hai -->
+    <div class="categories" id="categories-box"></div>
+</section>
+
 
   <!-- PRODUCTS SECTION -->
   <section class="section productsSection" id="products">
