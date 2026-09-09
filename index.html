@@ -5,10 +5,7 @@
 
   <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta
     name="google-site-verification"
@@ -24,15 +21,9 @@
     content="A.K Nursery Sonipat - Plants, nursery pots, vermicompost, gardening products and wall compound at affordable prices."
   >
 
-  <meta
-    name="theme-color"
-    content="#064b2a"
-  >
+  <meta name="theme-color" content="#064b2a">
 
-  <link
-    rel="stylesheet"
-    href="styles.css"
-  >
+  <link rel="stylesheet" href="styles.css">
 
 </head>
 
@@ -41,360 +32,116 @@
 
 
 <!-- ========================================
-     TOP INFORMATION BAR
+     TOP BAR
 ======================================== -->
 
-<div class="topInfoBar">
+<header>
 
-  <div class="topInfoLeft">
-
-    <span>🌿 Fresh Plants</span>
-
-    <i>|</i>
-
-    <span>🪴 Quality Pots</span>
-
-    <i>|</i>
-
-    <span>♻️ Organic Compost</span>
-
-    <i>|</i>
-
-    <span>🧱 Wall Compound</span>
-
-  </div>
-
-
-  <div class="topInfoRight">
+  <div class="topbar">
 
     <span>
-      🚚 Free Delivery on Orders Above ₹999
+      🌱 Welcome to A.K Nursery & Wall Compound
     </span>
 
     <span>
-      📞 +91 95553 22038
+      📍 Sonipat, Haryana
     </span>
 
-    <span>◎</span>
-
-    <span>f</span>
-
-    <span>▶</span>
-
   </div>
-
-</div>
-
 
 
 <!-- ========================================
-     MAIN HEADER
+     NAVIGATION
 ======================================== -->
 
-<header class="mainHeader">
+  <nav class="nav">
+
+    <a href="#home" class="brand">
+
+      <div class="logo">
+        🌿
+      </div>
+
+      <div>
+
+        <b>
+          A.K NURSERY
+        </b>
+
+        <small>
+          & WALL COMPOUND
+        </small>
+
+      </div>
+
+    </a>
 
 
-  <!-- BRAND -->
+    <div class="links">
 
-  <a
-    href="#home"
-    class="newBrand"
-  >
+      <a href="#home">
+        Home
+      </a>
 
-    <div class="brandLeaf">
-      🌿
+      <a href="#categories">
+        Categories
+      </a>
+
+      <a href="#products">
+        Shop
+      </a>
+
+      <a href="#about">
+        About
+      </a>
+
+      <a href="#contact">
+        Contact
+      </a>
+
     </div>
 
 
-    <div class="brandText">
-
-      <strong>
-        A.K NURSERY
-      </strong>
-
-      <small>
-        & WALL COMPOUND
-      </small>
-
-    </div>
-
-  </a>
-
-
-
-  <!-- NAVIGATION -->
-
-  <nav class="mainNav">
-
-    <a
-      href="#home"
-      class="active"
-    >
-      Home
-    </a>
-
-    <a href="#categories">
-      Shop
-    </a>
-
-    <a href="#about">
-      About Us
-    </a>
-
-    <a href="#products">
-      Products
-    </a>
-
-    <a href="#contact">
-      Contact
-    </a>
-
-  </nav>
-
-
-
-  <!-- HEADER ACTIONS -->
-
-  <div class="headerActions">
-
-
-    <div class="searchBox">
-
-      <input
-        type="search"
-        id="siteSearch"
-        placeholder="Search for plants, pots, compost..."
-      >
+    <div class="navActions">
 
       <button
-        type="button"
-        onclick="searchProducts()"
-        aria-label="Search"
+        class="cartBtn"
+        onclick="openCart()"
+        aria-label="Open cart"
       >
-        🔍
+
+        🛒
+
+        <span id="cartCount">
+          0
+        </span>
+
       </button>
 
     </div>
 
-
-
-    <button
-      class="headerIcon"
-      type="button"
-      aria-label="Account"
-    >
-      ♙
-    </button>
-
-
-    <button
-      class="headerIcon"
-      type="button"
-      aria-label="Wishlist"
-    >
-      ♡
-    </button>
-
-
-
-    <button
-      class="headerCart"
-      onclick="openCart()"
-      aria-label="Open cart"
-    >
-
-      🛒
-
-      <span id="cartCount">
-        0
-      </span>
-
-    </button>
-
-
-  </div>
+  </nav>
 
 </header>
 
 
 
-<!-- ========================================
-     MAIN
-======================================== -->
-
 <main>
 
 
-
 <!-- ========================================
-     HERO SECTION
+     HOME / BANNER
 ======================================== -->
 
 <section
   id="home"
-  class="realHero"
+  class="mainBanner"
 >
 
-
-  <div class="heroGlow glow1"></div>
-
-  <div class="heroGlow glow2"></div>
-
-
-
-  <div class="realHeroContent">
-
-
-    <div class="heroBadge">
-
-      🌿 A.K NURSERY & WALL COMPOUND
-
-    </div>
-
-
-
-    <h1>
-
-      Bring Nature
-
-      <span>
-        Into Your Space
-      </span>
-
-    </h1>
-
-
-
-    <p>
-
-      Fresh plants, premium pots,
-      vermicompost, gardening essentials
-      & wall compound — all at one place.
-
-    </p>
-
-
-
-    <div class="realHeroButtons">
-
-
-      <button
-        class="heroPrimaryBtn"
-        onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})"
-      >
-
-        🛒 Shop Now →
-
-      </button>
-
-
-
-      <button
-        class="heroWhatsAppBtn"
-        onclick="window.open('https://wa.me/919555322038','_blank')"
-      >
-
-        💬 WhatsApp Order
-
-      </button>
-
-
-    </div>
-
-
-
-    <div class="heroTrust">
-
-
-      <div>
-
-        <strong>
-          🌱 Fresh
-        </strong>
-
-        <span>
-          Healthy Plants
-        </span>
-
-      </div>
-
-
-
-      <div>
-
-        <strong>
-          🪴 Premium
-        </strong>
-
-        <span>
-          Quality Pots
-        </span>
-
-      </div>
-
-
-
-      <div>
-
-        <strong>
-          ♻️ Natural
-        </strong>
-
-        <span>
-          Vermicompost
-        </span>
-
-      </div>
-
-
-
-      <div>
-
-        <strong>
-          🚚 Easy
-        </strong>
-
-        <span>
-          Delivery
-        </span>
-
-      </div>
-
-
-    </div>
-
-
-  </div>
-
-
-
-  <!-- HERO VISUAL -->
-
-  <div class="heroPlantVisual">
-
-
-    <div class="plantCircle">
-      🌿
-    </div>
-
-
-    <div class="floatingCard cardOne">
-      🌱 Fresh Plants
-    </div>
-
-
-    <div class="floatingCard cardTwo">
-      🪴 Premium Pots
-    </div>
-
-
-    <div class="floatingCard cardThree">
-      ♻️ Vermicompost
-    </div>
-
-
-  </div>
-
+  <img
+    src="banner.png"
+    alt="A.K Nursery Plants, Pots and Garden Products"
+  >
 
 </section>
 
@@ -405,7 +152,6 @@
 ======================================== -->
 
 <section class="featureStrip">
-
 
   <div>
 
@@ -426,7 +172,6 @@
     </div>
 
   </div>
-
 
 
   <div>
@@ -450,7 +195,6 @@
   </div>
 
 
-
   <div>
 
     <span class="featureEmoji">
@@ -470,7 +214,6 @@
     </div>
 
   </div>
-
 
 
   <div>
@@ -493,7 +236,6 @@
 
   </div>
 
-
 </section>
 
 
@@ -506,7 +248,6 @@
   id="categories"
   class="section categorySection"
 >
-
 
   <div class="sectionTitle">
 
@@ -525,9 +266,6 @@
   </div>
 
 
-
-  <!-- SUPABASE CATEGORIES -->
-
   <div class="categories">
 
     <p class="loading">
@@ -535,7 +273,6 @@
     </p>
 
   </div>
-
 
 </section>
 
@@ -550,9 +287,7 @@
   class="section productsSection"
 >
 
-
   <div class="sectionHead">
-
 
     <div>
 
@@ -571,7 +306,6 @@
     </div>
 
 
-
     <select
       id="filter"
       onchange="filterCat(this.value)"
@@ -583,12 +317,8 @@
 
     </select>
 
-
   </div>
 
-
-
-  <!-- SUPABASE PRODUCTS -->
 
   <div
     id="productGrid"
@@ -601,27 +331,22 @@
 
   </div>
 
-
 </section>
 
 
 
 <!-- ========================================
-     PROMO SECTION
+     PROMO BANNERS
 ======================================== -->
 
 <section class="promoSection">
 
 
-  <!-- PLANTS -->
-
   <div class="promoCard">
-
 
     <div class="promoIcon">
       🌿
     </div>
-
 
     <div>
 
@@ -638,7 +363,6 @@
         and seasonal plants.
       </p>
 
-
       <button
         onclick="filterCat('Plants')"
       >
@@ -647,20 +371,15 @@
 
     </div>
 
-
   </div>
 
 
 
-  <!-- POTS -->
-
   <div class="promoCard">
-
 
     <div class="promoIcon">
       🪴
     </div>
-
 
     <div>
 
@@ -677,7 +396,6 @@
         ceramic pots and stands.
       </p>
 
-
       <button
         onclick="filterCat('Pots')"
       >
@@ -686,20 +404,15 @@
 
     </div>
 
-
   </div>
 
 
 
-  <!-- VERMICOMPOST -->
-
   <div class="promoCard">
-
 
     <div class="promoIcon">
       ♻️
     </div>
-
 
     <div>
 
@@ -716,7 +429,6 @@
         bone meal and garden care.
       </p>
 
-
       <button
         onclick="filterCat('Vermicompost')"
       >
@@ -724,7 +436,6 @@
       </button>
 
     </div>
-
 
   </div>
 
@@ -742,7 +453,6 @@
   class="about section"
 >
 
-
   <div class="sectionTitle">
 
     <span>
@@ -759,7 +469,6 @@
     </p>
 
   </div>
-
 
 
   <div class="features">
@@ -782,7 +491,6 @@
     </div>
 
 
-
     <div>
 
       <div class="featureIcon">
@@ -800,7 +508,6 @@
     </div>
 
 
-
     <div>
 
       <div class="featureIcon">
@@ -816,7 +523,6 @@
       </span>
 
     </div>
-
 
 
     <div>
@@ -838,7 +544,6 @@
 
   </div>
 
-
 </section>
 
 
@@ -851,7 +556,6 @@
   id="contact"
   class="section contact"
 >
-
 
   <div class="sectionTitle">
 
@@ -871,9 +575,7 @@
   </div>
 
 
-
   <form onsubmit="sendOrder(event)">
-
 
     <input
       id="name"
@@ -881,7 +583,6 @@
       required
       placeholder="Your name"
     >
-
 
 
     <input
@@ -892,7 +593,6 @@
     >
 
 
-
     <textarea
       id="address"
       required
@@ -900,22 +600,16 @@
     ></textarea>
 
 
-
     <button
       class="btn"
       type="submit"
     >
-
       📲 Send Order on WhatsApp
-
     </button>
-
 
   </form>
 
-
 </section>
-
 
 
 </main>
@@ -927,7 +621,6 @@
 ======================================== -->
 
 <footer>
-
 
   <div>
 
@@ -943,7 +636,6 @@
   </div>
 
 
-
   <div>
 
     <b>
@@ -955,7 +647,6 @@
     </p>
 
   </div>
-
 
 
   <div>
@@ -974,13 +665,12 @@
 
   </div>
 
-
 </footer>
 
 
 
 <!-- ========================================
-     CART MODAL
+     CART
 ======================================== -->
 
 <div
@@ -988,9 +678,7 @@
   class="modal hidden"
 >
 
-
   <div class="cart">
-
 
     <button
       class="close"
@@ -1001,15 +689,12 @@
     </button>
 
 
-
     <h2>
       🛒 Your Cart
     </h2>
 
 
-
     <div id="cartItems"></div>
-
 
 
     <div class="total">
@@ -1020,16 +705,12 @@
     </div>
 
 
-
     <button
       class="btn checkoutBtn"
       onclick="checkout()"
     >
-
       📲 Order Cart on WhatsApp
-
     </button>
-
 
   </div>
 
@@ -1046,7 +727,6 @@
   class="imageViewer hidden"
 >
 
-
   <button
     class="imageViewerClose"
     onclick="closeProductImage()"
@@ -1056,13 +736,11 @@
   </button>
 
 
-
   <img
     id="viewerImage"
     src=""
     alt="Product"
   >
-
 
 </div>
 
