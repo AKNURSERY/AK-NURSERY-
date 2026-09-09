@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ========================================
-// LOAD CATEGORIES (FRONTEND & ADMIN FIX)
+// 1. LOAD CATEGORIES FROM SUPABASE
 // ========================================
 async function loadCategories() {
   try {
@@ -42,60 +42,85 @@ async function loadCategories() {
       }
     );
 
-    if (!response.ok) return;
+    if (!response.ok) {
+      console.error("Failed to load categories");
+      return;
+    }
 
     categories = await response.json();
 
-    // Frontend Website Render Calls
-    if (typeof renderCategoriesGrid === "function") {
-      renderCategoriesGrid();
-    }
-    if (typeof updateCategoryFilterMenu === "function") {
-      updateCategoryFilterMenu();
-    }
+    // Frontend Grid Display Call
+    renderCategoriesGrid();
+    
+    // Dropdown Filter Call
+    updateCategoryFilterMenu();
 
-    // Admin Panel Table Render Calls
+    // Admin Panel Table Call (if admin mode active)
     if (typeof renderCategoriesAdmin === "function") {
       renderCategoriesAdmin();
-    }
-    if (typeof populateCategoryDropdown === "function") {
-      populateCategoryDropdown();
     }
   } catch (error) {
     console.error("CATEGORY ERROR:", error);
   }
 }
 
-
 // ========================================
-// RENDER CATEGORIES AS GRID CARDS (FIXED LAYOUT)
+// 2. RENDER CATEGORIES GRID (FRONTEND)
 // ========================================
 function renderCategoriesGrid() {
-  const box = document.querySelector(".categories");
+  const box = document.querySelector(".categories") || document.querySelector(".categories-grid") || document.getElementById("categories-box");
   if (!box) return;
 
-  // Render as card grid using exact structure from Image 3
+  // Duplicates hatane ke liye container ko empty karein
+  box.innerHTML = "";
+
+  if (!categories || categories.length === 0) {
+    box.innerHTML = "<p>No categories found.</p>";
+    return;
+  }
+
   box.innerHTML = categories
     .map(
       (c) => `
-    <div class="cat-card" onclick="filterCat('${escapeJS(c.name)}')">
-      <div class="cat-card-img">
-        ${
-          c.image_url
-            ? `<img src="${escapeHTML(c.image_url)}" alt="${escapeHTML(
-                c.name
-              )}" loading="lazy">`
-            : `<div class="cat-image-placeholder">${c.icon || "🌱"}</div>`
-        }
+      <div class="cat-card" onclick="filterByCategory('${escapeHTML(c.name)}')">
+        <div class="cat-card-img">
+          ${
+            c.image_url
+              ? `<img src="${escapeHTML(c.image_url)}" alt="${escapeHTML(c.name)}" loading="lazy">`
+              : `<div class="cat-image-placeholder">${c.icon || "🌱"}</div>`
+          }
+        </div>
         <div class="cat-badge-icon">${c.icon || "🌱"}</div>
+        <h4>${escapeHTML(c.name)}</h4>
+        <p>Explore Products →</p>
       </div>
-      <h4>${escapeHTML(c.name)}</h4>
-      <p>Explore Products →</p>
-    </div>
-  `
+    `
     )
     .join("");
 }
+
+// ========================================
+// 3. UPDATE CATEGORY FILTER MENU
+// ========================================
+function updateCategoryFilterMenu() {
+  const filterSelect = document.getElementById("category-filter");
+  const productCategorySelect = document.getElementById("product-category");
+
+  if (filterSelect) {
+    filterSelect.innerHTML = `
+      <option value="All">All Categories</option>
+      ${categories.map((c) => `<option value="${escapeHTML(c.name)}">${escapeHTML(c.name)}</option>`).join("")}
+    `;
+  }
+
+  if (productCategorySelect) {
+    productCategorySelect.innerHTML = `
+      <option value="">Select Category</option>
+      ${categories.map((c) => `<option value="${escapeHTML(c.name)}">${escapeHTML(c.name)}</option>`).join("")}
+    `;
+  }
+}
+
 
 // UPDATE CATEGORY FILTER MENU
 function updateCategoryFilterMenu() {
