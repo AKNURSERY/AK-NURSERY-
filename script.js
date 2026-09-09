@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ========================================
-// LOAD CATEGORIES FROM SUPABASE
+// LOAD CATEGORIES (FRONTEND & ADMIN FIX)
 // ========================================
 async function loadCategories() {
   try {
@@ -46,17 +46,25 @@ async function loadCategories() {
 
     categories = await response.json();
 
+    // Frontend Website Render Calls
     if (typeof renderCategoriesGrid === "function") {
       renderCategoriesGrid();
     }
     if (typeof updateCategoryFilterMenu === "function") {
       updateCategoryFilterMenu();
     }
+
+    // Admin Panel Table Render Calls
+    if (typeof renderCategoriesAdmin === "function") {
+      renderCategoriesAdmin();
+    }
+    if (typeof populateCategoryDropdown === "function") {
+      populateCategoryDropdown();
+    }
   } catch (error) {
     console.error("CATEGORY ERROR:", error);
   }
 }
-
 
 
 // ========================================
