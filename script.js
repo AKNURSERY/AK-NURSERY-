@@ -1,10 +1,7 @@
 // ========================================
-// A.K NURSERY - FINAL SCRIPT.JS
-// DYNAMIC GRID & GALLERY
+// CONFIG & GLOBAL VARIABLES
 // ========================================
-
 const WHATSAPP_NUMBER = "919555322038";
-
 const SUPABASE_URL = "https://mudpcroftnctbbdqxisj.supabase.co";
 const SUPABASE_KEY = "sb_publishable_YaAB-Uf3OpSI5gpKdmqvSQ_TwHTtyLs";
 
@@ -12,21 +9,28 @@ let products = [];
 let categories = [];
 let cart = [];
 
-// GALLERY VIEWER STATE
-let galleryImages = [];
-let galleryIndex = 0;
+// Helper Function for Escaping HTML
+function escapeHTML(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
 
 // ========================================
-// START WEBSITE
+// START WEBSITE ON LOAD
 // ========================================
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   loadCategories();
   loadProducts();
   updateCart();
+  setupImageModal(); // Image Zoom Preview listener setup
 });
 
 // ========================================
-// 1. LOAD CATEGORIES FROM SUPABASE
+// 1. LOAD CATEGORIES (17 Dynamic Categories)
 // ========================================
 async function loadCategories() {
   try {
@@ -42,20 +46,13 @@ async function loadCategories() {
       }
     );
 
-    if (!response.ok) {
-      console.error("Failed to load categories");
-      return;
-    }
+    if (!response.ok) return;
 
     categories = await response.json();
 
-    // Frontend Grid Display Call
     renderCategoriesGrid();
-    
-    // Dropdown Filter Call
     updateCategoryFilterMenu();
 
-    // Admin Panel Table Call (if admin mode active)
     if (typeof renderCategoriesAdmin === "function") {
       renderCategoriesAdmin();
     }
@@ -65,14 +62,13 @@ async function loadCategories() {
 }
 
 // ========================================
-// 2. RENDER CATEGORIES GRID (FRONTEND)
+// 2. RENDER CATEGORIES GRID
 // ========================================
 function renderCategoriesGrid() {
-  const box = document.querySelector(".categories") || document.querySelector(".categories-grid") || document.getElementById("categories-box");
+  const box = document.querySelector(".categories") || document.getElementById("categories-box");
   if (!box) return;
 
-  // Duplicates hatane ke liye container ko empty karein
-  box.innerHTML = "";
+  box.innerHTML = ""; // Clear duplicates
 
   if (!categories || categories.length === 0) {
     box.innerHTML = "<p>No categories found.</p>";
@@ -103,204 +99,194 @@ function renderCategoriesGrid() {
 // 3. UPDATE CATEGORY FILTER MENU
 // ========================================
 function updateCategoryFilterMenu() {
-  const filterSelect = document.getElementById("category-filter");
-  const productCategorySelect = document.getElementById("product-category");
-
+  const filterSelect = document.getElementById("filter");
   if (filterSelect) {
     filterSelect.innerHTML = `
-      <option value="All">All Categories</option>
-      ${categories.map((c) => `<option value="${escapeHTML(c.name)}">${escapeHTML(c.name)}</option>`).join("")}
-    `;
-  }
-
-  if (productCategorySelect) {
-    productCategorySelect.innerHTML = `
-      <option value="">Select Category</option>
+      <option value="All">All Products</option>
       ${categories.map((c) => `<option value="${escapeHTML(c.name)}">${escapeHTML(c.name)}</option>`).join("")}
     `;
   }
 }
 
-
-// UPDATE CATEGORY FILTER MENU
-function updateCategoryFilterMenu() {
-  const filter = document.getElementById("filter");
-  if (!filter) return;
-  filter.innerHTML = `
-    <option value="All">All Products</option>
-    ${categories
-      .map((c) => `<option value="${escapeHTML(c.name)}">${escapeHTML(c.name)}</option>`)
-      .join("")}
-  `;
+// Filter function when clicking category card
+function filterByCategory(catName) {
+  const filterSelect = document.getElementById("filter");
+  if (filterSelect) {
+    filterSelect.value = catName;
+    filterCat(catName);
+    document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
+  }
 }
 
 // ========================================
-// LOAD PRODUCTS
+// 4. LOAD PRODUCTS
 // ========================================
 async function loadProducts() {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
 
-  grid.innerHTML = `<p class="loading">Loading products...</p>`;
+  grid.innerHTML = '<p class="loading">Loading products...</p>';
 
   try {
     const response = await fetch(
-      SUPABASE_URL + "/rest/v1/products?select=*&order=id.desc",
+      SUPABASE_URL + "/rest/v1/products?select=*",
       {
         method: "GET",
         headers: {
           apikey: SUPABASE_KEY,
-          Authorization: "Bearer " + SUPABASE_KEY,
-        },
+          Authorization: "Bearer " + SUPABASE_KEY
+        }
       }
     );
 
+    if (!response.ok) return;
+
     const data = await response.json();
-
-    products = data.map((p) => {
-      const price = Number(
-        String(p.price ?? "").replace(/[₹,\s]/g, "")
-      );
-      const oldPrice = Number(
-        String(p.old_price ?? "").replace(/[₹,\s]/g, "")
-      );
-
-      let allImages = [];
-      if (Array.isArray(p.images)) {
-        allImages = p.images.filter((x) => typeof x === "string").map((x) => x.trim());
-      } else if (typeof p.images === "string") {
-        try {
-          const parsed = JSON.parse(p.images);
-          if (Array.isArray(parsed)) {
-            allImages = parsed.filter((x) => typeof x === "string").map((x) => x.trim());
-          }
-        } catch (e) {}
-      }
-      if (typeof p.image_url === "string" && p.image_url.trim()) {
-        const main = p.image_url.trim();
-        if (!allImages.includes(main)) allImages.unshift(main);
-      }
-
-      return {
-        id: p.id,
-        name: p.name || "Product",
-        cat: p.cat || "Plants",
-        price: Number.isFinite(price) ? price : 0,
-        old: Number.isFinite(oldPrice) ? oldPrice : 0,
-        image: allImages[0] || "",
-        images: allImages,
-        stock: p.stock !== false,
-        badge: p.old_price && price < oldPrice ? "Best Seller" : "New",
-        rating: 5,
-      };
-    });
-
-    renderProductsGrid(); 
+    products = data;
+    renderProducts(products);
   } catch (error) {
     console.error("PRODUCT ERROR:", error);
-    grid.innerHTML = `<p>Error loading products.</p>`;
   }
 }
 
 // ========================================
-// RENDER PRODUCTS GRID AS E-COMMERCE CARDS
+// 5. RENDER PRODUCTS GRID & CLICKABLE IMAGE
 // ========================================
-function renderProductsGrid(list = products) {
+function renderProducts(items) {
   const grid = document.getElementById("productGrid");
   if (!grid) return;
 
-  if (!list.length) {
-    grid.innerHTML = `<p>No products available.</p>`;
+  grid.innerHTML = "";
+
+  if (items.length === 0) {
+    grid.innerHTML = "<p>No products available.</p>";
     return;
   }
 
-  // Exact UI match for Image 3 layout card grid
-  grid.innerHTML = list
+  grid.innerHTML = items
     .map(
       (p) => `
-    <article class="card">
+    <div class="card">
       <div class="pic">
-        <img src="${escapeHTML(p.image)}" alt="${escapeHTML(
-        p.name
-      )}" class="productImage" loading="lazy" onclick="openProductGallery(${
-        p.id
-      })">
-        <div class="card-tag">${p.badge || "New"}</div>
-        <button class="wishlist-btn"><i class="fa-regular fa-heart"></i></button>
+        <img src="${escapeHTML(p.image_url)}" alt="${escapeHTML(p.name)}" class="productImage" onclick="openImageModal('${escapeHTML(p.image_url)}', '${escapeHTML(p.name)}')">
       </div>
       <div class="cardBody">
-        <span class="tag">${escapeHTML(p.cat)}</span>
+        <span class="tag">${escapeHTML(p.category || "General")}</span>
         <h3>${escapeHTML(p.name)}</h3>
-        <div class="rating">
-          ${renderRating(p.rating)}
-        </div>
         <div class="price">
-          ₹${formatPrice(p.price)}
-          ${p.old > 0 ? `<span class="old">₹${formatPrice(p.old)}</span>` : ""}
+          ₹${p.price} ${p.old_price ? `<span class="old">₹${p.old_price}</span>` : ""}
         </div>
-        <div class="extraCharges">
-          🚚 Delivery charges extra<br>🪴 Fixing charge extra
-        </div>
-        ${
-          p.stock
-            ? `<button class="btn btn-cart-grid" onclick="addToCart(${p.id})">🛒 Add to Cart</button>`
-            : `<button class="btn btn-cart-grid" disabled>❌ Out of Stock</button>`
-        }
+        <button class="btn-cart-grid" onclick="addToCart(${p.id})">🛒 Add to Cart</button>
       </div>
-    </article>
+    </div>
   `
     )
     .join("");
 }
 
-// Helper: Format rating stars
-function renderRating(rating) {
-  const stars = new Array(5).fill("☆");
-  return stars.map((_, i) => (i < rating ? "★" : "☆")).join("");
+// ========================================
+// 6. FILTER PRODUCTS
+// ========================================
+function filterCat(selectedCat) {
+  if (selectedCat === "All") {
+    renderProducts(products);
+  } else {
+    const filtered = products.filter((p) => p.category === selectedCat);
+    renderProducts(filtered);
+  }
 }
 
-// Gallery Viewer Functions
-function openProductGallery(id) {
-  const product = products.find((p) => String(p.id) === String(id));
-  if (!product || !product.images.length) return;
-  galleryImages = product.images.filter(Boolean);
-  galleryIndex = 0;
-  createGalleryViewer();
-  updateGalleryViewer(product.name);
+// ========================================
+// 7. IMAGE ENLARGE MODAL (PHOTO BADI KRNE KA LOGIC)
+// ========================================
+function setupImageModal() {
+  if (!document.getElementById("imgZoomModal")) {
+    const modalHTML = `
+      <div id="imgZoomModal" class="modal hidden" onclick="closeImageModal()">
+        <div class="modal-content" style="background:transparent; text-align:center; max-width:90vw;" onclick="event.stopPropagation()">
+          <button class="close-btn" onclick="closeImageModal()" style="color:#fff; font-size:30px;">&times;</button>
+          <img id="zoomedImg" src="" style="max-width:100%; max-height:80vh; border-radius:10px; box-shadow:0 0 20px rgba(0,0,0,0.8);">
+          <h3 id="zoomedTitle" style="color:#fff; margin-top:10px;"></h3>
+        </div>
+      </div>
+    `;
+    document.body.insertAdjacentHTML("beforeend", modalHTML);
+  }
+}
+
+function openImageModal(imgSrc, title) {
+  const modal = document.getElementById("imgZoomModal");
+  const img = document.getElementById("zoomedImg");
+  const t = document.getElementById("zoomedTitle");
+  if (modal && img) {
+    img.src = imgSrc;
+    if (t) t.innerText = title;
+    modal.classList.remove("hidden");
+  }
+}
+
+function closeImageModal() {
+  const modal = document.getElementById("imgZoomModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+// ========================================
+// 8. CART & WHATSAPP CHECKOUT
+// ========================================
+function addToCart(id) {
+  const prod = products.find((p) => p.id === id);
+  if (prod) {
+    cart.push(prod);
+    updateCart();
+    alert(prod.name + " added to cart!");
+  }
+}
+
+function updateCart() {
+  const count = document.getElementById("cartCount");
+  if (count) count.innerText = cart.length;
+}
+
+function openCart() {
+  const modal = document.getElementById("cartModal");
+  const itemsContainer = document.getElementById("cartItems");
+  const totalElem = document.getElementById("cartTotal");
+
+  if (!modal) return;
+
+  if (cart.length === 0) {
+    itemsContainer.innerHTML = "<p>Your cart is empty.</p>";
+    if (totalElem) totalElem.innerText = "0";
+  } else {
+    let total = 0;
+    itemsContainer.innerHTML = cart
+      .map((item) => {
+        total += Number(item.price || 0);
+        return `<div style="display:flex; justify-between; margin-bottom:8px;">
+          <span>${escapeHTML(item.name)}</span>
+          <b>₹${item.price}</b>
+        </div>`;
+      })
+      .join("");
+    if (totalElem) totalElem.innerText = total;
+  }
+
+  modal.classList.remove("hidden");
+}
+
+function closeCart() {
+  const modal = document.getElementById("cartModal");
+  if (modal) modal.classList.add("hidden");
 }
 
 function checkout() {
-  if (!cart.length) return;
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${orderText()}`, "_blank");
-}
-// Include all remaining utility and cart functions (addToCart, removeFromCart, changeQty, updateCart, openCart, etc.)
-// ... (Cart logic unchanged)
-
-function formatPrice(value) {
-  const number = Number(value);
-  if (!Number.isFinite(number)) return "0";
-  return number.toLocaleString("en-IN");
-}
-function escapeHTML(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
-function escapeJS(value) {
-  return String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'").replace(/"/g, '\\"');
-}
-function filterCat(cat) {
-  if (cat === "All") {
-    renderProductsGrid(products);
-  } else {
-    renderProductsGrid(
-      products.filter(
-        (p) => String(p.cat).toLowerCase() === String(cat).toLowerCase()
-      )
-    );
+  if (cart.length === 0) {
+    alert("Cart is empty!");
+    return;
   }
-  document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
+  let text = "Hello A.K Nursery, I want to order:\n";
+  cart.forEach((item, i) => {
+    text += `${i + 1}. ${item.name} - ₹${item.price}\n`;
+  });
+  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, "_blank");
 }
