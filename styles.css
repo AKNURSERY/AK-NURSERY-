@@ -204,3 +204,51 @@
   cursor: pointer;
   margin-top: 5px;
 }
+/* Samsung Browser ya doosre Forced Dark Mode ko rokne ke liye specific selectors */
+
+/* 1. Category Card Sizing aur Text Fix */
+.categories {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+.cat-card {
+  padding: 12px;
+}
+
+/* 2. Forced Dark Mode ko Category Cards par break hone se rokne ke liye protection */
+.cat-card {
+  background-color: #fff !important; /* Forces a specific light color */
+  color: #173b29 !important; /* Force text color to dark to be readable */
+  border-color: #ccd8cd !important;
+}
+
+/* Category icons aur text ko clear rakhne ke liye protection */
+.cat-card-img .cat-image-placeholder,
+.cat-badge-icon,
+.cat-card h4,
+.cat-card p {
+  color: #173b29 !important; /* Original dark text color */
+}
+
+/* 3. Product Cards Protection */
+#productGrid .card,
+#productGrid .cardBody,
+#productGrid .cardBody h3,
+#productGrid .cardBody .rating,
+#productGrid .cardBody .price,
+#productGrid .cardBody .delivery-note {
+  background-color: #fff !important; /* White background to match target layout */
+  color: #173b29 !important; /* Dark text to read */
+}
+
+/* Cart Modal protection */
+.modal-content,
+.modal-content h3,
+.modal-content #cartTotal,
+.modal-content .notice {
+  background-color: #fff !important;
+  color: #173b29 !important;
+}
+
