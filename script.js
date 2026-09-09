@@ -28,32 +28,33 @@ document.addEventListener("DOMContentLoaded", function () {
 // ========================================
 // LOAD CATEGORIES FROM SUPABASE
 // ========================================
-// Fix: All 17 categories fetch karne ke liye script.js update
-async function loadCategories(isAdmin = false) {
-    try {
-        // Range header (0-99) add karne se default limits bypass ho jati hain
-        const response = await fetch(`${SUPABASE_URL}/rest/v1/categories?select=*&order=id.asc`, {
-            method: "GET",
-            headers: {
-                "apikey": SUPABASE_KEY,
-                "Authorization": `Bearer ${SUPABASE_KEY}`,
-                "Range": "0-99" // Force fully load all items up to 100
-            }
-        });
-
-        if (!response.ok) throw new Error("Failed to load categories");
-        
-        categories = await response.json();
-
-        if (isAdmin) {
-            renderCategoriesAdmin(); // Admin table display
-        } else {
-            renderCategoriesFrontPage(); // Frontend website grid
+async function loadCategories() {
+  try {
+    const response = await fetch(
+      SUPABASE_URL + "/rest/v1/categories?select=*",
+      {
+        method: "GET",
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: "Bearer " + SUPABASE_KEY,
+          Range: "0-99"
         }
-    } catch (error) {
-        console.error("Categories loading error:", error);
+      }
+    );
+
+    categories = await response.json();
+
+    if (typeof renderCategoriesGrid === "function") {
+      renderCategoriesGrid();
     }
+    if (typeof updateCategoryFilterMenu === "function") {
+      updateCategoryFilterMenu();
+    }
+  } catch (error) {
+    console.error("CATEGORY ERROR:", error);
+  }
 }
+
 
 
 // ========================================
